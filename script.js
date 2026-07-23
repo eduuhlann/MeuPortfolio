@@ -91,17 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
 
-    // 6. Parallax on hero portrait
-    const portraitCard = document.querySelector('.portrait-card');
-    function updateParallax() {
-        if (!portraitCard) return;
-        const scrolled = window.scrollY;
-        const rate = scrolled * 0.3;
-        portraitCard.style.transform = `translateY(${rate}px)`;
-    }
-    window.addEventListener('scroll', updateParallax, { passive: true });
-
-    // 7. Staggered reveal for skill cards
+    // 6. Staggered reveal for skill cards
     const skillCards = document.querySelectorAll('.skill-card');
     const skillObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
