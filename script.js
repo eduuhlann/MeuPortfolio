@@ -122,9 +122,165 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         skillObserver.observe(card);
     });
+
+    // 8. Typing effect on hero name
+    const heroTyping = document.getElementById('heroTyping');
+    if (heroTyping) {
+        const text = 'Eduardo Lannes Marinato';
+        const roles = ['Desenvolvedor FrontEnd', 'UI/UX Designer', 'Freelancer'];
+        let i = 0;
+        let deleting = false;
+        let currentText = '';
+        let currentTarget = text;
+        let roleIndex = 0;
+
+        function typeLoop() {
+            if (!deleting) {
+                currentText = currentTarget.substring(0, i + 1);
+                i++;
+                heroTyping.textContent = currentText;
+
+                if (i === currentTarget.length) {
+                    if (currentTarget === text) {
+                        setTimeout(() => { deleting = true; typeLoop(); }, 2000);
+                        return;
+                    } else {
+                        setTimeout(() => { deleting = true; typeLoop(); }, 1500);
+                        return;
+                    }
+                }
+                setTimeout(typeLoop, 80);
+            } else {
+                currentText = currentTarget.substring(0, i - 1);
+                i--;
+                heroTyping.textContent = currentText;
+
+                if (i === 0) {
+                    deleting = false;
+                    if (currentTarget === text) {
+                        currentTarget = roles[roleIndex];
+                        roleIndex = (roleIndex + 1) % roles.length;
+                    } else {
+                        currentTarget = text;
+                    }
+                    setTimeout(typeLoop, 500);
+                    return;
+                }
+                setTimeout(typeLoop, 40);
+            }
+        }
+        setTimeout(typeLoop, 800);
+    }
+
+    // 9. Back to top button
+    const backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // 10. Hero grid animation
+    const heroCanvas = document.getElementById('heroGrid');
+    if (heroCanvas) {
+        const ctx = heroCanvas.getContext('2d');
+        let w, h, cols, rows, points;
+        const spacing = 50;
+        let mouse = { x: -1000, y: -1000 };
+
+        function resize() {
+            const hero = heroCanvas.parentElement;
+            w = hero.offsetWidth;
+            h = hero.offsetHeight;
+            heroCanvas.width = w;
+            heroCanvas.height = h;
+            cols = Math.ceil(w / spacing) + 1;
+            rows = Math.ceil(h / spacing) + 1;
+            points = [];
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    points.push({
+                        x: x * spacing,
+                        y: y * spacing,
+                        ox: x * spacing,
+                        oy: y * spacing
+                    });
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+
+            for (const p of points) {
+                const dx = mouse.x - p.x;
+                const dy = mouse.y - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const maxDist = 150;
+
+                if (dist < maxDist) {
+                    const force = (maxDist - dist) / maxDist;
+                    p.x = p.ox - dx * force * 0.3;
+                    p.y = p.oy - dy * force * 0.3;
+                } else {
+                    p.x += (p.ox - p.x) * 0.08;
+                    p.y += (p.oy - p.y) * 0.08;
+                }
+
+                const alpha = 0.08 + (dist < maxDist ? (maxDist - dist) / maxDist * 0.15 : 0);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+                ctx.fill();
+            }
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+            ctx.lineWidth = 0.5;
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols - 1; x++) {
+                    const a = points[y * cols + x];
+                    const b = points[y * cols + x + 1];
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.stroke();
+                }
+            }
+            for (let y = 0; y < rows - 1; y++) {
+                for (let x = 0; x < cols; x++) {
+                    const a = points[y * cols + x];
+                    const b = points[(y + 1) * cols + x];
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.stroke();
+                }
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        heroCanvas.parentElement.addEventListener('mousemove', (e) => {
+            const rect = heroCanvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+
+        heroCanvas.parentElement.addEventListener('mouseleave', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
+    }
 });
 
-// Add visible class for skill cards via CSS
 const style = document.createElement('style');
 style.textContent = '.skill-card.visible { opacity: 1 !important; transform: translateY(0) !important; }';
 document.head.appendChild(style);

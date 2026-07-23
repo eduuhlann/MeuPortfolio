@@ -51,10 +51,11 @@
     <main>
         <!-- HERO SECTION -->
         <section id="home" class="hero section-shell">
+            <canvas class="hero-grid" id="heroGrid"></canvas>
             <div class="hero-copy scroll-reveal scroll-reveal--up">
                 <p class="intro">Disponível para novos projetos</p>
                 <h1>
-                    <span class="hero-name">Eduardo Lannes Marinato</span><span class="hero-cursor">_</span>
+                    <span class="hero-name" id="heroTyping"></span><span class="hero-cursor">_</span>
                 </h1>
                 <p class="hero-role">Desenvolvedor FrontEnd</p>
                 <p class="lead">Crio interfaces limpas e modernas, focadas na experiência do usuário, juntando clareza
@@ -236,6 +237,10 @@
             </div>
         </section>
     </main>
+
+    <button class="back-to-top" id="backToTop" aria-label="Voltar ao topo">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
 
     <footer class="site-footer">
         <p>© 2026 Eduardo Lannes Marinato. Desenvolvido com muito <i class="fa-solid fa-mug-hot"></i> e código.</p>
