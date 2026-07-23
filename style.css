@@ -111,13 +111,9 @@ p {
     margin-bottom: 1rem;
 }
 
-/* ================== HERO GRID ================== */
-.hero {
-    position: relative;
-}
-
-.hero-grid {
-    position: absolute;
+/* ================== PAGE GRID ================== */
+.page-grid {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -126,7 +122,7 @@ p {
     pointer-events: none;
 }
 
-.hero > *:not(.hero-grid) {
+body > *:not(.page-grid) {
     position: relative;
     z-index: 1;
 }

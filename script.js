@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 10. Hero grid animation
+    // 10. Page grid animation
     const heroCanvas = document.getElementById('heroGrid');
     if (heroCanvas) {
         const ctx = heroCanvas.getContext('2d');
@@ -193,9 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let mouse = { x: -1000, y: -1000 };
 
         function resize() {
-            const hero = heroCanvas.parentElement;
-            w = hero.offsetWidth;
-            h = hero.offsetHeight;
+            w = window.innerWidth;
+            h = window.innerHeight;
             heroCanvas.width = w;
             heroCanvas.height = h;
             cols = Math.ceil(w / spacing) + 1;
@@ -231,14 +230,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     p.y += (p.oy - p.y) * 0.08;
                 }
 
-                const alpha = 0.08 + (dist < maxDist ? (maxDist - dist) / maxDist * 0.15 : 0);
+                const alpha = 0.06 + (dist < maxDist ? (maxDist - dist) / maxDist * 0.12 : 0);
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255,255,255,${alpha})`;
                 ctx.fill();
             }
 
-            ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+            ctx.strokeStyle = 'rgba(255,255,255,0.02)';
             ctx.lineWidth = 0.5;
             for (let y = 0; y < rows; y++) {
                 for (let x = 0; x < cols - 1; x++) {
@@ -264,13 +263,12 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(draw);
         }
 
-        heroCanvas.parentElement.addEventListener('mousemove', (e) => {
-            const rect = heroCanvas.getBoundingClientRect();
-            mouse.x = e.clientX - rect.left;
-            mouse.y = e.clientY - rect.top;
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
         });
 
-        heroCanvas.parentElement.addEventListener('mouseleave', () => {
+        document.addEventListener('mouseleave', () => {
             mouse.x = -1000;
             mouse.y = -1000;
         });
