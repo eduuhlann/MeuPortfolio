@@ -7,6 +7,18 @@
     --text-secondary: #a3a3a3;
     --accent: #ffffff;
     --accent-glow: rgba(255, 255, 255, 0.2);
+    --header-bg: rgba(5, 5, 5, 0.7);
+    --header-bg-scrolled: rgba(5, 5, 5, 0.95);
+    --header-border: rgba(255, 255, 255, 0.05);
+    --header-border-scrolled: rgba(255, 255, 255, 0.1);
+    --card-hover-bg: rgba(255, 255, 255, 0.05);
+    --card-hover-border: rgba(255, 255, 255, 0.3);
+    --skill-card-bg: rgba(255, 255, 255, 0.03);
+    --portrait-bg: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1), transparent 70%);
+    --project-gradient: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+    --project-number: rgba(255,255,255,0.05);
+    --experience-time-bg: rgba(255,255,255,0.05);
+    --contact-icon-bg: rgba(255,255,255,0.05);
     
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
@@ -185,17 +197,17 @@ body > *:not(.page-grid) {
     justify-content: space-between;
     align-items: center;
     z-index: 100;
-    background: rgba(5, 5, 5, 0.7);
+    background: var(--header-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--header-border);
     transition: var(--transition-normal);
 }
 
 .site-header.scrolled {
-    background: rgba(5, 5, 5, 0.95);
+    background: var(--header-bg-scrolled);
     padding: 1rem 5%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--header-border-scrolled);
 }
 
 .brand {
@@ -367,7 +379,7 @@ body > *:not(.page-grid) {
 
 .secondary-action:hover {
     border-color: var(--text-primary);
-    background: rgba(255,255,255,0.05);
+    background: var(--card-hover-bg);
 }
 
 .social-links {
@@ -392,7 +404,7 @@ body > *:not(.page-grid) {
     color: var(--text-primary);
     border-color: var(--text-primary);
     transform: translateY(-2px);
-    background: rgba(255,255,255,0.05);
+    background: var(--card-hover-bg);
 }
 
 /* Portrait Card */
@@ -413,7 +425,7 @@ body > *:not(.page-grid) {
 .portrait-bg {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1), transparent 70%);
+    background: var(--portrait-bg);
 }
 
 .hero-code-card {
@@ -555,7 +567,7 @@ body > *:not(.page-grid) {
 }
 
 .skill-group-card:hover {
-    border-color: rgba(255,255,255,0.3);
+    border-color: var(--card-hover-border);
     transform: translateY(-5px);
 }
 
@@ -594,7 +606,7 @@ body > *:not(.page-grid) {
 }
 
 .skill-card:hover {
-    background: rgba(255,255,255,0.05);
+    background: var(--card-hover-bg);
     border-color: var(--text-primary);
 }
 
@@ -640,7 +652,7 @@ body > *:not(.page-grid) {
 .skill-card:hover {
     border-color: var(--text-primary);
     transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--skill-card-bg);
 }
 
 .skill-card:hover i {
@@ -713,7 +725,7 @@ body > *:not(.page-grid) {
     font-size: 0.85rem;
     color: var(--text-secondary);
     padding: 0.2rem 0.8rem;
-    background: rgba(255,255,255,0.05);
+    background: var(--experience-time-bg);
     border-radius: 2rem;
     border: 1px solid var(--border-color);
 }
@@ -772,14 +784,14 @@ body > *:not(.page-grid) {
     font-family: var(--font-heading);
     color: var(--text-secondary);
     font-size: 1.5rem;
-    background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+    background: var(--project-gradient);
 }
 
 .project-number {
     font-family: var(--font-heading);
     font-size: 3rem;
     font-weight: 800;
-    color: rgba(255,255,255,0.05);
+    color: var(--project-number);
     line-height: 1;
     display: block;
     margin-bottom: -1rem;
@@ -866,7 +878,7 @@ body > *:not(.page-grid) {
 }
 
 .c-link:hover {
-    border-color: rgba(255,255,255,0.3);
+    border-color: var(--card-hover-border);
     transform: translateY(-5px);
 }
 
@@ -876,7 +888,7 @@ body > *:not(.page-grid) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255,255,255,0.05);
+    background: var(--contact-icon-bg);
     border-radius: 50%;
     font-size: 1.5rem;
     margin-right: 1.5rem;
@@ -942,7 +954,7 @@ body > *:not(.page-grid) {
     display: block;
     width: 2px;
     height: 12px;
-    background: rgba(255, 255, 255, 0.25);
+    background: var(--border-color);
     border-radius: 2px;
     animation: steam-rise 1.4s ease-in-out infinite;
 }
