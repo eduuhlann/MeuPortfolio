@@ -79,4 +79,52 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // 5. Scroll progress bar
+    const scrollProgress = document.getElementById('scrollProgress');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        scrollProgress.style.width = progress + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // 6. Parallax on hero portrait
+    const portraitCard = document.querySelector('.portrait-card');
+    function updateParallax() {
+        if (!portraitCard) return;
+        const scrolled = window.scrollY;
+        const rate = scrolled * 0.3;
+        portraitCard.style.transform = `translateY(${rate}px)`;
+    }
+    window.addEventListener('scroll', updateParallax, { passive: true });
+
+    // 7. Staggered reveal for skill cards
+    const skillCards = document.querySelectorAll('.skill-card');
+    const skillObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                const card = entry.target;
+                const siblings = Array.from(card.parentElement.children);
+                const i = siblings.indexOf(card);
+                card.style.transitionDelay = (i * 0.08) + 's';
+                card.classList.add('visible');
+                skillObserver.unobserve(card);
+            }
+        });
+    }, { threshold: 0.2 });
+
+    skillCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(15px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        skillObserver.observe(card);
+    });
 });
+
+// Add visible class for skill cards via CSS
+const style = document.createElement('style');
+style.textContent = '.skill-card.visible { opacity: 1 !important; transform: translateY(0) !important; }';
+document.head.appendChild(style);
