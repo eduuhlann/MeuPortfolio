@@ -4,8 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eduardo Lannes Marinato</title>
-    <link rel="icon" href="Inserir-um-título-_2_ (1).ico" type="image/x-icon">
+    <title>Eduardo Lannes Marinato - Desenvolvedor FrontEnd</title>
+    <meta name="description" content="Portfólio de Eduardo Lannes Marinato - Desenvolvedor FrontEnd criando interfaces modernas, limpas e focadas na experiência do usuário.">
+    <meta name="theme-color" content="#050505">
+    <meta property="og:title" content="Eduardo Lannes Marinato - Desenvolvedor FrontEnd">
+    <meta property="og:description" content="Portfólio - Interfaces modernas, limpas e focadas na experiência do usuário.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="WhatsApp Image 2026-06-27 at 15.29.25.jpeg">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Fontes do Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,6 +38,7 @@
             <a href="#work">Projetos</a>
             <a href="#contact">Contato</a>
         </nav>
+        <div class="nav-backdrop"></div>
 
         <div class="header-actions">
             <button class="icon-button menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
@@ -60,7 +67,8 @@
                 <div class="social-links">
                     <a class="icon-button" href="https://github.com/eduuhlann" target="_blank" aria-label="GitHub"><i
                             class="fa-brands fa-github"></i></a>
-                    <a class="icon-button" href="mailto:seuemail@exemplo.com" aria-label="E-mail"><i
+                    <a class="icon-button copy-email-btn" href="mailto:eduardolannesmarinato@gmail.com"
+                        aria-label="E-mail" data-email="eduardolannesmarinato@gmail.com"><i
                             class="fa-solid fa-envelope"></i></a>
                 </div>
             </div>
@@ -68,7 +76,7 @@
             <div class="portrait-card scroll-reveal scroll-reveal--left" aria-hidden="true">
                 <div class="portrait-bg"></div>
                 <div class="portrait-illustration">
-                    <img src="WhatsApp Image 2026-06-27 at 15.29.25.jpeg" alt="Eduardo Foto" class="profile-image">
+                    <img src="WhatsApp Image 2026-06-27 at 15.29.25.jpeg" alt="Eduardo Foto" class="profile-image" loading="lazy">
                 </div>
             </div>
         </section>
@@ -86,7 +94,7 @@
                     <div class="about-photo" aria-hidden="true">
                         <div class="photo-bg"></div>
                         <img src="WhatsApp Image 2026-06-27 at 15.29.25.jpeg" alt="Eduardo Lannes"
-                            class="about-profile-image">
+                            class="about-profile-image" loading="lazy">
                     </div>
                 </div>
                 <div class="scroll-reveal scroll-reveal--right">
@@ -124,23 +132,35 @@
                         <span>Linguagens</span>
                         <p>Base para construir interfaces e aplicações web.</p>
                     </div>
-                    <div class="skills-grid">
-                        <span class="skill-card">
-                            <i class="fa-brands fa-html5 skill-icon"></i>
-                            <strong>HTML5</strong>
-                        </span>
-                        <span class="skill-card">
-                            <i class="fa-brands fa-css3-alt skill-icon"></i>
-                            <strong>CSS3</strong>
-                        </span>
-                        <span class="skill-card">
-                            <i class="fa-brands fa-js skill-icon"></i>
-                            <strong>JavaScript</strong>
-                        </span>
-                        <span class="skill-card">
-                            <i class="fa-brands fa-python skill-icon"></i>
-                            <strong>Python</strong>
-                        </span>
+                    <div class="skills-list">
+                        <div class="skill-bar">
+                            <div class="skill-bar-header">
+                                <span class="skill-bar-name"><i class="fa-brands fa-html5"></i> HTML5</span>
+                                <span class="skill-bar-pct">90%</span>
+                            </div>
+                            <div class="skill-bar-track"><div class="skill-bar-fill" style="--pct: 90%"></div></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-header">
+                                <span class="skill-bar-name"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+                                <span class="skill-bar-pct">85%</span>
+                            </div>
+                            <div class="skill-bar-track"><div class="skill-bar-fill" style="--pct: 85%"></div></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-header">
+                                <span class="skill-bar-name"><i class="fa-brands fa-js"></i> JavaScript</span>
+                                <span class="skill-bar-pct">80%</span>
+                            </div>
+                            <div class="skill-bar-track"><div class="skill-bar-fill" style="--pct: 80%"></div></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-header">
+                                <span class="skill-bar-name"><i class="fa-brands fa-python"></i> Python</span>
+                                <span class="skill-bar-pct">70%</span>
+                            </div>
+                            <div class="skill-bar-track"><div class="skill-bar-fill" style="--pct: 70%"></div></div>
+                        </div>
                     </div>
                 </article>
 
@@ -150,15 +170,21 @@
                         <span>Frameworks & Tecnologias</span>
                         <p>Ferramentas que aceleram o desenvolvimento moderno.</p>
                     </div>
-                    <div class="skills-grid">
-                        <span class="skill-card">
-                            <i class="fa-brands fa-react skill-icon"></i>
-                            <strong>React</strong>
-                        </span>
-                        <span class="skill-card">
-                            <i class="fa-solid fa-code skill-icon"></i>
-                            <strong>TypeScript</strong>
-                        </span>
+                    <div class="skills-list">
+                        <div class="skill-bar">
+                            <div class="skill-bar-header">
+                                <span class="skill-bar-name"><i class="fa-brands fa-react"></i> React</span>
+                                <span class="skill-bar-pct">75%</span>
+                            </div>
+                            <div class="skill-bar-track"><div class="skill-bar-fill" style="--pct: 75%"></div></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-header">
+                                <span class="skill-bar-name"><i class="fa-solid fa-code"></i> TypeScript</span>
+                                <span class="skill-bar-pct">65%</span>
+                            </div>
+                            <div class="skill-bar-track"><div class="skill-bar-fill" style="--pct: 65%"></div></div>
+                        </div>
                     </div>
                 </article>
             </div>
