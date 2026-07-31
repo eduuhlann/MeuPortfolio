@@ -7,10 +7,22 @@
     <title>Eduardo Lannes Marinato</title>
     <meta name="description" content="Portfólio de Eduardo Lannes Marinato - Desenvolvedor FrontEnd criando interfaces modernas, limpas e focadas na experiência do usuário.">
     <meta name="theme-color" content="#050505">
+    <script>
+        (function () {
+            document.documentElement.classList.add('js');
+            var stored = null;
+            try { stored = localStorage.getItem('theme'); } catch (e) { }
+            var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+            var theme = stored ? stored : (prefersLight ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', theme === 'light' ? '#f7f7f8' : '#050505');
+        })();
+    </script>
     <meta property="og:title" content="Eduardo Lannes Marinato - Desenvolvedor FrontEnd">
     <meta property="og:description" content="Portfólio - Interfaces modernas, limpas e focadas na experiência do usuário.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="WhatsApp Image 2026-06-27 at 15.29.25.jpeg">
+    <meta property="og:image" content="foto1.jpeg">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Fontes do Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,12 +49,17 @@
             <a href="#home">Home</a>
             <a href="#about">Sobre</a>
             <a href="#skills">Skills</a>
+            <a href="#services">Serviços</a>
             <a href="#work">Projetos</a>
             <a href="#contact">Contato</a>
         </nav>
         <div class="nav-backdrop"></div>
 
         <div class="header-actions">
+            <button class="icon-button theme-toggle" type="button" aria-label="Alternar tema claro e escuro"
+                aria-pressed="true">
+                <i class="fa-solid fa-sun"></i>
+            </button>
             <button class="icon-button menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
                 <i class="fa-solid fa-bars"></i>
             </button>
@@ -78,7 +95,7 @@
             <div class="portrait-card scroll-reveal scroll-reveal--left" aria-hidden="true">
                 <div class="portrait-bg"></div>
                 <div class="portrait-illustration">
-                    <img src="WhatsApp Image 2026-06-27 at 15.29.25.jpeg" alt="Eduardo Foto" class="profile-image" loading="lazy">
+                    <img src="foto1.jpeg" alt="Eduardo Foto" class="profile-image" loading="lazy">
                 </div>
             </div>
         </section>
@@ -95,7 +112,7 @@
                 <div class="scroll-reveal scroll-reveal--left">
                     <div class="about-photo" aria-hidden="true">
                         <div class="photo-bg"></div>
-                        <img src="WhatsApp Image 2026-06-27 at 15.29.25.jpeg" alt="Eduardo Lannes"
+                        <img src="foto1.jpeg" alt="Eduardo Lannes"
                             class="about-profile-image" loading="lazy">
                     </div>
                 </div>
@@ -156,7 +173,40 @@
             </div>
         </section>
 
+        <!-- SERVIÇOS SECTION -->
+        <section id="services" class="section-shell">
+            <div class="scroll-reveal scroll-reveal--up">
+                <div class="section-heading">
+                    <span class="tag">Serviços</span>
+                    <p>O que posso construir para você ou seu negócio.</p>
+                </div>
+            </div>
 
+            <div class="services-grid">
+                <article class="service-card scroll-reveal scroll-reveal--up">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <h3>Landing Pages</h3>
+                    <p>Páginas rápidas e focadas em conversão para divulgar seu produto, evento ou ideia.</p>
+                </article>
+
+                <article class="service-card scroll-reveal scroll-reveal--up">
+                    <i class="fa-solid fa-globe"></i>
+                    <h3>Sites Institucionais</h3>
+                    <p>Presença digital completa para empresas, igrejas e projetos, com design moderno e limpo.</p>
+                </article>
+
+                <article class="service-card scroll-reveal scroll-reveal--up">
+                    <i class="fa-solid fa-pen-ruler"></i>
+                    <h3>UI/UX Design</h3>
+                    <p>Interfaces pensadas na experiência do usuário, da primeira ideia ao protótipo final.</p>
+                </article>
+            </div>
+
+            <div class="services-cta scroll-reveal scroll-reveal--up">
+                <p>Gostou? Vamos tirar sua ideia do papel.</p>
+                <a href="#contact" class="primary-action">Falar comigo</a>
+            </div>
+        </section>
 
         <!-- PROJETOS SECTION -->
         <section id="work" class="section-shell">
@@ -167,10 +217,12 @@
                 </div>
             </div>
 
-            <div class="project-list">
+            <div class="project-carousel" id="projectCarousel" role="region" aria-roledescription="carrossel"
+                aria-label="Projetos">
+                <div class="project-track">
                 <article class="project-card scroll-reveal scroll-reveal--up">
                     <div class="project-preview">
-                        <div class="project-placeholder-image">OneFlow</div>
+                        <img src="foto3.png" alt="Screenshot do OneFlow" loading="lazy">
                     </div>
                     <div class="project-content">
                         <span class="project-number">01</span>
@@ -178,16 +230,40 @@
                         <p>Plataforma web moderna desenvolvida com foco em experiência do usuário, performance e design
                             limpo. Um projeto que demonstra o uso de tecnologias de ponta no desenvolvimento frontend.
                         </p>
-                        <div class="tag-list">
-                            <span class="tag">React</span>
-                            <span class="tag">TypeScript</span>
-                            <span class="tag">CSS</span>
-                        </div>
                         <a href="https://oneflowweb.vercel.app" target="_blank" class="project-link">
                             Visitar site <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
                 </article>
+
+                <article class="project-card scroll-reveal scroll-reveal--up">
+                    <div class="project-preview">
+                        <img src="foto2.png" alt="Screenshot do MetanoiaApp" loading="lazy">
+                    </div>
+                    <div class="project-content">
+                        <span class="project-number">02</span>
+                        <h3>MetanoiaApp</h3>
+                        <p>Site feito para a juventude da Primeira Igreja Batista de Campo Mourão, PR. Uma presença
+                            digital pensada para conectar os jovens, divulgar encontros e fortalecer a comunidade.
+                        </p>
+                        <a href="https://metanoiaapp.vercel.app" target="_blank" class="project-link">
+                            Visitar site <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+                </div>
+
+                <div class="carousel-nav">
+                    <div class="carousel-btns">
+                        <button class="carousel-btn carousel-btn--prev" type="button" aria-label="Projeto anterior">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <button class="carousel-btn carousel-btn--next" type="button" aria-label="Próximo projeto">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="carousel-dots" role="group" aria-label="Navegação dos projetos"></div>
+                </div>
             </div>
         </section>
 

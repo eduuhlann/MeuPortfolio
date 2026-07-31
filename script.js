@@ -34,6 +34,55 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', closeMenu);
     });
 
+    // 1.5 Theme toggle (claro/escuro)
+    const themeToggle = document.querySelector('.theme-toggle');
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    let gridRgb = '255, 255, 255';
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function getCurrentTheme() {
+        return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    }
+
+    function syncThemeUI() {
+        const theme = getCurrentTheme();
+        if (themeMeta) {
+            themeMeta.setAttribute('content', theme === 'light' ? '#f7f7f8' : '#050505');
+        }
+        if (themeToggle) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+            themeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+        }
+        const gridValue = getComputedStyle(document.documentElement).getPropertyValue('--grid-dot').trim();
+        gridRgb = gridValue || '255, 255, 255';
+    }
+
+    function applyTheme(theme, persist) {
+        document.documentElement.setAttribute('data-theme', theme);
+        if (persist) {
+            try { localStorage.setItem('theme', theme); } catch (e) { }
+        }
+        syncThemeUI();
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            applyTheme(getCurrentTheme() === 'light' ? 'dark' : 'light', true);
+        });
+    }
+
+    if (window.matchMedia) {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: light)');
+        systemTheme.addEventListener('change', (e) => {
+            let stored = null;
+            try { stored = localStorage.getItem('theme'); } catch (err) { }
+            if (!stored) applyTheme(e.matches ? 'light' : 'dark', false);
+        });
+    }
+
+    syncThemeUI();
+
     // 2. Scroll Reveal Animation using Intersection Observer
     const revealElements = document.querySelectorAll('.scroll-reveal');
 
@@ -60,6 +109,21 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', () => {
         header.classList.toggle('scrolled', window.scrollY > 50);
     }, { passive: true });
+
+    // 3.5 Scrollspy - destaca a seção ativa no menu
+    const sections = document.querySelectorAll('section[id]');
+    const navAnchors = document.querySelectorAll('.main-nav a');
+    const spyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navAnchors.forEach(a => {
+                    a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+                });
+            }
+        });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+
+    sections.forEach(section => spyObserver.observe(section));
 
     // 4. Copy email on click
     const copyEmailBtn = document.querySelector('.copy-email-btn');
@@ -106,60 +170,158 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, { threshold: 0.2 });
 
-    skillCards.forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(15px)';
-        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        skillObserver.observe(card);
-    });
+    skillCards.forEach(card => skillObserver.observe(card));
+
+    // 7. Projects carousel
+    const carousel = document.getElementById('projectCarousel');
+    if (carousel) {
+        const track = carousel.querySelector('.project-track');
+        const cards = carousel.querySelectorAll('.project-card');
+        const prevBtn = carousel.querySelector('.carousel-btn--prev');
+        const nextBtn = carousel.querySelector('.carousel-btn--next');
+        const dotsWrap = carousel.querySelector('.carousel-dots');
+        const total = cards.length;
+        const interval = 5000;
+        let current = 0;
+        let timer = null;
+        let paused = false;
+        let inView = true;
+
+        function goTo(index) {
+            current = (index + total) % total;
+            track.style.transform = `translateX(-${current * 100}%)`;
+            const dots = dotsWrap.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === current);
+                dot.setAttribute('aria-current', i === current ? 'true' : 'false');
+            });
+        }
+
+        function startAutoplay() {
+            if (reducedMotion || total < 2 || paused || !inView) return;
+            stopAutoplay();
+            timer = setInterval(() => goTo(current + 1), interval);
+        }
+
+        function stopAutoplay() {
+            clearInterval(timer);
+            timer = null;
+        }
+
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', 'Ir para o projeto ' + (i + 1));
+            dot.setAttribute('aria-current', i === 0 ? 'true' : 'false');
+            dot.addEventListener('click', () => {
+                goTo(i);
+                startAutoplay();
+            });
+            dotsWrap.appendChild(dot);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            goTo(current - 1);
+            startAutoplay();
+        });
+        nextBtn.addEventListener('click', () => {
+            goTo(current + 1);
+            startAutoplay();
+        });
+
+        carousel.addEventListener('mouseenter', () => {
+            paused = true;
+            stopAutoplay();
+        });
+        carousel.addEventListener('mouseleave', () => {
+            paused = false;
+            startAutoplay();
+        });
+
+        let touchStartX = 0;
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            paused = true;
+            stopAutoplay();
+        }, { passive: true });
+        carousel.addEventListener('touchend', (e) => {
+            const diff = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(diff) > 40) goTo(current + (diff < 0 ? 1 : -1));
+            paused = false;
+            startAutoplay();
+        }, { passive: true });
+
+        carousel.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                prevBtn.click();
+                e.preventDefault();
+            } else if (e.key === 'ArrowRight') {
+                nextBtn.click();
+                e.preventDefault();
+            }
+        });
+
+        new IntersectionObserver((entries) => {
+            inView = entries[0].isIntersecting;
+            if (inView) startAutoplay();
+            else stopAutoplay();
+        }, { threshold: 0.2 }).observe(carousel);
+
+        startAutoplay();
+    }
 
     // 8. Typing effect on hero name
     const heroTyping = document.getElementById('heroTyping');
     if (heroTyping) {
-        const text = 'Eduardo Lannes Marinato';
-        const roles = ['Desenvolvedor FrontEnd', 'UI/UX Designer', 'Freelancer'];
-        let i = 0;
-        let deleting = false;
-        let currentText = '';
-        let currentTarget = text;
-        let roleIndex = 0;
+        if (reducedMotion) {
+            heroTyping.textContent = 'Eduardo Lannes Marinato';
+        } else {
+            const text = 'Eduardo Lannes Marinato';
+            const roles = ['Desenvolvedor FrontEnd', 'UI/UX Designer', 'Freelancer'];
+            let i = 0;
+            let deleting = false;
+            let currentText = '';
+            let currentTarget = text;
+            let roleIndex = 0;
 
-        function typeLoop() {
-            if (!deleting) {
-                currentText = currentTarget.substring(0, i + 1);
-                i++;
-                heroTyping.textContent = currentText;
+            function typeLoop() {
+                if (!deleting) {
+                    currentText = currentTarget.substring(0, i + 1);
+                    i++;
+                    heroTyping.textContent = currentText;
 
-                if (i === currentTarget.length) {
-                    if (currentTarget === text) {
-                        setTimeout(() => { deleting = true; typeLoop(); }, 2000);
-                        return;
-                    } else {
-                        setTimeout(() => { deleting = true; typeLoop(); }, 1500);
+                    if (i === currentTarget.length) {
+                        if (currentTarget === text) {
+                            setTimeout(() => { deleting = true; typeLoop(); }, 2000);
+                            return;
+                        } else {
+                            setTimeout(() => { deleting = true; typeLoop(); }, 1500);
+                            return;
+                        }
+                    }
+                    setTimeout(typeLoop, 80);
+                } else {
+                    currentText = currentTarget.substring(0, i - 1);
+                    i--;
+                    heroTyping.textContent = currentText;
+
+                    if (i === 0) {
+                        deleting = false;
+                        if (currentTarget === text) {
+                            currentTarget = roles[roleIndex];
+                            roleIndex = (roleIndex + 1) % roles.length;
+                        } else {
+                            currentTarget = text;
+                        }
+                        setTimeout(typeLoop, 500);
                         return;
                     }
+                    setTimeout(typeLoop, 40);
                 }
-                setTimeout(typeLoop, 80);
-            } else {
-                currentText = currentTarget.substring(0, i - 1);
-                i--;
-                heroTyping.textContent = currentText;
-
-                if (i === 0) {
-                    deleting = false;
-                    if (currentTarget === text) {
-                        currentTarget = roles[roleIndex];
-                        roleIndex = (roleIndex + 1) % roles.length;
-                    } else {
-                        currentTarget = text;
-                    }
-                    setTimeout(typeLoop, 500);
-                    return;
-                }
-                setTimeout(typeLoop, 40);
             }
+            setTimeout(typeLoop, 800);
         }
-        setTimeout(typeLoop, 800);
     }
 
     // 9. Back to top button
@@ -170,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: true });
 
         backToTop.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
         });
     }
 
@@ -223,11 +385,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const alpha = 0.06 + (dist < maxDist ? (maxDist - dist) / maxDist * 0.12 : 0);
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+                ctx.fillStyle = `rgba(${gridRgb},${alpha})`;
                 ctx.fill();
             }
 
-            ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+            ctx.strokeStyle = `rgba(${gridRgb},0.02)`;
             ctx.lineWidth = 0.5;
             for (let y = 0; y < rows; y++) {
                 for (let x = 0; x < cols - 1; x++) {
@@ -249,26 +411,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.stroke();
                 }
             }
-
-            requestAnimationFrame(draw);
         }
 
-        document.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-
-        document.addEventListener('mouseleave', () => {
-            mouse.x = -1000;
-            mouse.y = -1000;
-        });
+        function loop() {
+            draw();
+            requestAnimationFrame(loop);
+        }
 
         window.addEventListener('resize', resize);
         resize();
-        draw();
+        if (reducedMotion) {
+            draw();
+        } else {
+            document.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            document.addEventListener('mouseleave', () => {
+                mouse.x = -1000;
+                mouse.y = -1000;
+            });
+
+            loop();
+        }
     }
 });
-
-const style = document.createElement('style');
-style.textContent = '.skill-card.visible { opacity: 1 !important; transform: translateY(0) !important; }';
-document.head.appendChild(style);
