@@ -436,4 +436,81 @@ document.addEventListener('DOMContentLoaded', () => {
             loop();
         }
     }
+
+    // 11. SplitText effect (porta do componente SplitText do React Bits)
+    if (typeof gsap !== 'undefined' && typeof SplitText !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger, SplitText);
+
+        function initSplitText(el) {
+            if (reducedMotion) return;
+
+            const text = el.textContent;
+            if (!text || !text.trim()) return;
+
+            const splitType = el.dataset.split || 'chars';
+            const delay = parseFloat(el.dataset.delay || '50');
+            const duration = parseFloat(el.dataset.duration || '1.25');
+            const ease = el.dataset.ease || 'power3.out';
+            const threshold = parseFloat(el.dataset.threshold || '0.1');
+            const rootMargin = el.dataset.rootMargin || '-100px';
+            const textAlign = el.dataset.textAlign || 'center';
+            const from = { opacity: 0, y: 40 };
+            const to = { opacity: 1, y: 0 };
+
+            el.style.textAlign = textAlign;
+            el.style.overflow = 'hidden';
+            el.style.display = 'inline-block';
+            el.style.whiteSpace = 'normal';
+            el.style.wordWrap = 'break-word';
+            el.style.willChange = 'transform, opacity';
+            el.classList.add('split-parent');
+
+            const startPct = (1 - threshold) * 100;
+            const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin);
+            const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
+            const marginUnit = marginMatch ? marginMatch[2] || 'px' : 'px';
+            const sign = marginValue === 0 ? '' : marginValue < 0 ? `-=${Math.abs(marginValue)}${marginUnit}` : `+=${marginValue}${marginUnit}`;
+            const start = `top ${startPct}%${sign}`;
+
+            let targets;
+            const assignTargets = (self) => {
+                if (splitType.includes('chars') && self.chars.length) targets = self.chars;
+                if (!targets && splitType.includes('words') && self.words.length) targets = self.words;
+                if (!targets && splitType.includes('lines') && self.lines.length) targets = self.lines;
+                if (!targets) targets = self.chars || self.words || self.lines;
+            };
+
+            new SplitText(el, {
+                type: splitType,
+                smartWrap: true,
+                autoSplit: splitType === 'lines',
+                linesClass: 'split-line',
+                wordsClass: 'split-word',
+                charsClass: 'split-char',
+                reduceWhiteSpace: false,
+                onSplit: (self) => {
+                    assignTargets(self);
+                    gsap.fromTo(
+                        targets,
+                        { ...from },
+                        {
+                            ...to,
+                            duration,
+                            ease,
+                            stagger: delay / 1000,
+                            scrollTrigger: {
+                                trigger: el,
+                                start,
+                                once: true,
+                                fastScrollEnd: true,
+                                anticipatePin: 0.4
+                            }
+                        }
+                    );
+                }
+            });
+        }
+
+        document.querySelectorAll('[data-split]').forEach(initSplitText);
+    }
 });

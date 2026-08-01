@@ -1132,6 +1132,18 @@ body > *:not(.page-grid) {
     transform: translateY(0);
 }
 
+/* ================== SPLIT TEXT (GSAP) ================== */
+.split-parent {
+    position: relative;
+}
+
+.split-char,
+.split-word,
+.split-line {
+    display: inline-block;
+    position: relative;
+}
+
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
