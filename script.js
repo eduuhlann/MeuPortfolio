@@ -382,14 +382,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     p.y += (p.oy - p.y) * 0.08;
                 }
 
-                const alpha = 0.06 + (dist < maxDist ? (maxDist - dist) / maxDist * 0.12 : 0);
+                const alpha = 0.25 + (dist < maxDist ? (maxDist - dist) / maxDist * 0.35 : 0);
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(${gridRgb},${alpha})`;
                 ctx.fill();
             }
 
-            ctx.strokeStyle = `rgba(${gridRgb},0.02)`;
+            ctx.strokeStyle = `rgba(${gridRgb},0.1)`;
             ctx.lineWidth = 0.5;
             for (let y = 0; y < rows; y++) {
                 for (let x = 0; x < cols - 1; x++) {
