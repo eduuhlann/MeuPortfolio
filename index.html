@@ -47,6 +47,19 @@
 </head>
 
 <body>
+    <!-- PAGE LOADER -->
+    <div class="page-loader" id="pageLoader" aria-hidden="true">
+        <div class="loader">
+            <div class="cup">
+                <div class="cup-handle"></div>
+                <div class="smoke one"></div>
+                <div class="smoke two"></div>
+                <div class="smoke three"></div>
+            </div>
+            <div class="load">Carregando...</div>
+        </div>
+    </div>
+
     <canvas class="page-grid" id="heroGrid"></canvas>
     <div class="scroll-progress" id="scrollProgress"></div>
     <header class="site-header">
@@ -84,21 +97,13 @@
                 <h1>
                     <span class="hero-name" id="heroTyping"></span><span class="hero-cursor">_</span>
                 </h1>
-                <p class="hero-role" data-split="words" data-text-align="left">Desenvolvedor FrontEnd</p>
+                <p class="hero-role" data-text-align="left"><span class="role-text" id="heroRole"></span><span class="role-cursor">_</span></p>
                 <p class="lead">Crio interfaces limpas e modernas, focadas na experiência do usuário, juntando clareza
                     visual, performance e código de qualidade.</p>
 
                 <div class="hero-actions">
-                    <a href="#work" class="primary-action">Ver projetos</a>
-                    <a href="#contact" class="secondary-action">Falar comigo</a>
-                </div>
-
-                <div class="social-links">
-                    <a class="icon-button" href="https://github.com/eduuhlann" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i
-                            class="fa-brands fa-github"></i></a>
-                    <a class="icon-button copy-email-btn" href="mailto:eduardolannesmarinato@gmail.com"
-                        aria-label="E-mail" data-email="eduardolannesmarinato@gmail.com"><i
-                            class="fa-solid fa-envelope"></i></a>
+                    <a href="#work" class="primary-action magnetic btn-shine">Ver projetos</a>
+                    <a href="#contact" class="secondary-action magnetic btn-ripple">Falar comigo</a>
                 </div>
             </div>
 
@@ -110,12 +115,62 @@
             </div>
         </section>
 
+        <!-- MARQUEE de tecnologias -->
+        <div class="marquee" aria-hidden="true">
+            <div class="marquee__track">
+                <div class="marquee__group">
+                    <span class="marquee__item"><i class="fa-brands fa-html5"></i> HTML5</span>
+                    <span class="marquee__item"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+                    <span class="marquee__item"><i class="fa-brands fa-js"></i> JavaScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-react"></i> React</span>
+                    <span class="marquee__item"><i class="fa-solid fa-code"></i> TypeScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-python"></i> Python</span>
+                    <span class="marquee__item"><i class="fa-brands fa-git-alt"></i> Git</span>
+                    <span class="marquee__item"><i class="fa-brands fa-html5"></i> HTML5</span>
+                    <span class="marquee__item"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+                    <span class="marquee__item"><i class="fa-brands fa-js"></i> JavaScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-react"></i> React</span>
+                    <span class="marquee__item"><i class="fa-solid fa-code"></i> TypeScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-python"></i> Python</span>
+                    <span class="marquee__item"><i class="fa-brands fa-git-alt"></i> Git</span>
+                    <span class="marquee__item"><i class="fa-brands fa-html5"></i> HTML5</span>
+                    <span class="marquee__item"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+                    <span class="marquee__item"><i class="fa-brands fa-js"></i> JavaScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-react"></i> React</span>
+                    <span class="marquee__item"><i class="fa-solid fa-code"></i> TypeScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-python"></i> Python</span>
+                    <span class="marquee__item"><i class="fa-brands fa-git-alt"></i> Git</span>
+                </div>
+                <div class="marquee__group">
+                    <span class="marquee__item"><i class="fa-brands fa-html5"></i> HTML5</span>
+                    <span class="marquee__item"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+                    <span class="marquee__item"><i class="fa-brands fa-js"></i> JavaScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-react"></i> React</span>
+                    <span class="marquee__item"><i class="fa-solid fa-code"></i> TypeScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-python"></i> Python</span>
+                    <span class="marquee__item"><i class="fa-brands fa-git-alt"></i> Git</span>
+                    <span class="marquee__item"><i class="fa-brands fa-html5"></i> HTML5</span>
+                    <span class="marquee__item"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+                    <span class="marquee__item"><i class="fa-brands fa-js"></i> JavaScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-react"></i> React</span>
+                    <span class="marquee__item"><i class="fa-solid fa-code"></i> TypeScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-python"></i> Python</span>
+                    <span class="marquee__item"><i class="fa-brands fa-git-alt"></i> Git</span>
+                    <span class="marquee__item"><i class="fa-brands fa-html5"></i> HTML5</span>
+                    <span class="marquee__item"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+                    <span class="marquee__item"><i class="fa-brands fa-js"></i> JavaScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-react"></i> React</span>
+                    <span class="marquee__item"><i class="fa-solid fa-code"></i> TypeScript</span>
+                    <span class="marquee__item"><i class="fa-brands fa-python"></i> Python</span>
+                    <span class="marquee__item"><i class="fa-brands fa-git-alt"></i> Git</span>
+                </div>
+            </div>
+        </div>
+
         <!-- SOBRE SECTION -->
         <section id="about" class="band section-shell">
-            <div class="scroll-reveal scroll-reveal--up">
-                <div class="section-heading">
-                    <span class="tag">Sobre Mim</span>
-                </div>
+            <div class="section-heading">
+                <span class="tag">Sobre Mim</span>
             </div>
 
             <div class="about-grid">
@@ -147,49 +202,38 @@
 
         <!-- SKILLS SECTION -->
         <section id="skills" class="section-shell">
-            <div class="scroll-reveal scroll-reveal--up">
-                <div class="section-heading">
-                    <span class="tag">Skills</span>
-                    <p>Minha stack organizada por área de trabalho.</p>
-                </div>
+            <div class="section-heading">
+                <span class="tag">Skills</span>
+                <p>Linguagens e frameworks com os quais trabalho.</p>
             </div>
 
-            <div class="skill-groups">
-                <!-- Group 1: Linguagens -->
-                <article class="skill-group-card scroll-reveal scroll-reveal--up">
-                    <div class="skill-group-copy">
-                        <span>Linguagens</span>
-                        <p>Base para construir interfaces e aplicações web.</p>
+            <div class="skill-stack scroll-reveal scroll-reveal--up">
+                <div class="skill-stack-card">
+                    <h3>Linguagens</h3>
+                    <div class="skill-stack-items">
+                        <div class="skill-stack-item"><i class="fa-brands fa-html5"></i> HTML5</div>
+                        <div class="skill-stack-item"><i class="fa-brands fa-css3-alt"></i> CSS3</div>
+                        <div class="skill-stack-item"><i class="fa-brands fa-js"></i> JavaScript</div>
+                        <div class="skill-stack-item"><i class="fa-solid fa-code"></i> TypeScript</div>
+                        <div class="skill-stack-item"><i class="fa-brands fa-python"></i> Python</div>
                     </div>
-                    <div class="skill-cards">
-                        <div class="skill-card"><i class="fa-brands fa-html5"></i><span>HTML5</span></div>
-                        <div class="skill-card"><i class="fa-brands fa-css3-alt"></i><span>CSS3</span></div>
-                        <div class="skill-card"><i class="fa-brands fa-js"></i><span>JavaScript</span></div>
-                        <div class="skill-card"><i class="fa-brands fa-python"></i><span>Python</span></div>
-                    </div>
-                </article>
+                </div>
 
-                <!-- Group 2: Frameworks -->
-                <article class="skill-group-card scroll-reveal scroll-reveal--up">
-                    <div class="skill-group-copy">
-                        <span>Frameworks & Tecnologias</span>
-                        <p>Ferramentas que aceleram o desenvolvimento moderno.</p>
+                <div class="skill-stack-card">
+                    <h3>Frameworks</h3>
+                    <div class="skill-stack-items">
+                        <div class="skill-stack-item"><i class="fa-brands fa-react"></i> React</div>
+                        <div class="skill-stack-item"><i class="fa-brands fa-react"></i> React Native</div>
                     </div>
-                    <div class="skill-cards">
-                        <div class="skill-card"><i class="fa-brands fa-react"></i><span>React</span></div>
-                        <div class="skill-card"><i class="fa-solid fa-code"></i><span>TypeScript</span></div>
-                    </div>
-                </article>
+                </div>
             </div>
         </section>
 
         <!-- SERVIÇOS SECTION -->
         <section id="services" class="section-shell">
-            <div class="scroll-reveal scroll-reveal--up">
-                <div class="section-heading">
-                    <span class="tag">Serviços</span>
-                    <p>O que posso construir para você ou seu negócio.</p>
-                </div>
+            <div class="section-heading">
+                <span class="tag">Serviços</span>
+                <p>O que posso construir para você ou seu negócio.</p>
             </div>
 
             <div class="services-grid">
@@ -220,11 +264,9 @@
 
         <!-- PROJETOS SECTION -->
         <section id="work" class="section-shell">
-            <div class="scroll-reveal scroll-reveal--up">
-                <div class="section-heading">
-                    <span class="tag">Projetos</span>
-                    <p>Alguns dos projetos que já construí.</p>
-                </div>
+            <div class="section-heading">
+                <span class="tag">Projetos</span>
+                <p>Alguns dos projetos que já construí.</p>
             </div>
 
             <div class="project-carousel" id="projectCarousel" role="region" aria-roledescription="carrossel"
@@ -235,7 +277,6 @@
                         <img src="foto3.png" alt="Screenshot do OneFlow" loading="lazy">
                     </div>
                     <div class="project-content">
-                        <span class="project-number">01</span>
                         <h3>OneFlow</h3>
                         <p>Plataforma web moderna desenvolvida com foco em experiência do usuário, performance e design
                             limpo. Um projeto que demonstra o uso de tecnologias de ponta no desenvolvimento frontend.
@@ -251,7 +292,6 @@
                         <img src="foto2.png" alt="Screenshot do MetanoiaApp" loading="lazy">
                     </div>
                     <div class="project-content">
-                        <span class="project-number">02</span>
                         <h3>MetanoiaApp</h3>
                         <p>Site feito para a juventude da Primeira Igreja Batista de Campo Mourão, PR. Uma presença
                             digital pensada para conectar os jovens, divulgar encontros e fortalecer a comunidade.
@@ -279,10 +319,8 @@
 
         <!-- CONTATO SECTION -->
         <section id="contact" class="band section-shell contact-section">
-            <div class="scroll-reveal scroll-reveal--up">
-                <div class="section-heading">
-                    <span class="tag">Contato</span>
-                </div>
+            <div class="section-heading">
+                <span class="tag">Contato</span>
             </div>
 
             <div class="contact-layout">

@@ -68,7 +68,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
-            applyTheme(getCurrentTheme() === 'light' ? 'dark' : 'light', true);
+            const next = getCurrentTheme() === 'light' ? 'dark' : 'light';
+            const apply = () => applyTheme(next, true);
+            if (document.startViewTransition && !reducedMotion) {
+                document.startViewTransition(apply);
+            } else {
+                apply();
+            }
         });
     }
 
@@ -125,25 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     sections.forEach(section => spyObserver.observe(section));
 
-    // 4. Copy email on click
-    const copyEmailBtn = document.querySelector('.copy-email-btn');
-    if (copyEmailBtn) {
-        copyEmailBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            navigator.clipboard.writeText(copyEmailBtn.dataset.email).then(() => {
-                const icon = copyEmailBtn.querySelector('i');
-                icon.classList.remove('fa-envelope');
-                icon.classList.add('fa-check');
-                copyEmailBtn.style.borderColor = '#22c55e';
-                setTimeout(() => {
-                    icon.classList.remove('fa-check');
-                    icon.classList.add('fa-envelope');
-                    copyEmailBtn.style.borderColor = '';
-                }, 2000);
-            });
-        });
-    }
-
     // 5. Scroll progress bar
     const scrollProgress = document.getElementById('scrollProgress');
     function updateProgress() {
@@ -154,23 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
-
-    // 6. Staggered reveal for skill cards
-    const skillCards = document.querySelectorAll('.skill-card');
-    const skillObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                const card = entry.target;
-                const siblings = Array.from(card.parentElement.children);
-                const i = siblings.indexOf(card);
-                card.style.transitionDelay = (i * 0.08) + 's';
-                card.classList.add('visible');
-                skillObserver.unobserve(card);
-            }
-        });
-    }, { threshold: 0.2 });
-
-    skillCards.forEach(card => skillObserver.observe(card));
 
     // 7. Projects carousel
     const carousel = document.getElementById('projectCarousel');
@@ -271,57 +241,64 @@ document.addEventListener('DOMContentLoaded', () => {
         startAutoplay();
     }
 
-    // 8. Typing effect on hero name
+    // 8. Typing effect on hero name + cycling role
     const heroTyping = document.getElementById('heroTyping');
+    const heroRole = document.getElementById('heroRole');
     if (heroTyping) {
+        const fullName = 'Eduardo Lannes Marinato';
         if (reducedMotion) {
-            heroTyping.textContent = 'Eduardo Lannes Marinato';
+            heroTyping.textContent = fullName;
+            if (heroRole) heroRole.textContent = 'Desenvolvedor FrontEnd';
         } else {
-            const text = 'Eduardo Lannes Marinato';
-            const roles = ['Desenvolvedor FrontEnd', 'UI/UX Designer', 'Freelancer'];
-            let i = 0;
-            let deleting = false;
-            let currentText = '';
-            let currentTarget = text;
-            let roleIndex = 0;
-
-            function typeLoop() {
-                if (!deleting) {
-                    currentText = currentTarget.substring(0, i + 1);
-                    i++;
-                    heroTyping.textContent = currentText;
-
-                    if (i === currentTarget.length) {
-                        if (currentTarget === text) {
-                            setTimeout(() => { deleting = true; typeLoop(); }, 2000);
-                            return;
-                        } else {
-                            setTimeout(() => { deleting = true; typeLoop(); }, 1500);
-                            return;
-                        }
-                    }
-                    setTimeout(typeLoop, 80);
-                } else {
-                    currentText = currentTarget.substring(0, i - 1);
-                    i--;
-                    heroTyping.textContent = currentText;
-
-                    if (i === 0) {
-                        deleting = false;
-                        if (currentTarget === text) {
-                            currentTarget = roles[roleIndex];
-                            roleIndex = (roleIndex + 1) % roles.length;
-                        } else {
-                            currentTarget = text;
-                        }
-                        setTimeout(typeLoop, 500);
-                        return;
-                    }
-                    setTimeout(typeLoop, 40);
+            let ni = 0;
+            function typeName() {
+                heroTyping.textContent = fullName.substring(0, ni + 1);
+                ni++;
+                if (ni < fullName.length) {
+                    setTimeout(typeName, 70);
+                } else if (heroRole) {
+                    setTimeout(startRoleCycling, 400);
                 }
             }
-            setTimeout(typeLoop, 800);
+            setTimeout(typeName, 600);
         }
+    }
+
+    function startRoleCycling() {
+        const heroRole = document.getElementById('heroRole');
+        if (!heroRole) return;
+        const roles = ['Desenvolvedor FrontEnd', 'UI/UX Designer', 'Freelancer', 'Estudante de CC'];
+        let ri = 0;
+        let i = 0;
+        let deleting = false;
+        let current = '';
+
+        function loop() {
+            const target = roles[ri];
+            if (!deleting) {
+                current = target.substring(0, i + 1);
+                i++;
+                heroRole.textContent = current;
+                if (i >= target.length) {
+                    deleting = true;
+                    setTimeout(loop, 1600);
+                    return;
+                }
+                setTimeout(loop, 75);
+            } else {
+                current = target.substring(0, i - 1);
+                i--;
+                heroRole.textContent = current;
+                if (i <= 0) {
+                    deleting = false;
+                    ri = (ri + 1) % roles.length;
+                    setTimeout(loop, 350);
+                    return;
+                }
+                setTimeout(loop, 38);
+            }
+        }
+        loop();
     }
 
     // 9. Back to top button
@@ -437,6 +414,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 10.5 Magnetic elements
+    if (!reducedMotion && window.matchMedia('(pointer: fine)').matches) {
+        const magnets = document.querySelectorAll('.magnetic');
+        magnets.forEach(el => {
+            const strength = 0.35;
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - (rect.left + rect.width / 2);
+                const y = e.clientY - (rect.top + rect.height / 2);
+                el.classList.add('magnetic--active');
+                el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+            });
+            el.addEventListener('mouseleave', () => {
+                el.classList.remove('magnetic--active');
+                el.style.transform = 'translate(0, 0)';
+            });
+        });
+    }
+
+    // 10.6 Ripple on .btn-ripple
+    const ripples = document.querySelectorAll('.btn-ripple');
+    ripples.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const span = document.createElement('span');
+            span.className = 'ripple';
+            span.style.width = span.style.height = size + 'px';
+            span.style.left = (e.clientX - rect.left - size / 2) + 'px';
+            span.style.top = (e.clientY - rect.top - size / 2) + 'px';
+            btn.appendChild(span);
+            setTimeout(() => span.remove(), 600);
+        });
+    });
+
     // 11. SplitText effect (porta do componente SplitText do React Bits)
     if (typeof gsap !== 'undefined' && typeof SplitText !== 'undefined') {
         gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -512,5 +524,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         document.querySelectorAll('[data-split]').forEach(initSplitText);
+    }
+
+    // 12. Page loader (porta do componente Cup Loader do React Bits)
+    const pageLoader = document.getElementById('pageLoader');
+    if (pageLoader) {
+        let loaderDone = false;
+        const hideLoader = () => {
+            if (loaderDone) return;
+            loaderDone = true;
+            pageLoader.classList.add('page-loader--done');
+            setTimeout(() => pageLoader.remove(), 600);
+        };
+
+        if (document.readyState === 'complete') {
+            hideLoader();
+        } else {
+            window.addEventListener('load', hideLoader);
+            setTimeout(hideLoader, 3000);
+        }
     }
 });
