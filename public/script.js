@@ -116,20 +116,40 @@ document.addEventListener('DOMContentLoaded', () => {
         header.classList.toggle('scrolled', window.scrollY > 50);
     }, { passive: true });
 
-    // 3.5 Scrollspy - destaca a seção ativa no menu
+    // 3.5 Scrollspy - destaca a seção ativa no menu + breadcrumb flutuante
     const sections = document.querySelectorAll('section[id]');
     const navAnchors = document.querySelectorAll('.main-nav a');
+    const sectionBreadcrumb = document.getElementById('sectionBreadcrumb');
+    const breadcrumbText = document.getElementById('breadcrumbText');
+    const breadcrumbLabels = { home: 'Home', about: 'Sobre mim', skills: 'Skills', work: 'Projetos', contact: 'Contato' };
+    let lastSectionId = '';
+
+    function updateSectionUI(id) {
+        navAnchors.forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+        if (!sectionBreadcrumb || !breadcrumbText || id === lastSectionId) return;
+        lastSectionId = id;
+        breadcrumbText.textContent = breadcrumbLabels[id] || id;
+        sectionBreadcrumb.classList.remove('flash');
+        void sectionBreadcrumb.offsetWidth;
+        sectionBreadcrumb.classList.add('flash');
+    }
+
     const spyObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                navAnchors.forEach(a => {
-                    a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
-                });
-            }
+            if (entry.isIntersecting) updateSectionUI(entry.target.id);
         });
     }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
 
     sections.forEach(section => spyObserver.observe(section));
+
+    // Breadcrumb aparece depois que o usuário sai do topo
+    function updateBreadcrumbVisibility() {
+        if (sectionBreadcrumb) {
+            sectionBreadcrumb.classList.toggle('visible', window.scrollY > window.innerHeight * 0.5);
+        }
+    }
 
     // 5. Scroll progress bar
     const scrollProgress = document.getElementById('scrollProgress');
@@ -138,107 +158,110 @@ document.addEventListener('DOMContentLoaded', () => {
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
         scrollProgress.style.width = progress + '%';
+        updateBreadcrumbVisibility();
     }
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
 
-    // 7. Projects carousel
-    const carousel = document.getElementById('projectCarousel');
-    if (carousel) {
-        const track = carousel.querySelector('.project-track');
-        const cards = carousel.querySelectorAll('.project-card');
-        const prevBtn = carousel.querySelector('.carousel-btn--prev');
-        const nextBtn = carousel.querySelector('.carousel-btn--next');
-        const dotsWrap = carousel.querySelector('.carousel-dots');
-        const total = cards.length;
-        const interval = 5000;
-        let current = 0;
-        let timer = null;
-        let paused = false;
-        let inView = true;
+    // 7. Projetos em grid + modal de detalhes
+    const PROJECT_DETAILS = {
+        oneflow: {
+            title: 'OneFlow',
+            tag: 'Projeto Web',
+            image: 'foto3.png',
+            alt: 'Screenshot do OneFlow',
+            description: 'Plataforma web moderna com foco em experiência do usuário, performance e design limpo. Construída para demonstrar boas práticas de desenvolvimento frontend, da interface à otimização.',
+            stack: ['React', 'TypeScript', 'CSS3', 'Vercel'],
+            highlights: [
+                'Interface responsiva e acessível',
+                'Design limpo e moderno',
+                'Foco em performance de carregamento'
+            ],
+            live: 'https://oneflowweb.vercel.app'
+        },
+        metanoia: {
+            title: 'MetanoiaApp',
+            tag: 'Site Institucional',
+            image: 'foto2.png',
+            alt: 'Screenshot do MetanoiaApp',
+            description: 'Presença digital da juventude da Primeira Igreja Batista de Campo Mourão, PR. Pensada para conectar os jovens, divulgar encontros e fortalecer a comunidade.',
+            stack: ['HTML5', 'CSS3', 'JavaScript', 'Vercel'],
+            highlights: [
+                'Divulgação clara dos encontros',
+                'Visual acolhedor e jovem',
+                'Navegação simples e direta'
+            ],
+            live: 'https://metanoiaapp.vercel.app'
+        }
+    };
 
-        function goTo(index) {
-            current = (index + total) % total;
-            track.style.transform = `translateX(-${current * 100}%)`;
-            const dots = dotsWrap.querySelectorAll('.carousel-dot');
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === current);
-                dot.setAttribute('aria-current', i === current ? 'true' : 'false');
-            });
+    const projectModal = document.getElementById('projectModal');
+
+    if (projectModal) {
+        const modalDialog = projectModal.querySelector('.modal-dialog');
+        const modalImage = document.getElementById('modalImage');
+        const modalTag = document.getElementById('modalTag');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalStack = document.getElementById('modalStack');
+        const modalHighlights = document.getElementById('modalHighlights');
+        const modalLive = document.getElementById('modalLive');
+        const modalCloseBtn = projectModal.querySelector('.modal-close');
+        let lastTrigger = null;
+
+        function openModal(key, trigger) {
+            const data = PROJECT_DETAILS[key];
+            if (!data) return;
+            lastTrigger = trigger || null;
+            modalImage.src = data.image;
+            modalImage.alt = data.alt;
+            modalTag.textContent = data.tag;
+            modalTitle.textContent = data.title;
+            modalDescription.textContent = data.description;
+            modalStack.innerHTML = data.stack.map(t => '<span class="chip">' + t + '</span>').join('');
+            modalHighlights.innerHTML = data.highlights.map(h => '<li>' + h + '</li>').join('');
+            modalLive.href = data.live;
+            projectModal.classList.add('open');
+            projectModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            modalCloseBtn.focus();
         }
 
-        function startAutoplay() {
-            if (reducedMotion || total < 2 || paused || !inView) return;
-            stopAutoplay();
-            timer = setInterval(() => goTo(current + 1), interval);
+        function closeModal() {
+            projectModal.classList.remove('open');
+            projectModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            if (lastTrigger) lastTrigger.focus();
         }
 
-        function stopAutoplay() {
-            clearInterval(timer);
-            timer = null;
-        }
-
-        for (let i = 0; i < total; i++) {
-            const dot = document.createElement('button');
-            dot.type = 'button';
-            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-            dot.setAttribute('aria-label', 'Ir para o projeto ' + (i + 1));
-            dot.setAttribute('aria-current', i === 0 ? 'true' : 'false');
-            dot.addEventListener('click', () => {
-                goTo(i);
-                startAutoplay();
-            });
-            dotsWrap.appendChild(dot);
-        }
-
-        prevBtn.addEventListener('click', () => {
-            goTo(current - 1);
-            startAutoplay();
-        });
-        nextBtn.addEventListener('click', () => {
-            goTo(current + 1);
-            startAutoplay();
+        document.querySelectorAll('[data-project]').forEach(btn => {
+            btn.addEventListener('click', () => openModal(btn.dataset.project, btn));
         });
 
-        carousel.addEventListener('mouseenter', () => {
-            paused = true;
-            stopAutoplay();
-        });
-        carousel.addEventListener('mouseleave', () => {
-            paused = false;
-            startAutoplay();
+        projectModal.querySelectorAll('[data-close-modal]').forEach(el => {
+            el.addEventListener('click', closeModal);
         });
 
-        let touchStartX = 0;
-        carousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            paused = true;
-            stopAutoplay();
-        }, { passive: true });
-        carousel.addEventListener('touchend', (e) => {
-            const diff = e.changedTouches[0].clientX - touchStartX;
-            if (Math.abs(diff) > 40) goTo(current + (diff < 0 ? 1 : -1));
-            paused = false;
-            startAutoplay();
-        }, { passive: true });
-
-        carousel.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') {
-                prevBtn.click();
-                e.preventDefault();
-            } else if (e.key === 'ArrowRight') {
-                nextBtn.click();
-                e.preventDefault();
+        document.addEventListener('keydown', (e) => {
+            if (!projectModal.classList.contains('open')) return;
+            if (e.key === 'Escape') {
+                closeModal();
+                return;
+            }
+            if (e.key === 'Tab') {
+                const focusables = modalDialog.querySelectorAll('a[href], button:not([disabled])');
+                if (!focusables.length) return;
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    last.focus();
+                    e.preventDefault();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    first.focus();
+                    e.preventDefault();
+                }
             }
         });
-
-        new IntersectionObserver((entries) => {
-            inView = entries[0].isIntersecting;
-            if (inView) startAutoplay();
-            else stopAutoplay();
-        }, { threshold: 0.2 }).observe(carousel);
-
-        startAutoplay();
     }
 
     // 8. Typing effect on hero name + cycling role
@@ -267,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function startRoleCycling() {
         const heroRole = document.getElementById('heroRole');
         if (!heroRole) return;
-        const roles = ['Desenvolvedor FrontEnd', 'UI/UX Designer', 'Freelancer', 'Estudante de CC'];
+        const roles = ['Desenvolvedor FrontEnd', 'UI/UX Designer', 'Freelancer'];
         let ri = 0;
         let i = 0;
         let deleting = false;
