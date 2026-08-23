@@ -168,8 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
         oneflow: {
             title: 'OneFlow',
             tag: 'Projeto Web',
-            image: 'foto3.png',
-            alt: 'Screenshot do OneFlow',
             description: 'Plataforma web moderna com foco em experiência do usuário, performance e design limpo. Construída para demonstrar boas práticas de desenvolvimento frontend, da interface à otimização.',
             stack: ['React', 'TypeScript', 'CSS3', 'Vercel'],
             highlights: [
@@ -182,8 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
         metanoia: {
             title: 'MetanoiaApp',
             tag: 'Site Institucional',
-            image: 'foto2.png',
-            alt: 'Screenshot do MetanoiaApp',
             description: 'Presença digital da juventude da Primeira Igreja Batista de Campo Mourão, PR. Pensada para conectar os jovens, divulgar encontros e fortalecer a comunidade.',
             stack: ['HTML5', 'CSS3', 'JavaScript', 'Vercel'],
             highlights: [
@@ -213,8 +209,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = PROJECT_DETAILS[key];
             if (!data) return;
             lastTrigger = trigger || null;
-            modalImage.src = data.image;
-            modalImage.alt = data.alt;
+            const card = trigger && trigger.closest ? trigger.closest('.project-card') : null;
+            const cardImg = card ? card.querySelector('.project-preview img') : null;
+            if (cardImg) {
+                modalImage.src = cardImg.src;
+                modalImage.alt = cardImg.alt;
+            }
             modalTag.textContent = data.tag;
             modalTitle.textContent = data.title;
             modalDescription.textContent = data.description;
@@ -266,7 +266,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 7.5 Música - playlists do Spotify + now playing
     const SPOTIFY_PLAYLISTS = [
-        // Cole aqui os links das suas playlists (botão compartilhar > copiar link)
+        'https://open.spotify.com/playlist/3hzZ1fciKtuZ8HrjqUYdNd',
+        'https://open.spotify.com/playlist/68WsqWla4tVm2Qi142odR4',
+        'https://open.spotify.com/playlist/3bpapEAbutIW5dbXq4HMlZ'
     ];
 
     const spotifyGrid = document.getElementById('spotifyGrid');
