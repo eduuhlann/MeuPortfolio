@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navAnchors = document.querySelectorAll('.main-nav a');
     const sectionBreadcrumb = document.getElementById('sectionBreadcrumb');
     const breadcrumbText = document.getElementById('breadcrumbText');
-    const breadcrumbLabels = { home: 'Home', about: 'Sobre mim', skills: 'Skills', work: 'Projetos', contact: 'Contato' };
+    const breadcrumbLabels = { home: 'Home', about: 'Sobre mim', skills: 'Skills', work: 'Projetos', music: 'Música', contact: 'Contato' };
     let lastSectionId = '';
 
     function updateSectionUI(id) {
@@ -262,6 +262,71 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+    }
+
+    // 7.5 Música - playlists do Spotify + now playing
+    const SPOTIFY_PLAYLISTS = [
+        // Cole aqui os links das suas playlists (botão compartilhar > copiar link)
+    ];
+
+    const spotifyGrid = document.getElementById('spotifyGrid');
+    const spotifyHint = document.getElementById('spotifyHint');
+
+    if (spotifyGrid) {
+        const playlistIds = SPOTIFY_PLAYLISTS
+            .map(url => {
+                const match = /playlist\/([A-Za-z0-9]+)/.exec(url);
+                return match ? match[1] : null;
+            })
+            .filter(Boolean);
+
+        if (!playlistIds.length && spotifyHint) spotifyHint.hidden = false;
+
+        playlistIds.forEach(id => {
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://open.spotify.com/embed/playlist/' + id + '?theme=0';
+            iframe.title = 'Playlist do Spotify';
+            iframe.loading = 'lazy';
+            iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+            spotifyGrid.appendChild(iframe);
+        });
+    }
+
+    const nowPlayingCard = document.getElementById('nowPlaying');
+    if (nowPlayingCard) {
+        const npCover = document.getElementById('npCover');
+        const npStatus = document.getElementById('npStatus');
+        const npTrack = document.getElementById('npTrack');
+        const npArtist = document.getElementById('npArtist');
+        const npBar = document.getElementById('npBar');
+
+        async function updateNowPlaying() {
+            try {
+                const res = await fetch('/api/now-playing');
+                if (!res.ok) throw new Error('api indisponivel');
+                const data = await res.json();
+                if (!data || !data.track) {
+                    nowPlayingCard.hidden = true;
+                    return;
+                }
+                nowPlayingCard.hidden = false;
+                nowPlayingCard.classList.toggle('paused', !data.playing);
+                npCover.src = data.cover || '';
+                npCover.alt = data.album ? 'Capa do álbum ' + data.album : 'Capa do álbum';
+                npStatus.textContent = data.playing ? 'Ouvindo agora' : 'Pausado';
+                npTrack.textContent = data.track;
+                npTrack.href = data.url || '#';
+                npArtist.textContent = Array.isArray(data.artists) ? data.artists.join(', ') : '';
+                const npProgress = document.querySelector('.np-progress');
+                if (npProgress) npProgress.hidden = !data.duration;
+                npBar.style.width = data.duration ? Math.min(100, (data.progress / data.duration) * 100) + '%' : '0%';
+            } catch (e) {
+                nowPlayingCard.hidden = true;
+            }
+        }
+
+        updateNowPlaying();
+        setInterval(updateNowPlaying, 30000);
     }
 
     // 8. Typing effect on hero name + cycling role

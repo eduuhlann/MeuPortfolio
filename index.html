@@ -73,6 +73,7 @@
             <a href="#about">Sobre</a>
             <a href="#skills">Skills</a>
             <a href="#work">Projetos</a>
+            <a href="#music">Música</a>
             <a href="#contact">Contato</a>
         </nav>
         <div class="nav-backdrop"></div>
@@ -274,6 +275,32 @@
                     </div>
                 </article>
             </div>
+        </section>
+
+        <!-- MÚSICA SECTION -->
+        <section id="music" class="section-shell">
+            <div class="section-heading">
+                <span class="tag">Música</span>
+                <p>O que estou escutando enquanto codifico.</p>
+            </div>
+
+            <div class="now-playing scroll-reveal scroll-reveal--up" id="nowPlaying" hidden>
+                <div class="np-cover">
+                    <img id="npCover" alt="" loading="lazy">
+                    <span class="np-eq" id="npEq" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+                </div>
+                <div class="np-info">
+                    <span class="np-status"><span class="np-dot"></span><span id="npStatus">Ouvindo agora</span></span>
+                    <a id="npTrack" class="np-track" href="#" target="_blank" rel="noopener noreferrer">—</a>
+                    <span id="npArtist" class="np-artist">—</span>
+                    <div class="np-progress" aria-hidden="true"><div class="np-bar" id="npBar"></div></div>
+                </div>
+            </div>
+
+            <div class="spotify-grid scroll-reveal scroll-reveal--up" id="spotifyGrid"></div>
+
+            <p class="spotify-hint" id="spotifyHint" hidden>Adicione os links das suas playlists em
+                public/script.js, na lista SPOTIFY_PLAYLISTS.</p>
         </section>
 
         <!-- CONTATO SECTION -->

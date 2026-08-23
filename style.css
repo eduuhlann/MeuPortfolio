@@ -1151,6 +1151,181 @@ body > .project-modal {
     margin-top: 0.75rem;
 }
 
+/* ================== MÚSICA / SPOTIFY ================== */
+.spotify-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 1.5rem;
+}
+
+.spotify-grid iframe {
+    width: 100%;
+    height: 352px;
+    border-radius: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.spotify-hint {
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.now-playing {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: var(--skill-card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    max-width: 480px;
+}
+
+.np-cover {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--bg-surface-hover);
+}
+
+.np-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.np-eq {
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    display: flex;
+    gap: 3px;
+    align-items: stretch;
+    height: 14px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.now-playing:not(.paused) .np-eq {
+    opacity: 1;
+}
+
+.np-eq span {
+    width: 3px;
+    height: 100%;
+    background: #1db954;
+    transform-origin: bottom;
+    animation: eq-bounce 1s ease-in-out infinite;
+}
+
+.np-eq span:nth-child(2) { animation-delay: 0.2s; }
+.np-eq span:nth-child(3) { animation-delay: 0.4s; }
+.np-eq span:nth-child(4) { animation-delay: 0.1s; }
+
+@keyframes eq-bounce {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+}
+
+.np-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.np-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.np-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1db954;
+    animation: np-pulse 1.8s ease-in-out infinite;
+}
+
+.now-playing.paused .np-dot {
+    background: var(--text-secondary);
+    animation: none;
+}
+
+@keyframes np-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.5); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(29, 185, 84, 0); }
+}
+
+.np-track {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.np-track:hover {
+    color: var(--text-secondary);
+}
+
+.np-artist {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.np-progress {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--border-color);
+    margin-top: 0.65rem;
+    overflow: hidden;
+}
+
+.np-bar {
+    height: 100%;
+    width: 0%;
+    background: #1db954;
+    border-radius: inherit;
+    transition: width 0.5s linear;
+}
+
+@media (max-width: 480px) {
+    .now-playing {
+        max-width: 100%;
+        padding: 1rem;
+    }
+
+    .np-cover {
+        width: 76px;
+        height: 76px;
+    }
+}
+
 /* ================== CONTACT ================== */
 .contact-layout {
     display: grid;
