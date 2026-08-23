@@ -1135,19 +1135,19 @@ body > :where(:not(.page-grid)) {
 .now-playing {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.75rem;
     background: var(--skill-card-bg);
     border: 1px solid var(--border-color);
     border-radius: 1rem;
-    padding: 1.5rem;
+    padding: 2rem;
     margin-bottom: 2rem;
-    max-width: 560px;
+    max-width: 680px;
 }
 
 .np-cover {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     border-radius: 0.75rem;
     overflow: hidden;
     flex-shrink: 0;
@@ -1241,7 +1241,7 @@ body > :where(:not(.page-grid)) {
 .np-track {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1.35rem;
+    font-size: 1.6rem;
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
@@ -1253,7 +1253,7 @@ body > :where(:not(.page-grid)) {
 }
 
 .np-artist {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
@@ -1283,8 +1283,8 @@ body > :where(:not(.page-grid)) {
     }
 
     .np-cover {
-        width: 92px;
-        height: 92px;
+        width: 108px;
+        height: 108px;
     }
 }
 
