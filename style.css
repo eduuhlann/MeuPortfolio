@@ -1155,19 +1155,19 @@ body > .project-modal {
 .now-playing {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: 1.5rem;
     background: var(--skill-card-bg);
     border: 1px solid var(--border-color);
     border-radius: 1rem;
-    padding: 1.25rem;
+    padding: 1.5rem;
     margin-bottom: 2rem;
-    max-width: 480px;
+    max-width: 560px;
 }
 
 .np-cover {
     position: relative;
-    width: 96px;
-    height: 96px;
+    width: 120px;
+    height: 120px;
     border-radius: 0.75rem;
     overflow: hidden;
     flex-shrink: 0;
@@ -1261,7 +1261,7 @@ body > .project-modal {
 .np-track {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1.15rem;
+    font-size: 1.35rem;
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
@@ -1273,7 +1273,7 @@ body > .project-modal {
 }
 
 .np-artist {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
@@ -1299,12 +1299,12 @@ body > .project-modal {
 @media (max-width: 480px) {
     .now-playing {
         max-width: 100%;
-        padding: 1rem;
+        padding: 1.25rem;
     }
 
     .np-cover {
-        width: 76px;
-        height: 76px;
+        width: 92px;
+        height: 92px;
     }
 }
 
