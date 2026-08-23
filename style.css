@@ -161,31 +161,11 @@ p {
     pointer-events: none;
 }
 
-body > *:not(.page-grid) {
+/* :where() zera a especificidade: componentes filhos diretos (header, overlays)
+   sempre vencem esta regra generica sem precisar de hacks de ordem */
+body > :where(:not(.page-grid)) {
     position: relative;
     z-index: 1;
-}
-
-/* Overlays fixos: precisam vencer a regra acima (mesma especificidade, ordem posterior) */
-body > .scroll-progress,
-body > .site-header,
-body > .back-to-top,
-body > .section-breadcrumb,
-body > .project-modal {
-    position: fixed;
-}
-
-body > .scroll-progress {
-    z-index: 200;
-}
-
-body > .back-to-top,
-body > .section-breadcrumb {
-    z-index: 100;
-}
-
-body > .project-modal {
-    z-index: 1200;
 }
 
 /* ================== BACK TO TOP ================== */
