@@ -264,36 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 7.5 Música - playlists do Spotify + now playing
-    const SPOTIFY_PLAYLISTS = [
-        'https://open.spotify.com/playlist/3hzZ1fciKtuZ8HrjqUYdNd',
-        'https://open.spotify.com/playlist/68WsqWla4tVm2Qi142odR4',
-        'https://open.spotify.com/playlist/3bpapEAbutIW5dbXq4HMlZ'
-    ];
-
-    const spotifyGrid = document.getElementById('spotifyGrid');
-    const spotifyHint = document.getElementById('spotifyHint');
-
-    if (spotifyGrid) {
-        const playlistIds = SPOTIFY_PLAYLISTS
-            .map(url => {
-                const match = /playlist\/([A-Za-z0-9]+)/.exec(url);
-                return match ? match[1] : null;
-            })
-            .filter(Boolean);
-
-        if (!playlistIds.length && spotifyHint) spotifyHint.hidden = false;
-
-        playlistIds.forEach(id => {
-            const iframe = document.createElement('iframe');
-            iframe.src = 'https://open.spotify.com/embed/playlist/' + id + '?theme=0';
-            iframe.title = 'Playlist do Spotify';
-            iframe.loading = 'lazy';
-            iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-            spotifyGrid.appendChild(iframe);
-        });
-    }
-
+    // 7.5 Música - now playing via Last.fm
     const nowPlayingCard = document.getElementById('nowPlaying');
     if (nowPlayingCard) {
         const npCover = document.getElementById('npCover');
