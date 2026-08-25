@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navAnchors = document.querySelectorAll('.main-nav a');
     const sectionBreadcrumb = document.getElementById('sectionBreadcrumb');
     const breadcrumbText = document.getElementById('breadcrumbText');
-    const breadcrumbLabels = { home: 'Home', about: 'Sobre mim', skills: 'Skills', work: 'Projetos', music: 'Música', contact: 'Contato' };
+    const breadcrumbLabels = { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato' };
     let lastSectionId = '';
 
     function updateSectionUI(id) {
@@ -302,64 +302,88 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(updateNowPlaying, 30000);
     }
 
-    // 8. Typing effect on hero name + cycling role
-    const heroTyping = document.getElementById('heroTyping');
-    const heroRole = document.getElementById('heroRole');
-    if (heroTyping) {
-        const fullName = 'Eduardo Lannes Marinato';
-        if (reducedMotion) {
-            heroTyping.textContent = fullName;
-            if (heroRole) heroRole.textContent = 'Desenvolvedor FrontEnd';
-        } else {
-            let ni = 0;
-            function typeName() {
-                heroTyping.textContent = fullName.substring(0, ni + 1);
-                ni++;
-                if (ni < fullName.length) {
-                    setTimeout(typeName, 70);
-                } else if (heroRole) {
-                    setTimeout(startRoleCycling, 400);
+    // 8. Hero V2 — morphing text (liquid-text effect)
+    const morphText1 = document.getElementById('morphText1');
+    const morphText2 = document.getElementById('morphText2');
+    if (morphText1 && morphText2 && !reducedMotion) {
+        const morphTexts = ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'];
+        const morphTime = 1.5;
+        const cooldownTime = 0.5;
+        let textIndex = 0;
+        let morphProgress = 0;
+        let cooldown = 0;
+        let lastTime = performance.now();
+
+        function updateMorph(now) {
+            const dt = (now - lastTime) / 1000;
+            lastTime = now;
+            cooldown -= dt;
+
+            if (cooldown <= 0) {
+                morphProgress -= cooldown;
+                cooldown = 0;
+                let fraction = morphProgress / morphTime;
+
+                if (fraction > 1) {
+                    cooldown = cooldownTime;
+                    fraction = 1;
                 }
+
+                const inv = 1 - fraction;
+                morphText2.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
+                morphText2.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+                morphText1.style.filter = `blur(${Math.min(8 / inv - 8, 100)}px)`;
+                morphText1.style.opacity = `${Math.pow(inv, 0.4) * 100}%`;
+
+                morphText1.textContent = morphTexts[textIndex % morphTexts.length];
+                morphText2.textContent = morphTexts[(textIndex + 1) % morphTexts.length];
+
+                if (fraction === 1) textIndex++;
+            } else {
+                morphProgress = 0;
+                morphText2.style.filter = 'none';
+                morphText2.style.opacity = '100%';
+                morphText1.style.filter = 'none';
+                morphText1.style.opacity = '0%';
             }
-            setTimeout(typeName, 600);
+
+            requestAnimationFrame(updateMorph);
         }
+        requestAnimationFrame(updateMorph);
+    } else if (morphText1 && morphText2) {
+        morphText1.textContent = 'DESENVOLVEDOR FRONTEND';
+        morphText1.style.opacity = '100%';
+        morphText1.style.filter = 'none';
     }
 
-    function startRoleCycling() {
-        const heroRole = document.getElementById('heroRole');
-        if (!heroRole) return;
-        const roles = ['Desenvolvedor FrontEnd', 'UI/UX Designer', 'Freelancer'];
-        let ri = 0;
-        let i = 0;
-        let deleting = false;
-        let current = '';
+    // 8.5 Hero V2 — mouse parallax on tech cards
+    if (!reducedMotion && window.matchMedia('(pointer: fine)').matches) {
+        const heroStage = document.getElementById('heroStage');
+        const techCards = document.querySelectorAll('.tech-card');
+        if (heroStage && techCards.length) {
+            heroStage.addEventListener('mousemove', (e) => {
+                const rect = heroStage.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                const dx = (e.clientX - cx) / rect.width;
+                const dy = (e.clientY - cy) / rect.height;
 
-        function loop() {
-            const target = roles[ri];
-            if (!deleting) {
-                current = target.substring(0, i + 1);
-                i++;
-                heroRole.textContent = current;
-                if (i >= target.length) {
-                    deleting = true;
-                    setTimeout(loop, 1600);
-                    return;
-                }
-                setTimeout(loop, 75);
-            } else {
-                current = target.substring(0, i - 1);
-                i--;
-                heroRole.textContent = current;
-                if (i <= 0) {
-                    deleting = false;
-                    ri = (ri + 1) % roles.length;
-                    setTimeout(loop, 350);
-                    return;
-                }
-                setTimeout(loop, 38);
-            }
+                techCards.forEach(card => {
+                    const depth = parseFloat(card.dataset.depth) || 0.03;
+                    const moveX = dx * depth * 120;
+                    const moveY = dy * depth * 80;
+                    const baseRotate = getComputedStyle(card).getPropertyValue('--card-rotate').trim() || '0deg';
+                    card.style.transform = `rotate(${baseRotate}) translate(${moveX}px, ${moveY}px)`;
+                });
+            });
+
+            heroStage.addEventListener('mouseleave', () => {
+                techCards.forEach(card => {
+                    const baseRotate = getComputedStyle(card).getPropertyValue('--card-rotate').trim() || '0deg';
+                    card.style.transform = `rotate(${baseRotate})`;
+                });
+            });
         }
-        loop();
     }
 
     // 9. Back to top button
