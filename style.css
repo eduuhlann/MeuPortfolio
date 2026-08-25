@@ -522,12 +522,12 @@ body > :where(:not(.page-grid)) {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1.2rem 2rem;
+    padding: 1.4rem 2.4rem;
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
-    border-radius: 1.1rem;
+    border-radius: 1.2rem;
     font-family: var(--font-heading);
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     font-weight: 600;
     color: var(--text-primary);
     transform: rotate(var(--card-rotate, 0deg));
@@ -548,7 +548,7 @@ body > :where(:not(.page-grid)) {
 }
 
 .tech-card i {
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: var(--text-secondary);
     transition: color 0.3s ease;
 }
