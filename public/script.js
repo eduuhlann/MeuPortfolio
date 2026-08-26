@@ -305,8 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 8. Hero V2 — morphing text (liquid-text effect)
     const morphText1 = document.getElementById('morphText1');
     const morphText2 = document.getElementById('morphText2');
+    let morphTexts = ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'];
     if (morphText1 && morphText2 && !reducedMotion) {
-        const morphTexts = ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'];
         const morphTime = 1.5;
         const cooldownTime = 0.5;
         let textIndex = 0;
@@ -609,6 +609,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         document.querySelectorAll('[data-split]').forEach(initSplitText);
+
+        // 11.5 Hero parallax cinemático com ScrollTrigger
+        if (!reducedMotion) {
+            const hero = document.querySelector('.hero-v2');
+            const heroTitle = document.querySelector('.hero-v2__title-wrap');
+            const heroStage = document.querySelector('.hero-v2__stage');
+            const heroBottom = document.querySelector('.hero-v2__bottom');
+            const heroGif = document.querySelector('.hero-v2__gif-wrap');
+
+            if (hero && heroTitle && heroStage) {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: hero,
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1.5,
+                        fastScrollEnd: true,
+                    }
+                });
+
+                tl.to(heroTitle, { y: -120, opacity: 0, ease: 'none' }, 0);
+                tl.to(heroStage, { y: -60, ease: 'none' }, 0);
+                tl.to(heroGif, { scale: 1.15, ease: 'none' }, 0);
+                if (heroBottom) {
+                    tl.to(heroBottom, { y: -40, opacity: 0, ease: 'none' }, 0);
+                }
+            }
+        }
     }
 
     // 12. Page loader (porta do componente Cup Loader do React Bits)

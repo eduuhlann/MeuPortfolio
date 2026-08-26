@@ -1,5 +1,25 @@
-export default async function handler(_req, res) {
+const rateMap = new Map();
+const RATE_LIMIT = 20;
+const RATE_WINDOW = 60_000;
+
+function isRateLimited(ip) {
+    const now = Date.now();
+    const entry = rateMap.get(ip);
+    if (!entry || now - entry.start > RATE_WINDOW) {
+        rateMap.set(ip, { start: now, count: 1 });
+        return false;
+    }
+    entry.count++;
+    return entry.count > RATE_LIMIT;
+}
+
+export default async function handler(req, res) {
     res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
+
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || 'unknown';
+    if (isRateLimited(ip)) {
+        return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    }
 
     const { LASTFM_API_KEY, LASTFM_USER } = process.env;
     if (!LASTFM_API_KEY || !LASTFM_USER) {
