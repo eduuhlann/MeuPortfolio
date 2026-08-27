@@ -516,7 +516,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 8. Hero V2 — morphing text (liquid-text effect)
     const morphText1 = document.getElementById('morphText1');
     const morphText2 = document.getElementById('morphText2');
-    let morphTexts = ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'];
     if (morphText1 && morphText2 && !reducedMotion) {
         const morphTime = 1.5;
         const cooldownTime = 0.5;
