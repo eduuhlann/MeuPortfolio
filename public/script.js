@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav.projects': 'Projetos',
             'nav.music': 'Música',
             'nav.contact': 'Contato',
-            'loading': 'Carregando...',
             'hero.ctaProjects': 'Ver projetos',
             'hero.ctaContact': 'Falar comigo',
             'hero.morphTexts': ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'],
@@ -128,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav.projects': 'Projects',
             'nav.music': 'Music',
             'nav.contact': 'Contact',
-            'loading': 'Loading...',
             'hero.ctaProjects': 'View projects',
             'hero.ctaContact': 'Get in touch',
             'hero.morphTexts': ['FRONTEND DEVELOPER', 'UI/UX DESIGNER', 'FREELANCER'],
@@ -846,25 +844,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     tl.to(heroBottom, { y: -40, opacity: 0, ease: 'none' }, 0);
                 }
             }
-        }
-    }
-
-    // 12. Page loader (porta do componente Cup Loader do React Bits)
-    const pageLoader = document.getElementById('pageLoader');
-    if (pageLoader) {
-        let loaderDone = false;
-        const hideLoader = () => {
-            if (loaderDone) return;
-            loaderDone = true;
-            pageLoader.classList.add('page-loader--done');
-            setTimeout(() => pageLoader.remove(), 600);
-        };
-
-        if (document.readyState === 'complete') {
-            hideLoader();
-        } else {
-            window.addEventListener('load', hideLoader);
-            setTimeout(hideLoader, 3000);
         }
     }
 
