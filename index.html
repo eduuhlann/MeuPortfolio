@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-lang="pt">
 
 <head>
     <meta charset="UTF-8">
@@ -17,6 +17,12 @@
             document.documentElement.setAttribute('data-theme', theme);
             var meta = document.querySelector('meta[name="theme-color"]');
             if (meta) meta.setAttribute('content', theme === 'light' ? '#f7f7f8' : '#050505');
+            var lang = null;
+            try { lang = localStorage.getItem('lang'); } catch (e) { }
+            if (lang) {
+                document.documentElement.setAttribute('data-lang', lang);
+                document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'pt-BR');
+            }
         })();
     </script>
     <meta property="og:title" content="Eduardo Lannes Marinato - Desenvolvedor FrontEnd">
@@ -58,7 +64,7 @@
                 <div class="smoke two"></div>
                 <div class="smoke three"></div>
             </div>
-            <div class="load">Carregando...</div>
+            <div class="load" data-i18n="loading">Carregando...</div>
         </div>
     </div>
 
@@ -71,15 +77,18 @@
         </a>
 
         <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
-            <a href="#home">Home</a>
-            <a href="#about">Sobre</a>
-            <a href="#work">Projetos</a>
-            <a href="#music">Música</a>
-            <a href="#contact">Contato</a>
+            <a href="#home" data-i18n="nav.home">Home</a>
+            <a href="#about" data-i18n="nav.about">Sobre</a>
+            <a href="#work" data-i18n="nav.projects">Projetos</a>
+            <a href="#music" data-i18n="nav.music">Música</a>
+            <a href="#contact" data-i18n="nav.contact">Contato</a>
         </nav>
         <div class="nav-backdrop"></div>
 
         <div class="header-actions">
+            <button class="icon-button lang-toggle" type="button" aria-label="Alternar idioma" aria-pressed="false">
+                <span class="lang-toggle__label" id="langLabel">EN</span>
+            </button>
             <button class="icon-button theme-toggle" type="button" aria-label="Alternar tema claro e escuro"
                 aria-pressed="true">
                 <i class="fa-solid fa-sun"></i>
@@ -117,15 +126,15 @@
                 <!-- Left tech cards -->
                 <div class="hero-v2__tech hero-v2__tech--left">
                     <div class="tech-card" data-tech="html" data-depth="0.03" style="--card-rotate: -6deg; --card-delay: 0s;">
-                        <i class="fa-brands fa-html5"></i>
+                        <img src="https://cdn-icons-png.flaticon.com/512/732/732212.png" alt="HTML5" class="tech-card__icon" width="32" height="32" loading="lazy">
                         <span>HTML</span>
                     </div>
                     <div class="tech-card" data-tech="css" data-depth="0.05" style="--card-rotate: 4deg; --card-delay: 0.1s;">
-                        <i class="fa-brands fa-css3-alt"></i>
+                        <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" alt="CSS3" class="tech-card__icon" width="32" height="32" loading="lazy">
                         <span>CSS</span>
                     </div>
                     <div class="tech-card" data-tech="js" data-depth="0.04" style="--card-rotate: -3deg; --card-delay: 0.2s;">
-                        <i class="fa-brands fa-js"></i>
+                        <img src="https://img.icons8.com/?size=100&id=108784&format=png&color=000000" alt="JavaScript" class="tech-card__icon" width="32" height="32" loading="lazy">
                         <span>JavaScript</span>
                     </div>
                 </div>
@@ -140,23 +149,23 @@
                 <!-- Right tech cards -->
                 <div class="hero-v2__tech hero-v2__tech--right">
                     <div class="tech-card" data-tech="ts" data-depth="0.04" style="--card-rotate: 5deg; --card-delay: 0.15s;">
-                        <i class="fa-solid fa-code"></i>
+                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968381.png" alt="TypeScript" class="tech-card__icon" width="32" height="32" loading="lazy">
                         <span>TypeScript</span>
                     </div>
                     <div class="tech-card" data-tech="react" data-depth="0.05" style="--card-rotate: -4deg; --card-delay: 0.05s;">
-                        <i class="fa-brands fa-react"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="32" height="32" class="tech-card__icon"><g fill="#61DAFB"><circle cx="64" cy="64" r="11.4"/><path d="M107.3 45.2c-2.2-.8-4.5-1.6-6.9-2.3.6-2.4 1.1-4.8 1.5-7.1 2.1-13.2-.2-22.5-6.6-26.1-1.9-1.1-4-1.6-6.4-1.6-7 0-15.9 5.2-24.9 13.9-9-8.7-17.9-13.9-24.9-13.9-2.4 0-4.5.5-6.4 1.6-6.4 3.7-8.7 13-6.6 26.1.4 2.3.9 4.7 1.5 7.1-2.4.7-4.7 1.4-6.9 2.3C8.2 50 1.4 56.6 1.4 64s6.9 14 19.3 18.8c2.2.8 4.5 1.6 6.9 2.3-.6 2.4-1.1 4.8-1.5 7.1-2.1 13.2.2 22.5 6.6 26.1 1.9 1.1 4 1.6 6.4 1.6 7.1 0 16-5.2 24.9-13.9 9 8.7 17.9 13.9 24.9 13.9 2.4 0 4.5-.5 6.4-1.6 6.4-3.7 8.7-13 6.6-26.1-.4-2.3-.9-4.7-1.5-7.1 2.4-.7 4.7-1.4 6.9-2.3 12.5-4.8 19.3-11.4 19.3-18.8s-6.8-14-19.3-18.8zM92.5 14.7c4.1 2.4 5.5 9.8 3.8 20.3-.3 2.1-.8 4.3-1.4 6.6-5.2-1.2-10.7-2-16.5-2.5-3.4-4.8-6.9-9.1-10.4-13 7.4-7.3 14.9-12.3 21-12.3 1.3 0 2.5.3 3.5.9zM81.3 74c-1.8 3.2-3.9 6.4-6.1 9.6-3.7.3-7.4.4-11.2.4-3.9 0-7.6-.1-11.2-.4-2.2-3.2-4.2-6.4-6-9.6-1.9-3.3-3.7-6.7-5.3-10 1.6-3.3 3.4-6.7 5.3-10 1.8-3.2 3.9-6.4 6.1-9.6 3.7-.3 7.4-.4 11.2-.4 3.9 0 7.6.1 11.2.4 2.2 3.2 4.2 6.4 6 9.6 1.9 3.3 3.7 6.7 5.3 10-1.7 3.3-3.4 6.6-5.3 10zm8.3-3.3c1.5 3.5 2.7 6.9 3.8 10.3-3.4.8-7 1.4-10.8 1.9 1.2-1.9 2.5-3.9 3.6-6 1.2-2.1 2.3-4.2 3.4-6.2zM64 97.8c-2.4-2.6-4.7-5.4-6.9-8.3 2.3.1 4.6.2 6.9.2 2.3 0 4.6-.1 6.9-.2-2.2 2.9-4.5 5.7-6.9 8.3zm-18.6-15c-3.8-.5-7.4-1.1-10.8-1.9 1.1-3.3 2.3-6.8 3.8-10.3 1.1 2 2.2 4.1 3.4 6.1 1.2 2.2 2.4 4.1 3.6 6.1zm-7-25.5c-1.5-3.5-2.7-6.9-3.8-10.3 3.4-.8 7-1.4 10.8-1.9-1.2 1.9-2.5 3.9-3.6 6-1.2 2.1-2.3 4.2-3.4 6.2zM64 30.2c2.4 2.6 4.7 5.4 6.9 8.3-2.3-.1-4.6-.2-6.9-.2-2.3 0-4.6.1-6.9.2 2.2-2.9 4.5-5.7 6.9-8.3zm22.2 21l-3.6-6c3.8.5 7.4 1.1 10.8 1.9-1.1 3.3-2.3 6.8-3.8 10.3-1.1-2.1-2.2-4.2-3.4-6.2zM31.7 35c-1.7-10.5-.3-17.9 3.8-20.3 1-.6 2.2-.9 3.5-.9 6 0 13.5 4.9 21 12.3-3.5 3.8-7 8.2-10.4 13-5.8.5-11.3 1.4-16.5 2.5-.6-2.3-1-4.5-1.4-6.6zM7 64c0-4.7 5.7-9.7 15.7-13.4 2-.8 4.2-1.5 6.4-2.1 1.6 5 3.6 10.3 6 15.6-2.4 5.3-4.5 10.5-6 15.5C15.3 75.6 7 69.6 7 64zm28.5 49.3c-4.1-2.4-5.5-9.8-3.8-20.3.3-2.1.8-4.3 1.4-6.6 5.2 1.2 10.7 2 16.5 2.5 3.4 4.8 6.9 9.1 10.4 13-7.4 7.3-14.9 12.3-21 12.3-1.3 0-2.5-.3-3.5-.9zM96.3 93c1.7 10.5.3 17.9-3.8 20.3-1 .6-2.2.9-3.5.9-6 0-13.5-4.9-21-12.3 3.5-3.8 7-8.2 10.4-13 5.8-.5 11.3-1.4 16.5-2.5.6 2.3 1 4.5 1.4 6.6zm9-15.6c-2 .8-4.2 1.5-6.4 2.1-1.6-5-3.6-10.3-6-15.6 2.4-5.3 4.5-10.5 6-15.5 13.8 4 22.1 10 22.1 15.6 0 4.7-5.8 9.7-15.7 13.4z"/></g></svg>
                         <span>React</span>
                     </div>
                     <div class="tech-card" data-tech="python" data-depth="0.06" style="--card-rotate: -5deg; --card-delay: 0.12s;">
-                        <i class="fa-brands fa-python"></i>
+                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968350.png" alt="Python" class="tech-card__icon" width="32" height="32" loading="lazy">
                         <span>Python</span>
                     </div>
                 </div>
             </div>
 
             <div class="hero-v2__bottom">
-                <a href="#work" class="hero-v2__cta hero-v2__cta--primary">Ver projetos</a>
-                <a href="#contact" class="hero-v2__cta hero-v2__cta--secondary">Falar comigo</a>
+                <a href="#work" class="hero-v2__cta hero-v2__cta--primary" data-i18n="hero.ctaProjects">Ver projetos</a>
+                <a href="#contact" class="hero-v2__cta hero-v2__cta--secondary" data-i18n="hero.ctaContact">Falar comigo</a>
             </div>
         </section>
 
@@ -215,7 +224,7 @@
         <!-- SOBRE SECTION -->
         <section id="about" class="band section-shell">
             <div class="section-heading">
-                <span class="tag">Sobre Mim</span>
+                <span class="tag" data-i18n="section.about">Sobre Mim</span>
             </div>
 
             <div class="about-grid">
@@ -228,16 +237,16 @@
                 </div>
                 <div class="scroll-reveal scroll-reveal--right">
                     <div class="content-stack">
-                        <h2 data-split="chars" data-text-align="left" data-delay="25">Desenvolvedor em formação pela UTFPR, apaixonado por tecnologia e design.</h2>
+                        <h2 data-split="chars" data-text-align="left" data-delay="25" data-i18n="about.title">Desenvolvedor em formação pela UTFPR, apaixonado por tecnologia e design.</h2>
                         <div class="about-list">
                             <span>20 Anos</span>
                             <span>Campo Mourão, PR</span>
                             <span>UTFPR</span>
                         </div>
-                        <p>Tenho 20 anos e sou estudante de Ciência da Computação na UTFPR de Campo Mourão. Estou em
+                        <p data-i18n="about.p1">Tenho 20 anos e sou estudante de Ciência da Computação na UTFPR de Campo Mourão. Estou em
                             constante evolução como desenvolvedor, com foco em criar interfaces limpas, modernas e
                             funcionais.</p>
-                        <p>Gosto de transformar ideias em produtos digitais bem acabados. Trabalho com tecnologias web e
+                        <p data-i18n="about.p2">Gosto de transformar ideias em produtos digitais bem acabados. Trabalho com tecnologias web e
                             busco sempre entregar uma experiência visual de qualidade, com atenção aos detalhes e
                             usabilidade.</p>
                     </div>
@@ -248,8 +257,8 @@
         <!-- PROJETOS SECTION -->
         <section id="work" class="section-shell">
             <div class="section-heading">
-                <span class="tag">Projetos</span>
-                <p>Alguns dos projetos que já construí.</p>
+                <span class="tag" data-i18n="section.projects">Projetos</span>
+                <p data-i18n="projects.subtitle">Alguns dos projetos que já construí.</p>
             </div>
 
             <div class="projects-grid">
@@ -259,13 +268,13 @@
                     </div>
                     <div class="project-content">
                         <h3>OneFlow</h3>
-                        <p>Plataforma web moderna com foco em experiência do usuário, performance e design limpo.
+                        <p data-i18n="projects.oneflow.desc">Plataforma web moderna com foco em experiência do usuário, performance e design limpo.
                         </p>
                         <div class="project-actions">
-                            <button type="button" class="btn-details" data-project="oneflow">
+                            <button type="button" class="btn-details" data-project="oneflow" data-i18n="projects.details">
                                 Ver detalhes <i class="fa-solid fa-plus"></i>
                             </button>
-                            <a href="https://oneflowweb.vercel.app" target="_blank" rel="noopener noreferrer" class="project-link">
+                            <a href="https://oneflowweb.vercel.app" target="_blank" rel="noopener noreferrer" class="project-link" data-i18n-html="projects.visit">
                                 Visitar site <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
@@ -278,13 +287,13 @@
                     </div>
                     <div class="project-content">
                         <h3>MetanoiaApp</h3>
-                        <p>Site feito para a juventude da Primeira Igreja Batista de Campo Mourão, PR.
+                        <p data-i18n="projects.metanoia.desc">Site feito para a juventude da Primeira Igreja Batista de Campo Mourão, PR.
                         </p>
                         <div class="project-actions">
-                            <button type="button" class="btn-details" data-project="metanoia">
+                            <button type="button" class="btn-details" data-project="metanoia" data-i18n="projects.details">
                                 Ver detalhes <i class="fa-solid fa-plus"></i>
                             </button>
-                            <a href="https://metanoiaapp.vercel.app" target="_blank" rel="noopener noreferrer" class="project-link">
+                            <a href="https://metanoiaapp.vercel.app" target="_blank" rel="noopener noreferrer" class="project-link" data-i18n-html="projects.visit">
                                 Visitar site <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
@@ -296,8 +305,8 @@
         <!-- MÚSICA SECTION -->
         <section id="music" class="section-shell">
             <div class="section-heading">
-                <span class="tag">Música</span>
-                <p>O que estou escutando enquanto codifico.</p>
+                <span class="tag" data-i18n="section.music">Música</span>
+                <p data-i18n="music.subtitle">O que estou escutando enquanto codifico.</p>
             </div>
 
             <div class="now-playing scroll-reveal scroll-reveal--up" id="nowPlaying" hidden>
@@ -306,7 +315,7 @@
                     <span class="np-eq" id="npEq" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
                 </div>
                 <div class="np-info">
-                    <span class="np-status"><span class="np-dot"></span><span id="npStatus">Ouvindo agora</span></span>
+                    <span class="np-status"><span class="np-dot"></span><span id="npStatus" data-i18n="music.listening">Ouvindo agora</span></span>
                     <a id="npTrack" class="np-track" href="#" target="_blank" rel="noopener noreferrer">—</a>
                     <span id="npArtist" class="np-artist">—</span>
                     <div class="np-progress" aria-hidden="true"><div class="np-bar" id="npBar"></div></div>
@@ -317,41 +326,41 @@
         <!-- CONTATO SECTION -->
         <section id="contact" class="band section-shell contact-section">
             <div class="section-heading">
-                <span class="tag">Contato</span>
+                <span class="tag" data-i18n="section.contact">Contato</span>
             </div>
 
             <div class="contact-layout">
                 <div class="contact-head scroll-reveal scroll-reveal--left">
-                    <p class="contact-kicker">Vamos tirar sua ideia do papel?</p>
-                    <h2 data-split="chars" data-text-align="left" data-delay="25">Design moderno e código de qualidade para a sua presença digital.</h2>
-                    <p>Entre em contato para criarmos uma experiência online única para você ou seu negócio.</p>
+                    <p class="contact-kicker" data-i18n="contact.kicker">Vamos tirar sua ideia do papel?</p>
+                    <h2 data-split="chars" data-text-align="left" data-delay="25" data-i18n="contact.title">Design moderno e código de qualidade para a sua presença digital.</h2>
+                    <p data-i18n="contact.p">Entre em contato para criarmos uma experiência online única para você ou seu negócio.</p>
                 </div>
 
                 <div class="contact-links-grid">
                     <a href="mailto:eduardolannesmarinato@gmail.com" class="c-link scroll-reveal scroll-reveal--up">
                         <div class="c-link-icon"><i class="fa-solid fa-envelope"></i></div>
-                        <span class="c-link-label">// e-mail direto</span>
+                        <span class="c-link-label" data-i18n="contact.email">// e-mail direto</span>
                         <i class="fa-solid fa-arrow-right c-link-arrow"></i>
                     </a>
 
                     <a href="https://github.com/eduuhlann" target="_blank" rel="noopener noreferrer"
                         class="c-link scroll-reveal scroll-reveal--up">
                         <div class="c-link-icon"><i class="fa-brands fa-github"></i></div>
-                        <span class="c-link-label">// código aberto</span>
+                        <span class="c-link-label" data-i18n="contact.github">// código aberto</span>
                         <i class="fa-solid fa-arrow-right c-link-arrow"></i>
                     </a>
 
                     <a href="https://instagram.com/eduuuhlann" target="_blank" rel="noopener noreferrer"
                         class="c-link scroll-reveal scroll-reveal--up">
                         <div class="c-link-icon"><i class="fa-brands fa-instagram"></i></div>
-                        <span class="c-link-label">// rede social</span>
+                        <span class="c-link-label" data-i18n="contact.social">// rede social</span>
                         <i class="fa-solid fa-arrow-right c-link-arrow"></i>
                     </a>
 
                     <a href="https://wa.me/5544920008171" target="_blank" rel="noopener noreferrer"
                         class="c-link scroll-reveal scroll-reveal--up">
                         <div class="c-link-icon"><i class="fa-brands fa-whatsapp"></i></div>
-                        <span class="c-link-label">// conversa rápida</span>
+                        <span class="c-link-label" data-i18n="contact.whatsapp">// conversa rápida</span>
                         <i class="fa-solid fa-arrow-right c-link-arrow"></i>
                     </a>
                 </div>
@@ -364,20 +373,20 @@
         <span id="breadcrumbText">Home</span>
     </div>
 
-    <button class="back-to-top" id="backToTop" aria-label="Voltar ao topo">
+    <button class="back-to-top" id="backToTop" aria-label="Voltar ao topo" data-i18n-aria="backToTop">
         <i class="fa-solid fa-arrow-up"></i>
     </button>
 
     <footer class="site-footer">
-        <p>© 2026 Eduardo Lannes Marinato. Desenvolvido com muito <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> e código.</p>
-        <p class="footer-updated">Última atualização: ago/2026</p>
+        <p data-i18n-html="footer.copyright">© 2026 Eduardo Lannes Marinato. Desenvolvido com muito <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> e código.</p>
+        <p class="footer-updated" data-i18n="footer.updated">Última atualização: ago/2026</p>
     </footer>
 
     <!-- MODAL DE DETALHES DO PROJETO -->
     <div class="project-modal" id="projectModal" aria-hidden="true">
         <div class="modal-backdrop" data-close-modal></div>
         <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-            <button class="modal-close" type="button" data-close-modal aria-label="Fechar detalhes do projeto">
+            <button class="modal-close" type="button" data-close-modal aria-label="Fechar detalhes do projeto" data-i18n-aria="modal.close">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <div class="modal-preview">
@@ -388,14 +397,14 @@
                 <h3 id="modalTitle"></h3>
                 <p id="modalDescription"></p>
 
-                <h4>Tecnologias</h4>
+                <h4 data-i18n="modal.technologies">Tecnologias</h4>
                 <div class="stack-chips" id="modalStack"></div>
 
-                <h4>Destaques</h4>
+                <h4 data-i18n="modal.highlights">Destaques</h4>
                 <ul class="modal-highlights" id="modalHighlights"></ul>
 
                 <div class="modal-links">
-                    <a id="modalLive" href="#" target="_blank" rel="noopener noreferrer" class="btn-details">
+                    <a id="modalLive" href="#" target="_blank" rel="noopener noreferrer" class="btn-details" data-i18n-html="projects.visit">
                         Visitar site <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>

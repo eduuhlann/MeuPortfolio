@@ -66,6 +66,217 @@ document.addEventListener('DOMContentLoaded', () => {
         syncThemeUI();
     }
 
+    let morphTexts = ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'];
+
+    // 1.6 Language toggle (PT/EN)
+    const TRANSLATIONS = {
+        pt: {
+            'nav.home': 'Home',
+            'nav.about': 'Sobre',
+            'nav.projects': 'Projetos',
+            'nav.music': 'Música',
+            'nav.contact': 'Contato',
+            'loading': 'Carregando...',
+            'hero.ctaProjects': 'Ver projetos',
+            'hero.ctaContact': 'Falar comigo',
+            'hero.morphTexts': ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'],
+            'section.about': 'Sobre Mim',
+            'section.projects': 'Projetos',
+            'section.music': 'Música',
+            'section.contact': 'Contato',
+            'about.title': 'Desenvolvedor em formação pela UTFPR, apaixonado por tecnologia e design.',
+            'about.p1': 'Tenho 20 anos e sou estudante de Ciência da Computação na UTFPR de Campo Mourão. Estou em constante evolução como desenvolvedor, com foco em criar interfaces limpas, modernas e funcionais.',
+            'about.p2': 'Gosto de transformar ideias em produtos digitais bem acabados. Trabalho com tecnologias web e busco sempre entregar uma experiência visual de qualidade, com atenção aos detalhes e usabilidade.',
+            'projects.subtitle': 'Alguns dos projetos que já construí.',
+            'projects.details': 'Ver detalhes <i class="fa-solid fa-plus"></i>',
+            'projects.visit': 'Visitar site <i class="fa-solid fa-arrow-right"></i>',
+            'projects.oneflow.tag': 'Projeto Web',
+            'projects.oneflow.desc': 'Plataforma web moderna com foco em experiência do usuário, performance e design limpo.',
+            'projects.oneflow.title': 'OneFlow',
+            'projects.oneflow.fullDesc': 'Plataforma web moderna com foco em experiência do usuário, performance e design limpo. Construída para demonstrar boas práticas de desenvolvimento frontend, da interface à otimização.',
+            'projects.oneflow.h1': 'Interface responsiva e acessível',
+            'projects.oneflow.h2': 'Design limpo e moderno',
+            'projects.oneflow.h3': 'Foco em performance de carregamento',
+            'projects.metanoia.tag': 'Site Institucional',
+            'projects.metanoia.desc': 'Site feito para a juventude da Primeira Igreja Batista de Campo Mourão, PR.',
+            'projects.metanoia.title': 'MetanoiaApp',
+            'projects.metanoia.fullDesc': 'Presença digital da juventude da Primeira Igreja Batista de Campo Mourão, PR. Pensada para conectar os jovens, divulgar encontros e fortalecer a comunidade.',
+            'projects.metanoia.h1': 'Divulgação clara dos encontros',
+            'projects.metanoia.h2': 'Visual acolhedor e jovem',
+            'projects.metanoia.h3': 'Navegação simples e direta',
+            'music.subtitle': 'O que estou escutando enquanto codifico.',
+            'music.listening': 'Ouvindo agora',
+            'music.paused': 'Pausado',
+            'contact.kicker': 'Vamos tirar sua ideia do papel?',
+            'contact.title': 'Design moderno e código de qualidade para a sua presença digital.',
+            'contact.p': 'Entre em contato para criarmos uma experiência online única para você ou seu negócio.',
+            'contact.email': '// e-mail direto',
+            'contact.github': '// código aberto',
+            'contact.social': '// rede social',
+            'contact.whatsapp': '// conversa rápida',
+            'backToTop': 'Voltar ao topo',
+            'modal.close': 'Fechar detalhes do projeto',
+            'modal.technologies': 'Tecnologias',
+            'modal.highlights': 'Destaques',
+            'footer.copyright': '© 2026 Eduardo Lannes Marinato. Desenvolvido com muito <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> e código.',
+            'footer.updated': 'Última atualização: ago/2026',
+            'breadcrumb': { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato' }
+        },
+        en: {
+            'nav.home': 'Home',
+            'nav.about': 'About',
+            'nav.projects': 'Projects',
+            'nav.music': 'Music',
+            'nav.contact': 'Contact',
+            'loading': 'Loading...',
+            'hero.ctaProjects': 'View projects',
+            'hero.ctaContact': 'Get in touch',
+            'hero.morphTexts': ['FRONTEND DEVELOPER', 'UI/UX DESIGNER', 'FREELANCER'],
+            'section.about': 'About Me',
+            'section.projects': 'Projects',
+            'section.music': 'Music',
+            'section.contact': 'Contact',
+            'about.title': 'Computer Science student at UTFPR, passionate about technology and design.',
+            'about.p1': "I'm 20 years old and a Computer Science student at UTFPR in Campo Mourão. I'm constantly evolving as a developer, focused on creating clean, modern, and functional interfaces.",
+            'about.p2': 'I enjoy turning ideas into well-crafted digital products. I work with web technologies and always strive to deliver a quality visual experience, with attention to detail and usability.',
+            'projects.subtitle': 'Some of the projects I have built.',
+            'projects.details': 'View details <i class="fa-solid fa-plus"></i>',
+            'projects.visit': 'Visit site <i class="fa-solid fa-arrow-right"></i>',
+            'projects.oneflow.tag': 'Web Project',
+            'projects.oneflow.desc': 'Modern web platform focused on user experience, performance, and clean design.',
+            'projects.oneflow.title': 'OneFlow',
+            'projects.oneflow.fullDesc': 'Modern web platform focused on user experience, performance, and clean design. Built to demonstrate frontend development best practices, from interface to optimization.',
+            'projects.oneflow.h1': 'Responsive and accessible interface',
+            'projects.oneflow.h2': 'Clean and modern design',
+            'projects.oneflow.h3': 'Focus on loading performance',
+            'projects.metanoia.tag': 'Institutional Site',
+            'projects.metanoia.desc': 'Website built for the youth ministry of Primeira Igreja Batista de Campo Mourão, PR.',
+            'projects.metanoia.title': 'MetanoiaApp',
+            'projects.metanoia.fullDesc': 'Digital presence for the youth ministry of Primeira Igreja Batista de Campo Mourão, PR. Designed to connect young people, promote events, and strengthen the community.',
+            'projects.metanoia.h1': 'Clear event promotion',
+            'projects.metanoia.h2': 'Welcoming and youthful look',
+            'projects.metanoia.h3': 'Simple and direct navigation',
+            'music.subtitle': 'What I am listening to while coding.',
+            'music.listening': 'Now playing',
+            'music.paused': 'Paused',
+            'contact.kicker': 'Ready to bring your idea to life?',
+            'contact.title': 'Modern design and quality code for your digital presence.',
+            'contact.p': 'Get in touch to create a unique online experience for you or your business.',
+            'contact.email': '// direct email',
+            'contact.github': '// open source',
+            'contact.social': '// social media',
+            'contact.whatsapp': '// quick chat',
+            'backToTop': 'Back to top',
+            'modal.close': 'Close project details',
+            'modal.technologies': 'Technologies',
+            'modal.highlights': 'Highlights',
+            'footer.copyright': '© 2026 Eduardo Lannes Marinato. Built with lots of <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> and code.',
+            'footer.updated': 'Last updated: Aug/2026',
+            'breadcrumb': { home: 'Home', about: 'About me', work: 'Projects', music: 'Music', contact: 'Contact' }
+        }
+    };
+
+    const langToggle = document.querySelector('.lang-toggle');
+    const langLabel = document.getElementById('langLabel');
+
+    function getCurrentLang() {
+        return document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'pt';
+    }
+
+    function applyLang(lang, persist) {
+        document.documentElement.setAttribute('data-lang', lang);
+        document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'pt-BR');
+        if (persist) {
+            try { localStorage.setItem('lang', lang); } catch (e) { }
+        }
+        if (langLabel) langLabel.textContent = lang === 'pt' ? 'EN' : 'PT';
+        translatePage(lang);
+    }
+
+    function translatePage(lang) {
+        const t = TRANSLATIONS[lang];
+        if (!t) return;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (t[key] !== undefined) {
+                el.textContent = t[key];
+            }
+        });
+
+        document.querySelectorAll('[data-i18n-html]').forEach(el => {
+            const key = el.getAttribute('data-i18n-html');
+            if (t[key] !== undefined) {
+                el.innerHTML = t[key];
+            }
+        });
+
+        document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+            const key = el.getAttribute('data-i18n-aria');
+            if (t[key] !== undefined) {
+                el.setAttribute('aria-label', t[key]);
+            }
+        });
+
+        const bc = t.breadcrumb;
+        if (bc) {
+            breadcrumbLabels.home = bc.home;
+            breadcrumbLabels.about = bc.about;
+            breadcrumbLabels.work = bc.work;
+            breadcrumbLabels.music = bc.music;
+            breadcrumbLabels.contact = bc.contact;
+        }
+
+        if (typeof morphTexts !== 'undefined') {
+            const newMorphs = t['hero.morphTexts'];
+            if (newMorphs) {
+                morphTexts.length = 0;
+                newMorphs.forEach(s => morphTexts.push(s));
+            }
+        }
+
+        translateProjectDetails(lang);
+        updateNowPlayingText(lang);
+    }
+
+    function translateProjectDetails(lang) {
+        const t = TRANSLATIONS[lang];
+        if (!t) return;
+
+        PROJECT_DETAILS.oneflow.tag = t['projects.oneflow.tag'];
+        PROJECT_DETAILS.oneflow.description = t['projects.oneflow.fullDesc'];
+        PROJECT_DETAILS.oneflow.title = t['projects.oneflow.title'];
+        PROJECT_DETAILS.oneflow.highlights = [t['projects.oneflow.h1'], t['projects.oneflow.h2'], t['projects.oneflow.h3']];
+
+        PROJECT_DETAILS.metanoia.tag = t['projects.metanoia.tag'];
+        PROJECT_DETAILS.metanoia.description = t['projects.metanoia.fullDesc'];
+        PROJECT_DETAILS.metanoia.title = t['projects.metanoia.title'];
+        PROJECT_DETAILS.metanoia.highlights = [t['projects.metanoia.h1'], t['projects.metanoia.h2'], t['projects.metanoia.h3']];
+    }
+
+    let currentNowPlayingLang = 'pt';
+    function updateNowPlayingText(lang) {
+        currentNowPlayingLang = lang;
+        const el = document.getElementById('npStatus');
+        if (el && el.getAttribute('data-i18n')) {
+            const key = el.getAttribute('data-i18n');
+            const t = TRANSLATIONS[lang];
+            if (t && t[key]) el.textContent = t[key];
+        }
+    }
+
+    if (langToggle) {
+        langToggle.addEventListener('click', () => {
+            const next = getCurrentLang() === 'pt' ? 'en' : 'pt';
+            const apply = () => applyLang(next, true);
+            if (document.startViewTransition && !reducedMotion) {
+                document.startViewTransition(apply);
+            } else {
+                apply();
+            }
+        });
+    }
+
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
             const next = getCurrentTheme() === 'light' ? 'dark' : 'light';
@@ -121,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navAnchors = document.querySelectorAll('.main-nav a');
     const sectionBreadcrumb = document.getElementById('sectionBreadcrumb');
     const breadcrumbText = document.getElementById('breadcrumbText');
-    const breadcrumbLabels = { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato' };
+    let breadcrumbLabels = { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato' };
     let lastSectionId = '';
 
     function updateSectionUI(id) {
@@ -286,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 nowPlayingCard.classList.toggle('paused', !data.playing);
                 npCover.src = data.cover || '';
                 npCover.alt = data.album ? 'Capa do álbum ' + data.album : 'Capa do álbum';
-                npStatus.textContent = data.playing ? 'Ouvindo agora' : 'Pausado';
+                npStatus.textContent = data.playing ? TRANSLATIONS[currentNowPlayingLang]['music.listening'] : TRANSLATIONS[currentNowPlayingLang]['music.paused'];
                 npTrack.textContent = data.track;
                 npTrack.href = data.url || '#';
                 npArtist.textContent = Array.isArray(data.artists) ? data.artists.join(', ') : '';
@@ -657,4 +868,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(hideLoader, 3000);
         }
     }
+
+    applyLang(getCurrentLang(), false);
 });

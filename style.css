@@ -311,6 +311,20 @@ body > :where(:not(.page-grid)) {
     cursor: pointer;
 }
 
+.lang-toggle {
+    background: transparent;
+    cursor: pointer;
+}
+
+.lang-toggle__label {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    user-select: none;
+}
+
 .header-actions .menu-button {
     display: none;
     background: transparent;
@@ -555,6 +569,18 @@ body > :where(:not(.page-grid)) {
     transition: color 0.3s ease;
 }
 
+.tech-card svg {
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+.tech-card__icon {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+    transition: filter 0.3s ease;
+}
+
 .tech-card span {
     line-height: 1;
 }
@@ -583,6 +609,7 @@ body > :where(:not(.page-grid)) {
     background: rgba(49, 120, 198, 0.08);
 }
 .tech-card[data-tech="ts"]:hover i { color: #3178C6; }
+.tech-card[data-tech="ts"]:hover svg { color: #3178C6; }
 
 .tech-card[data-tech="react"]:hover {
     border-color: #61DAFB;
