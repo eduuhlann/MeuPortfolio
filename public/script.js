@@ -878,5 +878,24 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCirc();
     }
 
+    // 13. App loader (efeito "Loading") — esconde ao carregar
+    const appLoader = document.getElementById('appLoader');
+    if (appLoader) {
+        let appLoaderDone = false;
+        const hideAppLoader = () => {
+            if (appLoaderDone) return;
+            appLoaderDone = true;
+            appLoader.classList.add('ldr--done');
+            setTimeout(() => appLoader.remove(), 600);
+        };
+
+        if (document.readyState === 'complete') {
+            hideAppLoader();
+        } else {
+            window.addEventListener('load', hideAppLoader);
+            setTimeout(hideAppLoader, 3000);
+        }
+    }
+
     applyLang(getCurrentLang(), false);
 });
