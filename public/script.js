@@ -847,5 +847,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 12.5 Sobre mim — carrossel circular de fotos
+    const aboutCirc = document.getElementById('aboutCirc');
+    if (aboutCirc) {
+        const imgs = aboutCirc.querySelectorAll('.about-circ__img');
+        const prevBtn = aboutCirc.querySelector('[data-circ-prev]');
+        const nextBtn = aboutCirc.querySelector('[data-circ-next]');
+        const count = imgs.length;
+        let circIndex = 0;
+
+        function renderCirc() {
+            imgs.forEach((img, i) => {
+                img.classList.remove('is-active', 'is-left', 'is-right');
+                const offset = (i - circIndex + count) % count;
+                if (offset === 0) img.classList.add('is-active');
+                else if (offset === 1) img.classList.add('is-right');
+                else if (offset === count - 1) img.classList.add('is-left');
+            });
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', () => {
+            circIndex = (circIndex - 1 + count) % count;
+            renderCirc();
+        });
+        if (nextBtn) nextBtn.addEventListener('click', () => {
+            circIndex = (circIndex + 1) % count;
+            renderCirc();
+        });
+
+        renderCirc();
+    }
+
     applyLang(getCurrentLang(), false);
 });
