@@ -55,6 +55,9 @@
 </head>
 
 <body>
+    <div class="page-loader" id="pageLoader" aria-hidden="true">
+        <div class="loader"></div>
+    </div>
     <canvas class="page-grid" id="heroGrid"></canvas>
     <div class="scroll-progress" id="scrollProgress"></div>
     <header class="site-header">
@@ -418,6 +421,21 @@
         integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr"
         crossorigin="anonymous"></script>
     <script src="script.js"></script>
+    <script>
+        (function () {
+            var ldr = document.getElementById('pageLoader');
+            if (!ldr) return;
+            var hidden = false;
+            function hide() {
+                if (hidden) return;
+                hidden = true;
+                ldr.classList.add('pl--done');
+                setTimeout(function () { if (ldr.parentNode) ldr.parentNode.removeChild(ldr); }, 600);
+            }
+            window.addEventListener('load', hide);
+            setTimeout(hide, 4000);
+        })();
+    </script>
 </body>
 
 </html>
