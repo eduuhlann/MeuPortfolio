@@ -1,12 +1,32 @@
 import CyclingWarpText from "@/components/ui/CyclingWarpText";
 import AnimatedCard from "@/components/ui/AnimatedCard";
 import ClickSpark from "@/components/ui/ClickSpark";
+import PillNav from "@/components/ui/PillNav";
 import ParallaxDemo from "@/demos/default";
 import { SplineSceneBasic } from "@/demos/spline-demo";
+import favicon from "/favicon.ico";
 
 function App() {
   return (
-    <main className="w-full bg-background">
+    <main className="w-full scroll-smooth bg-background">
+      <PillNav
+        logo={favicon}
+        logoAlt="Logo"
+        items={[
+          { label: "Início", href: "#inicio" },
+          { label: "Sobre", href: "#sobre" },
+          { label: "Serviços", href: "#servicos" },
+          { label: "Contato", href: "#contato" },
+        ]}
+        activeHref="#inicio"
+        className="fixed left-1/2 top-6 z-50 -translate-x-1/2"
+        ease="power2.out"
+        baseColor="#000000"
+        pillColor="#ffffff"
+        hoveredPillTextColor="#000000"
+        pillTextColor="#ffffff"
+        theme="dark"
+      />
       <ClickSpark
         sparkColor="#fff"
         sparkSize={10}
@@ -14,16 +34,18 @@ function App() {
         sparkCount={8}
         duration={400}
       >
-        <ParallaxDemo />
+        <section id="inicio" className="scroll-mt-24">
+          <ParallaxDemo />
+        </section>
         <AnimatedCard direction="up" delay={0}>
-          <section className="flex justify-center p-6 md:p-10">
+          <section id="servicos" className="flex scroll-mt-24 justify-center p-6 md:p-10">
             <div className="w-full max-w-5xl">
               <SplineSceneBasic />
             </div>
           </section>
         </AnimatedCard>
         <AnimatedCard direction="up" delay={0.15}>
-          <section className="flex justify-center p-6 md:p-10" aria-label="FrontEnd">
+          <section id="sobre" className="flex scroll-mt-24 justify-center p-6 md:p-10" aria-label="FrontEnd">
             <CyclingWarpText
               texts={['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER']}
               interval={2500}
@@ -38,6 +60,13 @@ function App() {
               refraction={0.018}
               ripple
             />
+          </section>
+        </AnimatedCard>
+        <AnimatedCard direction="up" delay={0.15}>
+          <section id="contato" className="flex scroll-mt-24 justify-center p-6 md:p-10" aria-label="Contato">
+            <p className="text-center text-lg text-muted-foreground">
+              Entre em contato para projetos freelancer.
+            </p>
           </section>
         </AnimatedCard>
       </ClickSpark>

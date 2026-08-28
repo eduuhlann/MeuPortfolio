@@ -267,35 +267,56 @@ body > :where(:not(.page-grid)) {
     gap: 2.5rem;
 }
 
-.main-nav a {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    transition: var(--transition-fast);
-    position: relative;
-}
+@media (min-width: 769px) {
+    .main-nav.pill-nav {
+        --pill-base: #0a0a0a;
+        --pill-highlight: #2a2a2a;
+        --pill-text: var(--text-secondary);
+        --pill-text-active: #ffffff;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.35rem;
+        border-radius: 999px;
+        background: var(--pill-base);
+        border: 1px solid var(--accent-glow);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
 
-.main-nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 0;
-    height: 2px;
-    background: var(--text-primary);
-    transition: width var(--transition-fast);
-}
+    .main-nav.pill-nav .pill-nav__bg {
+        position: absolute;
+        top: 0.35rem;
+        left: 0;
+        height: calc(100% - 0.7rem);
+        width: 0;
+        border-radius: 999px;
+        background: var(--pill-highlight);
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: transform, width;
+    }
 
-.main-nav a:hover {
-    color: var(--text-primary);
-}
+    .main-nav.pill-nav a {
+        position: relative;
+        z-index: 1;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 0.55rem 1.25rem;
+        margin: 0;
+        border-radius: 999px;
+        color: var(--pill-text);
+        white-space: nowrap;
+        transition: color 0.25s ease;
+    }
 
-.main-nav a.active {
-    color: var(--text-primary);
-}
+    .main-nav.pill-nav a::after {
+        display: none;
+    }
 
-.main-nav a.active::after {
-    width: 100%;
+    .main-nav.pill-nav a:hover,
+    .main-nav.pill-nav a.active {
+        color: var(--pill-text-active);
+    }
 }
 
 .header-actions {
@@ -356,6 +377,10 @@ body > :where(:not(.page-grid)) {
     
     .main-nav a {
         font-size: 1.5rem;
+    }
+
+    .main-nav.pill-nav .pill-nav__bg {
+        display: none;
     }
     
     .header-actions .menu-button {

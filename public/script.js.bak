@@ -34,35 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', closeMenu);
     });
 
-    // 1.2 Pill Nav - barra deslizante
-    const pillNav = document.querySelector('.pill-nav');
-    const pillBg = document.querySelector('.pill-nav__bg');
-    const pillLinks = document.querySelectorAll('.pill-nav a');
-
-    function movePill(el) {
-        if (!pillNav || !pillBg || !el) return;
-        const navRect = pillNav.getBoundingClientRect();
-        const elRect = el.getBoundingClientRect();
-        pillBg.style.width = elRect.width + 'px';
-        pillBg.style.transform = 'translateX(' + (elRect.left - navRect.left) + 'px)';
-    }
-
-    if (pillNav && pillBg) {
-        function positionInitialPill() {
-            const active = pillNav.querySelector('a.active') || pillNav.querySelector('a');
-            movePill(active);
-        }
-
-        pillLinks.forEach(link => {
-            link.addEventListener('mouseenter', () => movePill(link));
-            link.addEventListener('mouseleave', positionInitialPill);
-        });
-
-        positionInitialPill();
-        window.addEventListener('resize', positionInitialPill);
-    }
-
-
     // 1.5 Theme toggle (claro/escuro)
     const themeToggle = document.querySelector('.theme-toggle');
     const themeMeta = document.querySelector('meta[name="theme-color"]');
@@ -366,10 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
         navAnchors.forEach(a => {
             a.classList.toggle('active', a.getAttribute('href') === '#' + id);
         });
-        if (pillBg && pillNav) {
-            const active = pillNav.querySelector('a.active') || pillNav.querySelector('a');
-            movePill(active);
-        }
         if (!sectionBreadcrumb || !breadcrumbText || id === lastSectionId) return;
         lastSectionId = id;
         breadcrumbText.textContent = breadcrumbLabels[id] || id;
