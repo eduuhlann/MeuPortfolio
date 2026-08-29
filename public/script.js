@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pillNav = document.querySelector('.pill-nav');
     const pillBg = document.querySelector('.pill-nav__bg');
     const pillLinks = document.querySelectorAll('.pill-nav a');
+    let pillHovered = null;
 
     function movePill(el) {
         if (!pillNav || !pillBg || !el) return;
@@ -49,19 +50,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (pillNav && pillBg) {
         function positionInitialPill() {
+            if (pillHovered) return;
             const active = pillNav.querySelector('a.active') || pillNav.querySelector('a');
             movePill(active);
         }
 
         pillLinks.forEach(link => {
-            link.addEventListener('mouseenter', () => movePill(link));
-            link.addEventListener('mouseleave', positionInitialPill);
+            link.addEventListener('mouseenter', () => {
+                pillHovered = link;
+                movePill(link);
+            });
+        });
+
+        pillNav.addEventListener('mouseleave', () => {
+            pillHovered = null;
+            positionInitialPill();
         });
 
         positionInitialPill();
         window.addEventListener('resize', positionInitialPill);
     }
-
 
     // 1.5 Theme toggle (claro/escuro)
     const themeToggle = document.querySelector('.theme-toggle');
@@ -118,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.subtitle': 'Alguns dos projetos que já construí.',
             'projects.details': 'Ver detalhes <i class="fa-solid fa-plus"></i>',
             'projects.visit': 'Visitar site <i class="fa-solid fa-arrow-right"></i>',
+            'projects.seeAll': 'Ver todos os projetos <i class="fa-brands fa-github"></i>',
             'projects.oneflow.tag': 'Projeto Web',
             'projects.oneflow.desc': 'Plataforma web moderna com foco em experiência do usuário, performance e design limpo.',
             'projects.oneflow.title': 'OneFlow',
@@ -135,6 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
             'music.subtitle': 'O que estou escutando enquanto codifico.',
             'music.listening': 'Ouvindo agora',
             'music.paused': 'Pausado',
+            'music.prev': 'Música anterior',
+            'music.next': 'Próxima música',
+            'music.play': 'Reproduzir música',
+            'music.pause': 'Pausar música',
             'contact.kicker': 'Vamos tirar sua ideia do papel?',
             'contact.title': 'Design moderno e código de qualidade para a sua presença digital.',
             'contact.p': 'Entre em contato para criarmos uma experiência online única para você ou seu negócio.',
@@ -169,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.subtitle': 'Some of the projects I have built.',
             'projects.details': 'View details <i class="fa-solid fa-plus"></i>',
             'projects.visit': 'Visit site <i class="fa-solid fa-arrow-right"></i>',
+            'projects.seeAll': 'See all projects <i class="fa-brands fa-github"></i>',
             'projects.oneflow.tag': 'Web Project',
             'projects.oneflow.desc': 'Modern web platform focused on user experience, performance, and clean design.',
             'projects.oneflow.title': 'OneFlow',
@@ -186,6 +200,10 @@ document.addEventListener('DOMContentLoaded', () => {
             'music.subtitle': 'What I am listening to while coding.',
             'music.listening': 'Now playing',
             'music.paused': 'Paused',
+            'music.prev': 'Previous track',
+            'music.next': 'Next track',
+            'music.play': 'Play track',
+            'music.pause': 'Pause track',
             'contact.kicker': 'Ready to bring your idea to life?',
             'contact.title': 'Modern design and quality code for your digital presence.',
             'contact.p': 'Get in touch to create a unique online experience for you or your business.',
@@ -366,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navAnchors.forEach(a => {
             a.classList.toggle('active', a.getAttribute('href') === '#' + id);
         });
-        if (pillBg && pillNav) {
+        if (pillBg && pillNav && !pillHovered) {
             const active = pillNav.querySelector('a.active') || pillNav.querySelector('a');
             movePill(active);
         }
@@ -514,6 +532,76 @@ document.addEventListener('DOMContentLoaded', () => {
         const npTrack = document.getElementById('npTrack');
         const npArtist = document.getElementById('npArtist');
         const npBar = document.getElementById('npBar');
+        const npPrev = document.getElementById('npPrev');
+        const npNext = document.getElementById('npNext');
+        const npPlay = document.getElementById('npPlay');
+        const npPlayIcon = document.getElementById('npPlayIcon');
+        const npProgress = document.querySelector('.np-progress');
+        const npAudio = new Audio();
+        npAudio.preload = 'none';
+        let npHistory = [];
+        let npIndex = 0;
+        let npPlaying = false;
+
+        function setPlayIcon() {
+            if (!npPlayIcon) return;
+            const key = npPlaying ? 'music.pause' : 'music.play';
+            npPlayIcon.className = npPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+            nowPlayingCard.classList.toggle('play-paused', npPlaying);
+            if (npPlay && TRANSLATIONS[currentNowPlayingLang]) {
+                npPlay.setAttribute('aria-label', TRANSLATIONS[currentNowPlayingLang][key] || '');
+            }
+        }
+
+        function stopAudio() {
+            npAudio.pause();
+            npAudio.removeAttribute('src');
+            npAudio.load();
+            npPlaying = false;
+            setPlayIcon();
+        }
+
+        function renderNowPlaying(item) {
+            if (!item || !item.track) {
+                nowPlayingCard.hidden = true;
+                stopAudio();
+                return;
+            }
+            nowPlayingCard.hidden = false;
+            const playing = npIndex === 0 ? !!item.playing : false;
+            nowPlayingCard.classList.toggle('paused', !playing);
+            if (npAudio.dataset.track !== (item.track || '')) stopAudio();
+            npCover.src = item.cover || '';
+            npCover.alt = item.album ? 'Capa do álbum ' + item.album : 'Capa do álbum';
+            npStatus.textContent = playing ? TRANSLATIONS[currentNowPlayingLang]['music.listening'] : TRANSLATIONS[currentNowPlayingLang]['music.paused'];
+            npTrack.textContent = item.track;
+            npTrack.href = item.url || '#';
+            npArtist.textContent = Array.isArray(item.artists) ? item.artists.join(', ') : '';
+            if (npProgress) npProgress.hidden = !item.duration;
+            npBar.style.width = item.duration ? Math.min(100, (item.progress / item.duration) * 100) + '%' : '0%';
+            if (npPrev) npPrev.disabled = npIndex <= 0;
+            if (npNext) npNext.disabled = npIndex >= npHistory.length - 1;
+            if (npPlay) npPlay.disabled = !item.preview;
+        }
+
+        function togglePlay() {
+            const item = npHistory[npIndex];
+            if (!item || !item.preview) return;
+            if (npPlaying) {
+                npAudio.pause();
+                npPlaying = false;
+                setPlayIcon();
+                return;
+            }
+            npAudio.src = item.preview;
+            npAudio.dataset.track = item.track || '';
+            npPlaying = true;
+            setPlayIcon();
+            npAudio.play().catch(() => {
+                npPlaying = false;
+                setPlayIcon();
+            });
+        }
 
         async function updateNowPlaying() {
             try {
@@ -524,24 +612,98 @@ document.addEventListener('DOMContentLoaded', () => {
                     nowPlayingCard.hidden = true;
                     return;
                 }
-                nowPlayingCard.hidden = false;
-                nowPlayingCard.classList.toggle('paused', !data.playing);
-                npCover.src = data.cover || '';
-                npCover.alt = data.album ? 'Capa do álbum ' + data.album : 'Capa do álbum';
-                npStatus.textContent = data.playing ? TRANSLATIONS[currentNowPlayingLang]['music.listening'] : TRANSLATIONS[currentNowPlayingLang]['music.paused'];
-                npTrack.textContent = data.track;
-                npTrack.href = data.url || '#';
-                npArtist.textContent = Array.isArray(data.artists) ? data.artists.join(', ') : '';
-                const npProgress = document.querySelector('.np-progress');
-                if (npProgress) npProgress.hidden = !data.duration;
-                npBar.style.width = data.duration ? Math.min(100, (data.progress / data.duration) * 100) + '%' : '0%';
+                npHistory = Array.isArray(data.history) && data.history.length
+                    ? data.history
+                    : [{ track: data.track, artists: data.artists, album: data.album, cover: data.cover, url: data.url, preview: data.preview, playing: data.playing }];
+                npIndex = 0;
+                renderNowPlaying(npHistory[0]);
             } catch (e) {
                 nowPlayingCard.hidden = true;
             }
         }
 
+        if (npPrev) npPrev.addEventListener('click', () => {
+            if (npIndex > 0) {
+                npIndex--;
+                renderNowPlaying(npHistory[npIndex]);
+            }
+        });
+        if (npNext) npNext.addEventListener('click', () => {
+            if (npIndex < npHistory.length - 1) {
+                npIndex++;
+                renderNowPlaying(npHistory[npIndex]);
+            }
+        });
+        if (npPlay) npPlay.addEventListener('click', togglePlay);
+        npAudio.addEventListener('ended', () => {
+            npPlaying = false;
+            setPlayIcon();
+        });
+
         updateNowPlaying();
         setInterval(updateNowPlaying, 30000);
+    }
+
+    // 7.6 Projetos — repos do GitHub dinâmicos
+    const githubReposEl = document.getElementById('githubRepos');
+    if (githubReposEl) {
+        function starCount(n) {
+            if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+            return String(n);
+        }
+
+        function renderRepos(repos) {
+            githubReposEl.innerHTML = '';
+            if (!repos || !repos.length) {
+                githubReposEl.innerHTML = '<p class="github-empty">Nenhum repositório encontrado.</p>';
+                return;
+            }
+            const fragment = document.createDocumentFragment();
+            repos.forEach(r => {
+                const a = document.createElement('a');
+                a.className = 'github-repo';
+                a.href = r.html_url || '#';
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+
+                const head = document.createElement('div');
+                head.className = 'github-repo__head';
+                head.innerHTML = '<span class="github-repo__name"></span>' +
+                    (r.language ? '<span class="github-repo__lang"></span>' : '');
+                head.querySelector('.github-repo__name').textContent = r.name;
+                if (r.language) head.querySelector('.github-repo__lang').textContent = r.language;
+
+                a.appendChild(head);
+
+                if (r.description) {
+                    const desc = document.createElement('p');
+                    desc.className = 'github-repo__desc';
+                    desc.textContent = r.description;
+                    a.appendChild(desc);
+                }
+
+                const meta = document.createElement('div');
+                meta.className = 'github-repo__meta';
+                meta.innerHTML =
+                    (r.stars ? '<span><i class="fa-regular fa-star"></i><b></b></span>' : '') +
+                    (r.forks ? '<span><i class="fa-solid fa-code-fork"></i><b></b></span>' : '') +
+                    (r.topics && r.topics.length ? '<span class="github-repo__lang">' + r.topics.slice(0, 2).join(' · ') + '</span>' : '');
+                meta.querySelectorAll('b').forEach((b, i) => {
+                    b.textContent = i === 0 ? starCount(r.stars) : starCount(r.forks);
+                });
+                a.appendChild(meta);
+
+                fragment.appendChild(a);
+            });
+            githubReposEl.appendChild(fragment);
+        }
+
+        fetch('/api/github')
+            .then(res => res.ok ? res.json() : { repos: [] })
+            .then(data => renderRepos(data.repos))
+            .catch(() => {
+                githubReposEl.innerHTML = '';
+            });
     }
 
     // 8. Hero V2 — morphing text (liquid-text effect)

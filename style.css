@@ -610,49 +610,11 @@ body > :where(:not(.page-grid)) {
     line-height: 1;
 }
 
-/* Per-tech hover colors */
-.tech-card[data-tech="html"]:hover {
-    border-color: #E44D26;
-    background: rgba(228, 77, 38, 0.08);
+/* Hover unificado: borda branca, sem cor por tecnologia */
+.tech-card:hover {
+    border-color: var(--text-primary);
+    background: var(--card-hover-bg);
 }
-.tech-card[data-tech="html"]:hover i { color: #E44D26; }
-
-.tech-card[data-tech="css"]:hover {
-    border-color: #1572B6;
-    background: rgba(21, 114, 182, 0.08);
-}
-.tech-card[data-tech="css"]:hover i { color: #1572B6; }
-
-.tech-card[data-tech="js"]:hover {
-    border-color: #F7DF1E;
-    background: rgba(247, 223, 30, 0.08);
-}
-.tech-card[data-tech="js"]:hover i { color: #F7DF1E; }
-
-.tech-card[data-tech="ts"]:hover {
-    border-color: #3178C6;
-    background: rgba(49, 120, 198, 0.08);
-}
-.tech-card[data-tech="ts"]:hover i { color: #3178C6; }
-.tech-card[data-tech="ts"]:hover svg { color: #3178C6; }
-
-.tech-card[data-tech="react"]:hover {
-    border-color: #61DAFB;
-    background: rgba(97, 218, 251, 0.08);
-}
-.tech-card[data-tech="react"]:hover i { color: #61DAFB; }
-
-.tech-card[data-tech="react-native"]:hover {
-    border-color: #61DAFB;
-    background: rgba(97, 218, 251, 0.08);
-}
-.tech-card[data-tech="react-native"]:hover i { color: #61DAFB; }
-
-.tech-card[data-tech="python"]:hover {
-    border-color: #3776AB;
-    background: rgba(55, 118, 171, 0.08);
-}
-.tech-card[data-tech="python"]:hover i { color: #3776AB; }
 
 @keyframes hero-card-enter {
     from {
@@ -2075,7 +2037,6 @@ body > :where(:not(.page-grid)) {
     pointer-events: none;
 }
 
-
 /* ================== PAGE LOADER (spinner) ================== */
 .page-loader {
     position: fixed;
@@ -2093,6 +2054,44 @@ body > :where(:not(.page-grid)) {
     pointer-events: none;
 }
 
+.page-loader .loader-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    min-width: 220px;
+}
+
+.page-loader .loader-brand {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.page-loader .loader-track {
+    width: 220px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--border-color);
+    overflow: hidden;
+}
+
+.page-loader .loader-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent));
+    transition: width 0.12s ease;
+}
+
+.page-loader .loader-pct {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
 .page-loader .loader {
     width: 40px;
     height: 40px;
@@ -2106,4 +2105,194 @@ body > :where(:not(.page-grid)) {
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Projetos — rodapé com botão "ver todos" e repos do GitHub */
+.projects-footer {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.btn-see-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 0.7rem 1.4rem;
+    transition: var(--transition-fast);
+}
+
+.btn-see-all i {
+    font-size: 1.1rem;
+    transition: transform var(--transition-fast);
+}
+
+.btn-see-all:hover {
+    border-color: var(--text-primary);
+    background: var(--card-hover-bg);
+}
+
+.btn-see-all:hover i {
+    transform: translateY(-2px);
+}
+
+.github-repos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    width: 100%;
+}
+
+.github-repo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    background: var(--skill-card-bg);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-fast);
+}
+
+.github-repo:hover {
+    border-color: var(--text-primary);
+    background: var(--card-hover-bg);
+    transform: translateY(-2px);
+}
+
+.github-repo__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.github-repo__name {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.github-repo__lang {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+    white-space: nowrap;
+}
+
+.github-repo__desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.github-repo__meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.github-repo__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.github-empty {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* Música — controles prev/next */
+.np-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.np-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.np-btn:hover {
+    border-color: var(--text-primary);
+    background: var(--card-hover-bg);
+}
+
+.np-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+    border-color: var(--border-color);
+    background: transparent;
+}
+
+.np-play {
+    width: 46px;
+    height: 46px;
+    font-size: 1.05rem;
+    background: var(--text-primary);
+    color: var(--bg-base);
+    border: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.np-play:hover {
+    background: var(--text-secondary);
+    color: var(--bg-base);
+}
+
+.np-play:disabled {
+    background: var(--accent-glow, var(--text-primary));
+    color: var(--text-secondary);
+    border: none;
+}
+
+.now-playing.play-paused .np-eq {
+    opacity: 0;
+}
+
+@media (max-width: 640px) {
+    .np-controls {
+        flex-direction: row;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Tema — transição suave ao alternar */
+body,
+.site-header,
+.site-footer,
+.project-card,
+.github-repo,
+.c-link,
+.now-playing {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }

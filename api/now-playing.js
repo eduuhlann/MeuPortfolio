@@ -32,7 +32,7 @@ export default async function handler(req, res) {
             user: LASTFM_USER,
             api_key: LASTFM_API_KEY,
             format: 'json',
-            limit: '1',
+            limit: '10',
             extended: '1'
         });
 
@@ -41,37 +41,53 @@ export default async function handler(req, res) {
 
         const data = await res2.json();
         const tracks = data?.recenttracks?.track;
-        const t = Array.isArray(tracks) ? tracks[0] : tracks;
+        const list = Array.isArray(tracks) ? tracks.map(t => ({
+            playing: t['@attr']?.nowplaying === 'true',
+            track: t.name ?? '',
+            artists: [(t.artist?.name || t.artist?.['#text'] || '')].filter(Boolean),
+            album: t.album?.['#text'] ?? '',
+            url: t.url ?? '',
+            cover: t.image?.find(i => i.size === 'extralarge')?.['#text'] ?? '',
+            preview: ''
+        })).filter(t => t.track) : [];
+
+        const t = list[0];
         if (!t) return res.status(200).json({ track: null });
 
-        const playing = t['@attr']?.nowplaying === 'true';
+        const playing = t.playing;
         if (!playing && process.env.LASTFM_ONLY_NOWPLAYING === 'true') {
             return res.status(200).json({ track: null });
         }
 
-        const artistName = t.artist?.name || t.artist?.['#text'] || '';
-        let cover = t.image?.find(i => i.size === 'extralarge')?.['#text'] ?? '';
-
-        // Placeholder do Last.fm (estrela): busca a capa real no iTunes como fallback
-        if (!cover || cover.includes('2a96cbd8b46e442fc41c2b86b821562f')) {
-            try {
-                const query = encodeURIComponent([artistName, t.name].filter(Boolean).join(' '));
-                const itunesRes = await fetch(`https://itunes.apple.com/search?term=${query}&entity=song&limit=1`);
-                const itunesData = await itunesRes.json();
-                const artwork = itunesData?.results?.[0]?.artworkUrl100;
-                if (artwork) cover = artwork.replace('100x100', '600x600');
-            } catch (e) { /* mantem o placeholder mesmo */ }
+        // Placeholder do Last.fm (estrela): busca a capa real e preview no iTunes como fallback
+        for (const item of list) {
+            if (!item.cover || item.cover.includes('2a96cbd8b46e442fc41c2b86b821562f') || !item.preview) {
+                try {
+                    const query = encodeURIComponent([item.artists[0], item.track].filter(Boolean).join(' '));
+                    const itunesRes = await fetch(`https://itunes.apple.com/search?term=${query}&entity=song&limit=1`);
+                    const itunesData = await itunesRes.json();
+                    const result = itunesData?.results?.[0];
+                    if (!result) continue;
+                    const artwork = result.artworkUrl100;
+                    if (artwork && (!item.cover || item.cover.includes('2a96cbd8b46e442fc41c2b86b821562f'))) {
+                        item.cover = artwork.replace('100x100', '600x600');
+                    }
+                    if (!item.preview && result.previewUrl) item.preview = result.previewUrl;
+                } catch (e) { /* mantem o placeholder mesmo */ }
+            }
         }
 
         res.status(200).json({
             playing,
-            track: t.name ?? '',
-            artists: [artistName].filter(Boolean),
-            album: t.album?.['#text'] ?? '',
-            cover,
+            track: t.track ?? '',
+            artists: t.artists ?? [],
+            album: t.album ?? '',
+            cover: t.cover ?? '',
             url: t.url ?? '',
+            preview: t.preview ?? '',
             progress: 0,
-            duration: 0
+            duration: 0,
+            history: list
         });
     } catch (e) {
         res.status(200).json({ track: null });

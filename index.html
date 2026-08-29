@@ -56,7 +56,11 @@
 
 <body>
     <div class="page-loader" id="pageLoader" aria-hidden="true">
-        <div class="loader"></div>
+        <div class="loader-inner">
+            <span class="loader-brand">eduuhlann</span>
+            <div class="loader-track"><div class="loader-fill" id="loaderFill"></div></div>
+            <span class="loader-pct" id="loaderPct">0%</span>
+        </div>
     </div>
     <canvas class="page-grid" id="heroGrid"></canvas>
     <div class="scroll-progress" id="scrollProgress"></div>
@@ -271,9 +275,6 @@
                         <p data-i18n="projects.oneflow.desc">Plataforma web moderna com foco em experiência do usuário, performance e design limpo.
                         </p>
                         <div class="project-actions">
-                            <button type="button" class="btn-details" data-project="oneflow" data-i18n="projects.details">
-                                Ver detalhes <i class="fa-solid fa-plus"></i>
-                            </button>
                             <a href="https://oneflowweb.vercel.app" target="_blank" rel="noopener noreferrer" class="project-link" data-i18n-html="projects.visit">
                                 Visitar site <i class="fa-solid fa-arrow-right"></i>
                             </a>
@@ -290,15 +291,20 @@
                         <p data-i18n="projects.metanoia.desc">Site feito para a juventude da Primeira Igreja Batista de Campo Mourão, PR.
                         </p>
                         <div class="project-actions">
-                            <button type="button" class="btn-details" data-project="metanoia" data-i18n="projects.details">
-                                Ver detalhes <i class="fa-solid fa-plus"></i>
-                            </button>
                             <a href="https://metanoiaapp.vercel.app" target="_blank" rel="noopener noreferrer" class="project-link" data-i18n-html="projects.visit">
                                 Visitar site <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
                     </div>
                 </article>
+            </div>
+
+            <div class="projects-footer scroll-reveal scroll-reveal--up" id="githubReposWrap">
+                <a href="https://github.com/eduuhlann?tab=repositories" target="_blank" rel="noopener noreferrer"
+                    class="btn-see-all" data-i18n-html="projects.seeAll">
+                    Ver todos os projetos <i class="fa-brands fa-github"></i>
+                </a>
+                <div class="github-repos" id="githubRepos" aria-live="polite"></div>
             </div>
         </section>
 
@@ -319,6 +325,17 @@
                     <a id="npTrack" class="np-track" href="#" target="_blank" rel="noopener noreferrer">—</a>
                     <span id="npArtist" class="np-artist">—</span>
                     <div class="np-progress" aria-hidden="true"><div class="np-bar" id="npBar"></div></div>
+                </div>
+                <div class="np-controls" aria-label="Navegar pelas músicas recentes">
+                    <button type="button" class="np-btn" id="npPrev" aria-label="Música anterior" data-i18n-aria="music.prev">
+                        <i class="fa-solid fa-backward-step"></i>
+                    </button>
+                    <button type="button" class="np-btn np-play" id="npPlay" aria-label="Reproduzir música" data-i18n-aria="music.play">
+                        <i class="fa-solid fa-play" id="npPlayIcon"></i>
+                    </button>
+                    <button type="button" class="np-btn" id="npNext" aria-label="Próxima música" data-i18n-aria="music.next">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
                 </div>
             </div>
         </section>
@@ -427,15 +444,46 @@
         (function () {
             var ldr = document.getElementById('pageLoader');
             if (!ldr) return;
+            var fill = document.getElementById('loaderFill');
+            var pct = document.getElementById('loaderPct');
             var hidden = false;
-            function hide() {
+            var progress = 0;
+            var tick = null;
+
+            function render() {
+                if (fill) fill.style.width = progress + '%';
+                if (pct) pct.textContent = Math.round(progress) + '%';
+            }
+
+            function advance() {
                 if (hidden) return;
+                var next = progress + (Math.random() * 12 + 6);
+                if (next >= 96) {
+                    progress = 96;
+                    if (tick) clearInterval(tick);
+                    return;
+                }
+                progress = next;
+                render();
+            }
+
+            tick = setInterval(advance, 100);
+            render();
+
+            function finish() {
+                if (hidden) return;
+                if (tick) clearInterval(tick);
                 hidden = true;
+                progress = 100;
+                render();
                 ldr.classList.add('pl--done');
                 setTimeout(function () { if (ldr.parentNode) ldr.parentNode.removeChild(ldr); }, 600);
             }
-            window.addEventListener('load', hide);
-            setTimeout(hide, 4000);
+
+            window.addEventListener('load', function () {
+                setTimeout(finish, 250);
+            });
+            setTimeout(finish, 4000);
         })();
     </script>
 </body>

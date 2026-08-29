@@ -2,6 +2,7 @@ import CyclingWarpText from "@/components/ui/CyclingWarpText";
 import AnimatedCard from "@/components/ui/AnimatedCard";
 import ClickSpark from "@/components/ui/ClickSpark";
 import PillNav from "@/components/ui/PillNav";
+import { TextAnimate } from "@/components/ui/text-animate";
 import ParallaxDemo from "@/demos/default";
 import { SplineSceneBasic } from "@/demos/spline-demo";
 import favicon from "/favicon.ico";
@@ -45,7 +46,20 @@ function App() {
           </section>
         </AnimatedCard>
         <AnimatedCard direction="up" delay={0.15}>
-          <section id="sobre" className="flex scroll-mt-24 justify-center p-6 md:p-10" aria-label="FrontEnd">
+          <section id="sobre" className="flex scroll-mt-24 flex-col items-center justify-center gap-6 p-6 md:p-10" aria-label="Sobre mim">
+            <TextAnimate
+              as="h2"
+              animation="blurInUp"
+              by="character"
+              once
+              className="text-4xl font-bold text-white md:text-5xl"
+            >
+              SOBRE MIM
+            </TextAnimate>
+            <p className="max-w-lg text-center text-neutral-300">
+              Desenvolvedor apaixonado por criar interfaces modernas, limpas e
+              focadas na experiência do usuário.
+            </p>
             <CyclingWarpText
               texts={['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER']}
               interval={2500}
@@ -63,7 +77,16 @@ function App() {
           </section>
         </AnimatedCard>
         <AnimatedCard direction="up" delay={0.15}>
-          <section id="contato" className="flex scroll-mt-24 justify-center p-6 md:p-10" aria-label="Contato">
+          <section id="contato" className="flex scroll-mt-24 flex-col items-center justify-center gap-6 p-6 md:p-10" aria-label="Contato">
+            <TextAnimate
+              as="h2"
+              animation="blurInUp"
+              by="character"
+              once
+              className="text-4xl font-bold text-white md:text-5xl"
+            >
+              CONTATO
+            </TextAnimate>
             <p className="text-center text-lg text-muted-foreground">
               Entre em contato para projetos freelancer.
             </p>
