@@ -644,68 +644,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(updateNowPlaying, 30000);
     }
 
-    // 7.6 Projetos — repos do GitHub dinâmicos
-    const githubReposEl = document.getElementById('githubRepos');
-    if (githubReposEl) {
-        function starCount(n) {
-            if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
-            return String(n);
-        }
-
-        function renderRepos(repos) {
-            githubReposEl.innerHTML = '';
-            if (!repos || !repos.length) {
-                githubReposEl.innerHTML = '<p class="github-empty">Nenhum repositório encontrado.</p>';
-                return;
-            }
-            const fragment = document.createDocumentFragment();
-            repos.forEach(r => {
-                const a = document.createElement('a');
-                a.className = 'github-repo';
-                a.href = r.html_url || '#';
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-
-                const head = document.createElement('div');
-                head.className = 'github-repo__head';
-                head.innerHTML = '<span class="github-repo__name"></span>' +
-                    (r.language ? '<span class="github-repo__lang"></span>' : '');
-                head.querySelector('.github-repo__name').textContent = r.name;
-                if (r.language) head.querySelector('.github-repo__lang').textContent = r.language;
-
-                a.appendChild(head);
-
-                if (r.description) {
-                    const desc = document.createElement('p');
-                    desc.className = 'github-repo__desc';
-                    desc.textContent = r.description;
-                    a.appendChild(desc);
-                }
-
-                const meta = document.createElement('div');
-                meta.className = 'github-repo__meta';
-                meta.innerHTML =
-                    (r.stars ? '<span><i class="fa-regular fa-star"></i><b></b></span>' : '') +
-                    (r.forks ? '<span><i class="fa-solid fa-code-fork"></i><b></b></span>' : '') +
-                    (r.topics && r.topics.length ? '<span class="github-repo__lang">' + r.topics.slice(0, 2).join(' · ') + '</span>' : '');
-                meta.querySelectorAll('b').forEach((b, i) => {
-                    b.textContent = i === 0 ? starCount(r.stars) : starCount(r.forks);
-                });
-                a.appendChild(meta);
-
-                fragment.appendChild(a);
-            });
-            githubReposEl.appendChild(fragment);
-        }
-
-        fetch('/api/github')
-            .then(res => res.ok ? res.json() : { repos: [] })
-            .then(data => renderRepos(data.repos))
-            .catch(() => {
-                githubReposEl.innerHTML = '';
-            });
-    }
-
     // 8. Hero V2 — morphing text (liquid-text effect)
     const morphText1 = document.getElementById('morphText1');
     const morphText2 = document.getElementById('morphText2');
@@ -775,15 +713,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     const depth = parseFloat(card.dataset.depth) || 0.03;
                     const moveX = dx * depth * 120;
                     const moveY = dy * depth * 80;
-                    const baseRotate = getComputedStyle(card).getPropertyValue('--card-rotate').trim() || '0deg';
-                    card.style.transform = `rotate(${baseRotate}) translate(${moveX}px, ${moveY}px)`;
+                    const cs = getComputedStyle(card);
+                    const baseRotate = cs.getPropertyValue('--card-rotate').trim() || '0deg';
+                    const offX = parseFloat(cs.getPropertyValue('--card-offset-x')) || 0;
+                    const offY = parseFloat(cs.getPropertyValue('--card-offset-y')) || 0;
+                    card.style.transform = `rotate(${baseRotate}) translate(${offX + moveX}px, ${offY + moveY}px)`;
                 });
             });
 
             heroStage.addEventListener('mouseleave', () => {
                 techCards.forEach(card => {
-                    const baseRotate = getComputedStyle(card).getPropertyValue('--card-rotate').trim() || '0deg';
-                    card.style.transform = `rotate(${baseRotate})`;
+                    const cs = getComputedStyle(card);
+                    const baseRotate = cs.getPropertyValue('--card-rotate').trim() || '0deg';
+                    const offX = parseFloat(cs.getPropertyValue('--card-offset-x')) || 0;
+                    const offY = parseFloat(cs.getPropertyValue('--card-offset-y')) || 0;
+                    card.style.transform = `rotate(${baseRotate}) translate(${offX}px, ${offY}px)`;
                 });
             });
         }

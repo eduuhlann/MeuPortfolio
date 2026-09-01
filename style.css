@@ -545,17 +545,17 @@ body > :where(:not(.page-grid)) {
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 1.05rem;
     z-index: 4;
 }
 
 .hero-v2__tech--left {
-    left: 2%;
+    left: 3%;
     align-items: flex-start;
 }
 
 .hero-v2__tech--right {
-    right: 2%;
+    right: 3%;
     align-items: flex-end;
 }
 
@@ -571,7 +571,7 @@ body > :where(:not(.page-grid)) {
     font-size: 1.3rem;
     font-weight: 600;
     color: var(--text-primary);
-    transform: rotate(var(--card-rotate, 0deg));
+    transform: rotate(var(--card-rotate, 0deg)) translate(var(--card-offset-x, 0px), var(--card-offset-y, 0px));
     transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
                 box-shadow 0.4s ease,
                 border-color 0.3s ease,
@@ -584,7 +584,7 @@ body > :where(:not(.page-grid)) {
 }
 
 .tech-card:hover {
-    transform: rotate(0deg) translateY(-4px) scale(1.06);
+    transform: rotate(0deg) translate(var(--card-offset-x, 0px), calc(var(--card-offset-y, 0px) - 4px)) scale(1.06);
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
 }
 
@@ -619,45 +619,49 @@ body > :where(:not(.page-grid)) {
 @keyframes hero-card-enter {
     from {
         opacity: 0;
-        transform: rotate(var(--card-rotate, 0deg)) translateY(16px) scale(0.92);
+        transform: rotate(var(--card-rotate, 0deg)) translate(calc(var(--card-offset-x, 0px) + 0px), calc(var(--card-offset-y, 0px) + 18px)) scale(0.92);
     }
     to {
         opacity: 1;
-        transform: rotate(var(--card-rotate, 0deg)) translateY(0) scale(1);
+        transform: rotate(var(--card-rotate, 0deg)) translate(var(--card-offset-x, 0px), var(--card-offset-y, 0px)) scale(1);
     }
 }
 
-/* Outer cards: slight blur for depth */
+/* Cards orbitando o avatar: offsets verticais e horizontais com leve rotação */
 .hero-v2__tech--left .tech-card:nth-child(1) {
+    --card-offset-x: -6px;
+    --card-offset-y: -22px;
     filter: blur(0.3px);
-    opacity: 0;
-    animation: hero-card-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0s forwards;
 }
 
 .hero-v2__tech--left .tech-card:nth-child(2) {
+    --card-offset-x: 28px;
+    --card-offset-y: 0px;
     filter: blur(0px);
 }
 
 .hero-v2__tech--left .tech-card:nth-child(3) {
+    --card-offset-x: 10px;
+    --card-offset-y: 24px;
     filter: blur(0.4px);
 }
 
 .hero-v2__tech--right .tech-card:nth-child(1) {
+    --card-offset-x: 6px;
+    --card-offset-y: -24px;
     filter: blur(0px);
 }
 
 .hero-v2__tech--right .tech-card:nth-child(2) {
+    --card-offset-x: -26px;
+    --card-offset-y: 0px;
     filter: blur(0.3px);
 }
 
 .hero-v2__tech--right .tech-card:nth-child(3) {
+    --card-offset-x: -10px;
+    --card-offset-y: 22px;
     filter: blur(0.2px);
-}
-
-.hero-v2__tech--right .tech-card:nth-child(4) {
-    filter: blur(0.5px);
-    opacity: 0;
-    animation: hero-card-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
 }
 
 /* --- Bottom CTAs --- */
@@ -721,6 +725,36 @@ body > :where(:not(.page-grid)) {
 
     .tech-card i {
         font-size: 1.1rem;
+    }
+
+    .hero-v2__tech--left .tech-card:nth-child(1) {
+        --card-offset-x: -3px;
+        --card-offset-y: -10px;
+    }
+
+    .hero-v2__tech--left .tech-card:nth-child(2) {
+        --card-offset-x: 12px;
+        --card-offset-y: 0px;
+    }
+
+    .hero-v2__tech--left .tech-card:nth-child(3) {
+        --card-offset-x: 4px;
+        --card-offset-y: 10px;
+    }
+
+    .hero-v2__tech--right .tech-card:nth-child(1) {
+        --card-offset-x: 3px;
+        --card-offset-y: -10px;
+    }
+
+    .hero-v2__tech--right .tech-card:nth-child(2) {
+        --card-offset-x: -12px;
+        --card-offset-y: 0px;
+    }
+
+    .hero-v2__tech--right .tech-card:nth-child(3) {
+        --card-offset-x: -4px;
+        --card-offset-y: 10px;
     }
 }
 
@@ -2107,7 +2141,7 @@ body > :where(:not(.page-grid)) {
     }
 }
 
-/* Projetos — rodapé com botão "ver todos" e repos do GitHub */
+/* Projetos — rodapé com botão "ver todos" */
 .projects-footer {
     margin-top: 2rem;
     display: flex;
@@ -2142,75 +2176,6 @@ body > :where(:not(.page-grid)) {
 
 .btn-see-all:hover i {
     transform: translateY(-2px);
-}
-
-.github-repos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1rem;
-    width: 100%;
-}
-
-.github-repo {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1.1rem 1.2rem;
-    border: 1px solid var(--border-color);
-    border-radius: 1rem;
-    background: var(--skill-card-bg);
-    text-decoration: none;
-    color: inherit;
-    transition: var(--transition-fast);
-}
-
-.github-repo:hover {
-    border-color: var(--text-primary);
-    background: var(--card-hover-bg);
-    transform: translateY(-2px);
-}
-
-.github-repo__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-}
-
-.github-repo__name {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--text-primary);
-}
-
-.github-repo__lang {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 999px;
-    padding: 0.1rem 0.55rem;
-    white-space: nowrap;
-}
-
-.github-repo__desc {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
-}
-
-.github-repo__meta {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-}
-
-.github-repo__meta span {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
 }
 
 .github-empty {
@@ -2291,7 +2256,6 @@ body,
 .site-header,
 .site-footer,
 .project-card,
-.github-repo,
 .c-link,
 .now-playing {
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
