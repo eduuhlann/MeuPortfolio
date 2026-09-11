@@ -141,6 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.metanoia.h1': 'Divulgação clara dos encontros',
             'projects.metanoia.h2': 'Visual acolhedor e jovem',
             'projects.metanoia.h3': 'Navegação simples e direta',
+            'projects.imper.tag': 'Site Institucional',
+            'projects.imper.desc': 'Site institucional para empresa de uniformes corporativos personalizados com catálogo de produtos.',
+            'projects.imper.title': 'Imper Uniformes',
+            'projects.imper.fullDesc': 'Site institucional completo para a Imper Uniformes, empresa especializada em uniformes corporativos personalizados. Inclui catálogo de produtos e informações de contato.',
+            'projects.imper.h1': 'Catálogo de produtos responsivo',
+            'projects.imper.h2': 'Design profissional e moderno',
+            'projects.imper.h3': 'Fácil acesso a informações de contato',
             'music.subtitle': 'O que estou escutando enquanto codifico.',
             'music.listening': 'Ouvindo agora',
             'music.paused': 'Pausado',
@@ -197,6 +204,13 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.metanoia.h1': 'Clear event promotion',
             'projects.metanoia.h2': 'Welcoming and youthful look',
             'projects.metanoia.h3': 'Simple and direct navigation',
+            'projects.imper.tag': 'Institutional Site',
+            'projects.imper.desc': 'Institutional website for a corporate uniforms company with product catalog.',
+            'projects.imper.title': 'Imper Uniformes',
+            'projects.imper.fullDesc': 'Complete institutional website for Imper Uniformes, a company specialized in custom corporate uniforms. Features a product catalog and contact information.',
+            'projects.imper.h1': 'Responsive product catalog',
+            'projects.imper.h2': 'Professional and modern design',
+            'projects.imper.h3': 'Easy access to contact information',
             'music.subtitle': 'What I am listening to while coding.',
             'music.listening': 'Now playing',
             'music.paused': 'Paused',
@@ -448,6 +462,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Navegação simples e direta'
             ],
             live: 'https://metanoiaapp.vercel.app'
+        },
+        imper: {
+            title: 'Imper Uniformes',
+            tag: 'Site Institucional',
+            description: 'Site institucional para empresa de uniformes corporativos personalizados, com catálogo de produtos e informações para contato.',
+            stack: ['React', 'Tailwind CSS', 'Vercel'],
+            highlights: [
+                'Catálogo de produtos responsivo',
+                'Design profissional e moderno',
+                'Fácil acesso a informações de contato'
+            ],
+            live: 'https://www.imperuniformes.com.br'
         }
     };
 
@@ -644,6 +670,106 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(updateNowPlaying, 30000);
     }
 
+    // 7.6 Projetos — carrossel
+    const carouselViewport = document.getElementById('carouselViewport');
+    const carouselTrack = document.getElementById('carouselTrack');
+    const carouselPrev = document.getElementById('carouselPrev');
+    const carouselNext = document.getElementById('carouselNext');
+    const carouselDots = document.getElementById('carouselDots');
+
+    if (carouselTrack && carouselViewport) {
+        const slides = Array.from(carouselTrack.children);
+        let currentIndex = 0;
+        let startX = 0;
+        let isDragging = false;
+        let didDrag = false;
+
+        function getStep() {
+            if (slides.length < 2) return carouselTrack.clientWidth || 1;
+            return slides[1].offsetLeft - slides[0].offsetLeft;
+        }
+
+        function render(smooth) {
+            carouselTrack.style.transition = smooth
+                ? 'transform 0.5s cubic-bezier(0.25, 0.8, 0.3, 1)'
+                : 'none';
+            carouselTrack.style.transform = 'translate3d(' + (-currentIndex * getStep()) + 'px, 0, 0)';
+            updateDots();
+        }
+
+        function goTo(index, smooth) {
+            currentIndex = Math.max(0, Math.min(slides.length - 1, index));
+            render(smooth === undefined ? true : smooth);
+        }
+
+        function buildDots() {
+            carouselDots.innerHTML = '';
+            slides.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = 'carousel-dot' + (i === 0 ? ' is-active' : '');
+                dot.setAttribute('aria-label', 'Ir para o projeto ' + (i + 1));
+                dot.addEventListener('click', () => goTo(i));
+                carouselDots.appendChild(dot);
+            });
+        }
+
+        function updateDots() {
+            Array.from(carouselDots.children).forEach((dot, i) => {
+                dot.classList.toggle('is-active', i === currentIndex);
+            });
+        }
+
+        if (carouselPrev) carouselPrev.addEventListener('click', () => goTo(currentIndex - 1));
+        if (carouselNext) carouselNext.addEventListener('click', () => goTo(currentIndex + 1));
+
+        carouselTrack.addEventListener('pointerdown', e => {
+            isDragging = true;
+            didDrag = false;
+            startX = e.clientX;
+            carouselTrack.style.transition = 'none';
+        });
+
+        carouselTrack.addEventListener('pointermove', e => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            if (Math.abs(dx) > 5) didDrag = true;
+            carouselTrack.style.transform = 'translate3d(' + (-currentIndex * getStep() + dx) + 'px, 0, 0)';
+        });
+
+        document.addEventListener('pointerup', e => {
+            if (!isDragging) return;
+            isDragging = false;
+            const dx = e.clientX - startX;
+            if (Math.abs(dx) > 50) {
+                goTo(currentIndex + (dx < 0 ? 1 : -1));
+            } else if (didDrag) {
+                render(true);
+            }
+        });
+
+        carouselTrack.addEventListener('pointercancel', () => {
+            isDragging = false;
+            render(true);
+        });
+
+        carouselTrack.addEventListener('click', e => {
+            if (didDrag) {
+                e.preventDefault();
+                e.stopPropagation();
+                didDrag = false;
+            }
+        });
+
+        function onResize() {
+            render(false);
+        }
+
+        buildDots();
+        render(false);
+        window.addEventListener('resize', onResize);
+    }
+
     // 8. Hero V2 — morphing text (liquid-text effect)
     const morphText1 = document.getElementById('morphText1');
     const morphText2 = document.getElementById('morphText2');
@@ -713,21 +839,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     const depth = parseFloat(card.dataset.depth) || 0.03;
                     const moveX = dx * depth * 120;
                     const moveY = dy * depth * 80;
-                    const cs = getComputedStyle(card);
-                    const baseRotate = cs.getPropertyValue('--card-rotate').trim() || '0deg';
-                    const offX = parseFloat(cs.getPropertyValue('--card-offset-x')) || 0;
-                    const offY = parseFloat(cs.getPropertyValue('--card-offset-y')) || 0;
-                    card.style.transform = `rotate(${baseRotate}) translate(${offX + moveX}px, ${offY + moveY}px)`;
+                    const baseRotate = getComputedStyle(card).getPropertyValue('--card-rotate').trim() || '0deg';
+                    card.style.transform = `rotate(${baseRotate}) translate(${moveX}px, ${moveY}px)`;
                 });
             });
 
             heroStage.addEventListener('mouseleave', () => {
                 techCards.forEach(card => {
-                    const cs = getComputedStyle(card);
-                    const baseRotate = cs.getPropertyValue('--card-rotate').trim() || '0deg';
-                    const offX = parseFloat(cs.getPropertyValue('--card-offset-x')) || 0;
-                    const offY = parseFloat(cs.getPropertyValue('--card-offset-y')) || 0;
-                    card.style.transform = `rotate(${baseRotate}) translate(${offX}px, ${offY}px)`;
+                    const baseRotate = getComputedStyle(card).getPropertyValue('--card-rotate').trim() || '0deg';
+                    card.style.transform = `rotate(${baseRotate})`;
                 });
             });
         }
