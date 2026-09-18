@@ -138,7 +138,7 @@
                 <!-- Center GIF -->
                 <div class="hero-v2__center">
                     <div class="hero-v2__gif-wrap">
-                        <img src="girl.gif" alt="Ilustração animada" class="hero-v2__gif" id="heroGif">
+                        <img src="dekudark.png" alt="Ilustração" class="hero-v2__gif" id="heroGif">
                     </div>
                 </div>
 
@@ -163,6 +163,17 @@
                 <a href="#work" class="hero-v2__cta hero-v2__cta--primary" data-i18n="hero.ctaProjects">Ver projetos</a>
                 <a href="#contact" class="hero-v2__cta hero-v2__cta--secondary" data-i18n="hero.ctaContact">Falar comigo</a>
             </div>
+        </section>
+
+        <!-- NOME GIGANTE -->
+        <section id="statement" class="statement" aria-label="EDUUHLANN">
+            <div class="statement__content">
+                <span class="statement__kicker" data-i18n="statement.kicker">O nome por trás do código</span>
+                <h2 class="statement__name" id="statementName">EDUUHLANN</h2>
+                <p class="statement__tagline" data-i18n="statement.tagline">Criando interfaces que as pessoas lembram.</p>
+                <a href="#work" class="statement__cta" data-i18n-html="statement.cta">Explorar projetos <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <span class="statement__scroll" data-i18n="statement.scroll">Rolar</span>
         </section>
 
         <!-- MARQUEE de tecnologias -->
@@ -254,6 +265,25 @@
                             busco sempre entregar uma experiência visual de qualidade, com atenção aos detalhes e
                             usabilidade.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FILOSOFIA (scroll expand) -->
+        <section id="philosophy" class="philosophy" aria-label="Filosofia">
+            <div class="philosophy__track">
+                <div class="philosophy__stage" id="philoStage">
+                    <div class="philosophy__frame" id="philoFrame">
+                        <img class="philosophy__media" src="image.png" alt="Fundo atmosférico" draggable="false">
+                        <div class="philosophy__scrim" id="philoScrim"></div>
+                        <div class="philosophy__overlay" id="philoOverlay">
+                            <span class="philosophy__kicker" data-i18n="philosophy.kicker">A Filosofia</span>
+                            <p class="philosophy__quote" data-i18n="philosophy.quote">Acredito que um bom software
+                                nasce na interseção entre precisão de engenharia e intuição de design. Cada pixel, cada
+                                interação, cada linha de código é uma oportunidade de criar algo que emociona.</p>
+                        </div>
+                    </div>
+                    <span class="philosophy__hint" id="philoHint" data-i18n="philosophy.scroll">Rolar</span>
                 </div>
             </div>
         </section>
@@ -505,6 +535,56 @@
                 setTimeout(finish, 250);
             });
             setTimeout(finish, 4000);
+        })();
+    </script>
+
+    <script>
+        (function () {
+            var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            /* ---------- REVELAÇÃO DO NOME ---------- */
+            if (window.gsap && !reducedMotion) {
+                gsap.registerPlugin(ScrollTrigger);
+                window.addEventListener('load', function () { ScrollTrigger.refresh(); });
+                gsap.from(['.statement__kicker', '.statement__name', '.statement__tagline', '.statement__cta'], {
+                    autoAlpha: 0,
+                    y: 44,
+                    duration: 1,
+                    ease: 'power3.out',
+                    stagger: 0.12,
+                    scrollTrigger: { trigger: '#statement', start: 'top 72%', once: true }
+                });
+
+                /* ---------- FILOSOFIA (scroll expand) ---------- */
+                var philoTrack = document.querySelector('.philosophy__track');
+                var philoFrame = document.getElementById('philoFrame');
+                if (philoTrack && philoFrame) {
+                    var philoMedia = philoFrame.querySelector('.philosophy__media');
+                    var philoScrim = document.getElementById('philoScrim');
+                    var philoOverlay = document.getElementById('philoOverlay');
+                    var philoHint = document.getElementById('philoHint');
+
+                    var philoTl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: philoTrack,
+                            start: 'top top',
+                            end: 'bottom bottom',
+                            scrub: 0.5,
+                            pin: document.getElementById('philoStage'),
+                            anticipatePin: 1
+                        }
+                    });
+
+                    philoTl.fromTo(philoFrame,
+                            { clipPath: 'inset(21% 29% round 24px)' },
+                            { clipPath: 'inset(0% 0% round 0px)', ease: 'none', duration: 1 }, 0)
+                        .fromTo(philoMedia, { scale: 1.25 }, { scale: 1, ease: 'none', duration: 1 }, 0)
+                        .fromTo(philoScrim, { opacity: 0 }, { opacity: 1, ease: 'none', duration: 0.8 }, 0.15)
+                        .fromTo(philoOverlay, { opacity: 0, y: 48 }, { opacity: 1, y: 0, ease: 'none', duration: 0.5 }, 0.5)
+                        .fromTo(philoHint, { opacity: 0 }, { opacity: 1, ease: 'none', duration: 0.25 }, 0.08)
+                        .to(philoHint, { opacity: 0, ease: 'none', duration: 0.2 }, 0.72);
+                }
+            }
         })();
     </script>
 </body>

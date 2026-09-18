@@ -2273,3 +2273,253 @@ body,
 .now-playing {
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
+
+/* ================== STATEMENT: NOME GIGANTE ================== */
+.statement {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--bg-base);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 6rem 5%;
+}
+
+.statement::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    z-index: 0;
+    background:
+        radial-gradient(38% 46% at 28% 32%, var(--accent-glow), transparent 70%),
+        radial-gradient(42% 50% at 74% 68%, rgba(252, 107, 47, 0.12), transparent 70%);
+    filter: blur(30px);
+    pointer-events: none;
+    animation: statementGlow 18s ease-in-out infinite alternate;
+}
+
+@keyframes statementGlow {
+    from { transform: translate3d(-3%, -2%, 0) scale(1); }
+    to { transform: translate3d(3%, 2%, 0) scale(1.08); }
+}
+
+.statement__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+    max-width: 1100px;
+}
+
+.statement__kicker {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--text-secondary);
+}
+
+.statement__name {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(2.25rem, 10vw, 8.5rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    color: var(--text-primary);
+    text-shadow: 0 0 70px var(--accent-glow);
+    user-select: none;
+}
+
+.statement__tagline {
+    font-family: var(--font-heading);
+    font-size: clamp(0.85rem, 1.6vw, 1.15rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: var(--text-primary);
+}
+
+.statement__tagline::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    margin-top: 0.9rem;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.statement__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.75rem;
+    padding: 0.85rem 1.9rem;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: var(--transition-normal);
+}
+
+.statement__cta i {
+    transition: transform 0.3s ease;
+}
+
+.statement__cta:hover {
+    border-color: var(--text-primary);
+    background: var(--card-hover-bg);
+}
+
+.statement__cta:hover i {
+    transform: translateX(4px);
+}
+
+.statement__scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--text-secondary);
+    opacity: 0;
+    animation: statementScrollIn 1s ease 1.6s forwards;
+}
+
+.statement__scroll::before {
+    content: "";
+    width: 1px;
+    height: 2.4rem;
+    background: linear-gradient(180deg, var(--text-secondary), transparent);
+}
+
+@keyframes statementScrollIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .statement::before {
+        animation: none;
+    }
+
+    .statement__scroll {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+/* ================== PHILOSOPHY (scroll expand) ================== */
+.philosophy {
+    position: relative;
+    background: #050506;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.philosophy__track {
+    position: relative;
+    height: 300vh;
+}
+
+.philosophy__stage {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.philosophy__frame {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(21% 29% round 24px);
+    will-change: clip-path;
+}
+
+.philosophy__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: 50%;
+    will-change: transform;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.philosophy__scrim {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: linear-gradient(180deg, rgba(5, 5, 5, 0.85) 0%, rgba(5, 5, 5, 0.4) 55%, rgba(5, 5, 5, 0.95) 100%);
+    pointer-events: none;
+}
+
+.philosophy__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.75rem;
+    padding: 6%;
+    text-align: center;
+    opacity: 0;
+    will-change: opacity, transform;
+}
+
+.philosophy__kicker {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.philosophy__quote {
+    max-width: 900px;
+    font-family: var(--font-heading);
+    font-weight: 300;
+    font-size: clamp(1.25rem, 3.2vw, 2.4rem);
+    line-height: 1.45;
+    color: #fff;
+}
+
+.philosophy__hint {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    opacity: 0;
+    will-change: opacity, transform;
+}
+
