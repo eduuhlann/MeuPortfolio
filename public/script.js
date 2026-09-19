@@ -168,14 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
             'modal.highlights': 'Destaques',
             'footer.copyright': '© 2026 Eduardo Lannes Marinato. Desenvolvido com muito <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> e código.',
             'footer.updated': 'Última atualização: ago/2026',
-            'statement.kicker': 'O nome por trás do código',
-            'statement.tagline': 'Criando interfaces que as pessoas lembram.',
-            'statement.cta': 'Explorar projetos <i class="fa-solid fa-arrow-right"></i>',
-            'statement.scroll': 'Rolar',
             'philosophy.kicker': 'A Filosofia',
             'philosophy.quote': 'Acredito que um bom software nasce na interseção entre precisão de engenharia e intuição de design. Cada pixel, cada interação, cada linha de código é uma oportunidade de criar algo que emociona.',
             'philosophy.scroll': 'Rolar',
-            'breadcrumb': { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato', statement: 'Nome', philosophy: 'Filosofia' }
+            'breadcrumb': { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato', philosophy: 'Filosofia' }
         },
         en: {
             'nav.home': 'Home',
@@ -238,14 +234,10 @@ document.addEventListener('DOMContentLoaded', () => {
             'modal.highlights': 'Highlights',
             'footer.copyright': '© 2026 Eduardo Lannes Marinato. Built with lots of <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> and code.',
             'footer.updated': 'Last updated: Aug/2026',
-            'statement.kicker': 'The name behind the code',
-            'statement.tagline': 'Crafting interfaces that people remember.',
-            'statement.cta': 'Explore projects <i class="fa-solid fa-arrow-right"></i>',
-            'statement.scroll': 'Scroll',
             'philosophy.kicker': 'The Philosophy',
             'philosophy.quote': "I believe great software is born at the intersection of engineering precision and design intuition. Every pixel, every interaction, every line of code is an opportunity to create something that moves people.",
             'philosophy.scroll': 'Scroll',
-            'breadcrumb': { home: 'Home', about: 'About me', work: 'Projects', music: 'Music', contact: 'Contact', statement: 'Name', philosophy: 'Philosophy' }
+            'breadcrumb': { home: 'Home', about: 'About me', work: 'Projects', music: 'Music', contact: 'Contact', philosophy: 'Philosophy' }
         }
     };
 
@@ -298,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
             breadcrumbLabels.work = bc.work;
             breadcrumbLabels.music = bc.music;
             breadcrumbLabels.contact = bc.contact;
-            breadcrumbLabels.statement = bc.statement;
             breadcrumbLabels.philosophy = bc.philosophy;
         }
 
@@ -407,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navAnchors = document.querySelectorAll('.main-nav a');
     const sectionBreadcrumb = document.getElementById('sectionBreadcrumb');
     const breadcrumbText = document.getElementById('breadcrumbText');
-    let breadcrumbLabels = { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato', statement: 'Nome', philosophy: 'Filosofia' };
+    let breadcrumbLabels = { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato', philosophy: 'Filosofia' };
     let lastSectionId = '';
 
     function updateSectionUI(id) {

@@ -174,17 +174,6 @@
             </div>
         </section>
 
-        <!-- NOME GIGANTE -->
-        <section id="statement" class="statement" aria-label="EDUUHLANN">
-            <div class="statement__content">
-                <span class="statement__kicker" data-i18n="statement.kicker">O nome por trás do código</span>
-                <h2 class="statement__name" id="statementName">EDUUHLANN</h2>
-                <p class="statement__tagline" data-i18n="statement.tagline">Criando interfaces que as pessoas lembram.</p>
-                <a href="#work" class="statement__cta" data-i18n-html="statement.cta">Explorar projetos <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
-            <span class="statement__scroll" data-i18n="statement.scroll">Rolar</span>
-        </section>
-
         <!-- MARQUEE de tecnologias -->
         <div class="marquee" aria-hidden="true">
             <div class="marquee__track">
@@ -551,20 +540,10 @@
         (function () {
             var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            /* ---------- REVELAÇÃO DO NOME ---------- */
+            /* ---------- FILOSOFIA (scroll expand) ---------- */
             if (window.gsap && !reducedMotion) {
                 gsap.registerPlugin(ScrollTrigger);
                 window.addEventListener('load', function () { ScrollTrigger.refresh(); });
-                gsap.from(['.statement__kicker', '.statement__name', '.statement__tagline', '.statement__cta'], {
-                    autoAlpha: 0,
-                    y: 44,
-                    duration: 1,
-                    ease: 'power3.out',
-                    stagger: 0.12,
-                    scrollTrigger: { trigger: '#statement', start: 'top 72%', once: true }
-                });
-
-                /* ---------- FILOSOFIA (scroll expand) ---------- */
                 var philoTrack = document.querySelector('.philosophy__track');
                 var philoFrame = document.getElementById('philoFrame');
                 if (philoTrack && philoFrame) {
