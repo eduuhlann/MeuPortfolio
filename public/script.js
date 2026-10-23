@@ -157,6 +157,16 @@ document.addEventListener('DOMContentLoaded', () => {
             'philosophy.kicker': 'A Filosofia',
             'philosophy.reference': "Efésios 2:1–10",
             'philosophy.reader': 'Versículos de Efésios 2:1–10 na NVI',
+            'philosophy.v1': 'Vocês estavam mortos nas suas transgressões e nos seus pecados,',
+            'philosophy.v2': 'nos quais costumavam viver, quando seguiam os padrões deste mundo e o príncipe do poder do ar, o espírito que agora atua nos filhos da desobediência.',
+            'philosophy.v3': 'Antes, todos também vivíamos como eles, satisfazendo os desejos da nossa natureza pecaminosa, realizando as vontades e os pensamentos dela. Como os outros, éramos por natureza merecedores da ira.',
+            'philosophy.v4': 'Todavia, Deus, por ser rico em misericórdia, por causa do grande amor com que nos amou,',
+            'philosophy.v5': 'deu-nos a vida com Cristo quando ainda estávamos mortos nas transgressões — pela graça vocês são salvos.',
+            'philosophy.v6': 'Deus nos ressuscitou com Cristo e com ele nos assentou nas regiões celestiais em Cristo Jesus,',
+            'philosophy.v7': 'para mostrar, nas eras por vir, a incomparável riqueza da sua graça, demonstrada na sua bondade para conosco em Cristo Jesus.',
+            'philosophy.v8': 'Pois pela graça vocês são salvos, por meio da fé, e isto não vem de vocês, é dom de Deus;',
+            'philosophy.v9': 'não por obras, para que ninguém se glorie.',
+            'philosophy.v10': 'Porque fomos feitos por Deus, criados em Cristo Jesus, para boas obras, as quais Deus preparou previamente para que andássemos nelas.',
             'breadcrumb': { home: 'Home', about: 'Sobre mim', music: 'Música', faq: 'Perguntas frequentes', contact: 'Contato', philosophy: 'Filosofia' }
         },
         en: {
@@ -208,7 +218,17 @@ document.addEventListener('DOMContentLoaded', () => {
             'footer.copyright': '© 2026 Eduardo Lannes Marinato. Built with lots of <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> and code.',
             'philosophy.kicker': 'The Philosophy',
             'philosophy.reference': "Ephesians 2:1–10",
-            'philosophy.reader': 'Ephesians 2:1–10 verses in Portuguese (NVI)',
+            'philosophy.reader': 'Ephesians 2:1–10 verses in English (WEB)',
+            'philosophy.v1': 'You were made alive when you were dead in transgressions and sins,',
+            'philosophy.v2': 'in which you once walked according to the course of this world, according to the prince of the power of the air, the spirit who now works in the children of disobedience;',
+            'philosophy.v3': 'among whom we also all once lived in the lusts of our flesh, doing the desires of the flesh and of the mind, and were by nature children of wrath, even as the rest.',
+            'philosophy.v4': 'But God, being rich in mercy, for his great love with which he loved us,',
+            'philosophy.v5': 'even when we were dead through our trespasses, made us alive together with Christ—by grace you have been saved—',
+            'philosophy.v6': 'and raised us up with him, and made us to sit with him in the heavenly places in Christ Jesus,',
+            'philosophy.v7': 'that in the ages to come he might show the exceeding riches of his grace in kindness toward us in Christ Jesus;',
+            'philosophy.v8': 'for by grace you have been saved through faith, and that not of yourselves; it is the gift of God,',
+            'philosophy.v9': 'not of works, that no one would boast.',
+            'philosophy.v10': 'For we are his workmanship, created in Christ Jesus for good works, which God prepared before that we would walk in them.',
             'breadcrumb': { home: 'Home', about: 'About me', music: 'Music', faq: 'Frequently asked questions', contact: 'Contact', philosophy: 'Philosophy' }
         }
     };
@@ -253,6 +273,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (t[key] !== undefined) {
                 el.setAttribute('aria-label', t[key]);
             }
+        });
+
+        document.querySelectorAll('.philosophy__quote').forEach(el => {
+            el.setAttribute('lang', lang === 'en' ? 'en' : 'pt-BR');
         });
 
         const bc = t.breadcrumb;
