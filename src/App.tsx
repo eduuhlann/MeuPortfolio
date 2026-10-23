@@ -3,7 +3,6 @@ import AnimatedCard from "@/components/ui/AnimatedCard";
 import ClickSpark from "@/components/ui/ClickSpark";
 import PillNav from "@/components/ui/PillNav";
 import { TextAnimate } from "@/components/ui/text-animate";
-import { ProjectCard } from "@/components/ui/ProjectCard";
 import ParallaxDemo from "@/demos/default";
 import { SplineSceneBasic } from "@/demos/spline-demo";
 import favicon from "/favicon.ico";
@@ -16,7 +15,6 @@ function App() {
         logoAlt="Logo"
         items={[
           { label: "Início", href: "#inicio" },
-          { label: "Projetos", href: "#projetos" },
           { label: "Serviços", href: "#servicos" },
           { label: "Sobre", href: "#sobre" },
           { label: "Contato", href: "#contato" },
@@ -44,27 +42,6 @@ function App() {
           <section id="servicos" className="flex scroll-mt-24 justify-center p-6 md:p-10">
             <div className="w-full max-w-5xl">
               <SplineSceneBasic />
-            </div>
-          </section>
-        </AnimatedCard>
-        <AnimatedCard direction="up" delay={0.15}>
-          <section id="projetos" className="flex scroll-mt-24 flex-col items-center justify-center gap-6 p-6 md:p-10" aria-label="Projetos">
-            <TextAnimate
-              as="h2"
-              animation="blurInUp"
-              by="character"
-              once
-              className="text-4xl font-bold text-white md:text-5xl"
-            >
-              PROJETOS
-            </TextAnimate>
-            <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              <ProjectCard
-                title="Imper Uniformes"
-                description="Site institucional para empresa de uniformes corporativos personalizados, com catálogo de produtos e formulário de contato."
-                url="https://www.imperuniformes.com.br"
-                tags={["React", "Tailwind", "Design"]}
-              />
             </div>
           </section>
         </AnimatedCard>

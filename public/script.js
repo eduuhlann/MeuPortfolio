@@ -110,44 +110,34 @@ document.addEventListener('DOMContentLoaded', () => {
         pt: {
             'nav.home': 'Home',
             'nav.about': 'Sobre',
-            'nav.projects': 'Projetos',
             'nav.music': 'Música',
+            'nav.faq': 'FAQ',
             'nav.contact': 'Contato',
-            'hero.ctaProjects': 'Ver projetos',
+            'section.faq': "FAQ",
+            'faq.title': "Perguntas frequentes",
+            'faq.intro': "O que você precisa saber antes de começarmos um site juntos.",
+            'faq.more': "Ainda tem alguma dúvida?",
+            'faq.contact': "Vamos conversar",
+            'faq.q1': "Que tipo de site posso solicitar?",
+            'faq.a1': "Landing pages, portfólios e sites institucionais são alguns exemplos. Conte a sua ideia para avaliarmos o que faz sentido para o seu objetivo.",
+            'faq.q2': "Como funciona o orçamento?",
+            'faq.a2': "Envie uma descrição da ideia, as páginas e funcionalidades de que precisa e, se tiver, algumas referências. Com essas informações, podemos definir o escopo e conversar sobre o investimento.",
+            'faq.q3': "Quanto tempo leva para um site ficar pronto?",
+            'faq.a3': "O prazo depende do tamanho do site, das funcionalidades e da disponibilidade dos textos e imagens. Ele é combinado depois da definição do projeto.",
+            'faq.q4': "O site vai funcionar no celular?",
+            'faq.a4': "A proposta é criar interfaces responsivas, pensadas para celulares, tablets e computadores, com atenção à navegação e à legibilidade em cada tela.",
+            'faq.q5': "Preciso ter domínio e hospedagem?",
+            'faq.a5': "Para publicar o site, precisamos definir onde ele será hospedado e se usará um domínio próprio. Essas escolhas podem ser avaliadas junto com as necessidades do projeto.",
+            'faq.q6': "Você faz alterações depois da entrega?",
+            'faq.a6': "Ajustes, atualizações e manutenção podem ser conversados conforme a necessidade. O que estiver incluído fica definido no escopo do projeto.",
             'hero.ctaContact': 'Falar comigo',
             'hero.morphTexts': ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'],
             'section.about': 'Sobre Mim',
-            'section.projects': 'Projetos',
             'section.music': 'Música',
             'section.contact': 'Contato',
             'about.title': 'Desenvolvedor em formação pela UTFPR, apaixonado por tecnologia e design.',
             'about.p1': 'Tenho 20 anos e sou estudante de Ciência da Computação na UTFPR de Campo Mourão. Estou em constante evolução como desenvolvedor, com foco em criar interfaces limpas, modernas e funcionais.',
             'about.p2': 'Gosto de transformar ideias em produtos digitais bem acabados. Trabalho com tecnologias web e busco sempre entregar uma experiência visual de qualidade, com atenção aos detalhes e usabilidade.',
-            'projects.subtitle': 'Alguns dos projetos que já construí.',
-            'projects.details': 'Ver detalhes <i class="fa-solid fa-plus"></i>',
-            'projects.visit': 'Visitar site <i class="fa-solid fa-arrow-right"></i>',
-            'projects.seeAll': 'Ver todos os projetos <i class="fa-brands fa-github"></i>',
-            'projects.oneflow.tag': 'Projeto Web',
-            'projects.oneflow.desc': 'Plataforma web moderna com foco em experiência do usuário, performance e design limpo.',
-            'projects.oneflow.title': 'OneFlow',
-            'projects.oneflow.fullDesc': 'Plataforma web moderna com foco em experiência do usuário, performance e design limpo. Construída para demonstrar boas práticas de desenvolvimento frontend, da interface à otimização.',
-            'projects.oneflow.h1': 'Interface responsiva e acessível',
-            'projects.oneflow.h2': 'Design limpo e moderno',
-            'projects.oneflow.h3': 'Foco em performance de carregamento',
-            'projects.metanoia.tag': 'Site Institucional',
-            'projects.metanoia.desc': 'Site feito para a juventude da Primeira Igreja Batista de Campo Mourão, PR.',
-            'projects.metanoia.title': 'MetanoiaApp',
-            'projects.metanoia.fullDesc': 'Presença digital da juventude da Primeira Igreja Batista de Campo Mourão, PR. Pensada para conectar os jovens, divulgar encontros e fortalecer a comunidade.',
-            'projects.metanoia.h1': 'Divulgação clara dos encontros',
-            'projects.metanoia.h2': 'Visual acolhedor e jovem',
-            'projects.metanoia.h3': 'Navegação simples e direta',
-            'projects.imper.tag': 'Site Institucional',
-            'projects.imper.desc': 'Site institucional para empresa de uniformes corporativos personalizados com catálogo de produtos.',
-            'projects.imper.title': 'Imper Uniformes',
-            'projects.imper.fullDesc': 'Site institucional completo para a Imper Uniformes, empresa especializada em uniformes corporativos personalizados. Inclui catálogo de produtos e informações de contato.',
-            'projects.imper.h1': 'Catálogo de produtos responsivo',
-            'projects.imper.h2': 'Design profissional e moderno',
-            'projects.imper.h3': 'Fácil acesso a informações de contato',
             'music.subtitle': 'O que estou escutando enquanto codifico.',
             'music.listening': 'Ouvindo agora',
             'music.paused': 'Pausado',
@@ -163,57 +153,43 @@ document.addEventListener('DOMContentLoaded', () => {
             'contact.social': '// rede social',
             'contact.whatsapp': '// conversa rápida',
             'backToTop': 'Voltar ao topo',
-            'modal.close': 'Fechar detalhes do projeto',
-            'modal.technologies': 'Tecnologias',
-            'modal.highlights': 'Destaques',
             'footer.copyright': '© 2026 Eduardo Lannes Marinato. Desenvolvido com muito <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> e código.',
-            'footer.updated': 'Última atualização: ago/2026',
             'philosophy.kicker': 'A Filosofia',
-            'philosophy.quote': 'Acredito que um bom software nasce na interseção entre precisão de engenharia e intuição de design. Cada pixel, cada interação, cada linha de código é uma oportunidade de criar algo que emociona.',
-            'philosophy.scroll': 'Rolar',
-            'breadcrumb': { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato', philosophy: 'Filosofia' }
+            'philosophy.reference': "Efésios 2:1–10",
+            'philosophy.reader': 'Versículos de Efésios 2:1–10 na NVI',
+            'breadcrumb': { home: 'Home', about: 'Sobre mim', music: 'Música', faq: 'Perguntas frequentes', contact: 'Contato', philosophy: 'Filosofia' }
         },
         en: {
             'nav.home': 'Home',
             'nav.about': 'About',
-            'nav.projects': 'Projects',
             'nav.music': 'Music',
+            'nav.faq': 'FAQ',
             'nav.contact': 'Contact',
-            'hero.ctaProjects': 'View projects',
+            'section.faq': "FAQ",
+            'faq.title': "Frequently asked questions",
+            'faq.intro': "What you need to know before we start building your website.",
+            'faq.more': "Still have a question?",
+            'faq.contact': "Let’s talk",
+            'faq.q1': "What kind of website can I request?",
+            'faq.a1': "Landing pages, portfolios, and business websites are a few examples. Tell me about your idea so we can work out what makes sense for your goals.",
+            'faq.q2': "How do I get a quote?",
+            'faq.a2': "Send a description of your idea, the pages and features you need, and any references you have. With that information, we can define the scope and discuss the cost.",
+            'faq.q3': "How long does it take to build a website?",
+            'faq.a3': "The timeline depends on the size of the website, its features, and when the text and images are ready. We agree on a schedule after defining the project.",
+            'faq.q4': "Will the website work on mobile?",
+            'faq.a4': "The goal is to create responsive interfaces for phones, tablets, and computers, with attention to navigation and readability on each screen.",
+            'faq.q5': "Do I need a domain and hosting?",
+            'faq.a5': "To publish the website, we need to decide where it will be hosted and whether it will use a custom domain. We can consider those choices alongside the needs of the project.",
+            'faq.q6': "Can I request changes after delivery?",
+            'faq.a6': "We can discuss changes, updates, and maintenance based on your needs. The project scope sets out what is included.",
             'hero.ctaContact': 'Get in touch',
             'hero.morphTexts': ['FRONTEND DEVELOPER', 'UI/UX DESIGNER', 'FREELANCER'],
             'section.about': 'About Me',
-            'section.projects': 'Projects',
             'section.music': 'Music',
             'section.contact': 'Contact',
             'about.title': 'Computer Science student at UTFPR, passionate about technology and design.',
             'about.p1': "I'm 20 years old and a Computer Science student at UTFPR in Campo Mourão. I'm constantly evolving as a developer, focused on creating clean, modern, and functional interfaces.",
             'about.p2': 'I enjoy turning ideas into well-crafted digital products. I work with web technologies and always strive to deliver a quality visual experience, with attention to detail and usability.',
-            'projects.subtitle': 'Some of the projects I have built.',
-            'projects.details': 'View details <i class="fa-solid fa-plus"></i>',
-            'projects.visit': 'Visit site <i class="fa-solid fa-arrow-right"></i>',
-            'projects.seeAll': 'See all projects <i class="fa-brands fa-github"></i>',
-            'projects.oneflow.tag': 'Web Project',
-            'projects.oneflow.desc': 'Modern web platform focused on user experience, performance, and clean design.',
-            'projects.oneflow.title': 'OneFlow',
-            'projects.oneflow.fullDesc': 'Modern web platform focused on user experience, performance, and clean design. Built to demonstrate frontend development best practices, from interface to optimization.',
-            'projects.oneflow.h1': 'Responsive and accessible interface',
-            'projects.oneflow.h2': 'Clean and modern design',
-            'projects.oneflow.h3': 'Focus on loading performance',
-            'projects.metanoia.tag': 'Institutional Site',
-            'projects.metanoia.desc': 'Website built for the youth ministry of Primeira Igreja Batista de Campo Mourão, PR.',
-            'projects.metanoia.title': 'MetanoiaApp',
-            'projects.metanoia.fullDesc': 'Digital presence for the youth ministry of Primeira Igreja Batista de Campo Mourão, PR. Designed to connect young people, promote events, and strengthen the community.',
-            'projects.metanoia.h1': 'Clear event promotion',
-            'projects.metanoia.h2': 'Welcoming and youthful look',
-            'projects.metanoia.h3': 'Simple and direct navigation',
-            'projects.imper.tag': 'Institutional Site',
-            'projects.imper.desc': 'Institutional website for a corporate uniforms company with product catalog.',
-            'projects.imper.title': 'Imper Uniformes',
-            'projects.imper.fullDesc': 'Complete institutional website for Imper Uniformes, a company specialized in custom corporate uniforms. Features a product catalog and contact information.',
-            'projects.imper.h1': 'Responsive product catalog',
-            'projects.imper.h2': 'Professional and modern design',
-            'projects.imper.h3': 'Easy access to contact information',
             'music.subtitle': 'What I am listening to while coding.',
             'music.listening': 'Now playing',
             'music.paused': 'Paused',
@@ -229,15 +205,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'contact.social': '// social media',
             'contact.whatsapp': '// quick chat',
             'backToTop': 'Back to top',
-            'modal.close': 'Close project details',
-            'modal.technologies': 'Technologies',
-            'modal.highlights': 'Highlights',
             'footer.copyright': '© 2026 Eduardo Lannes Marinato. Built with lots of <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> and code.',
-            'footer.updated': 'Last updated: Aug/2026',
             'philosophy.kicker': 'The Philosophy',
-            'philosophy.quote': "I believe great software is born at the intersection of engineering precision and design intuition. Every pixel, every interaction, every line of code is an opportunity to create something that moves people.",
-            'philosophy.scroll': 'Scroll',
-            'breadcrumb': { home: 'Home', about: 'About me', work: 'Projects', music: 'Music', contact: 'Contact', philosophy: 'Philosophy' }
+            'philosophy.reference': "Ephesians 2:1–10",
+            'philosophy.reader': 'Ephesians 2:1–10 verses in Portuguese (NVI)',
+            'breadcrumb': { home: 'Home', about: 'About me', music: 'Music', faq: 'Frequently asked questions', contact: 'Contact', philosophy: 'Philosophy' }
         }
     };
 
@@ -287,10 +259,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (bc) {
             breadcrumbLabels.home = bc.home;
             breadcrumbLabels.about = bc.about;
-            breadcrumbLabels.work = bc.work;
             breadcrumbLabels.music = bc.music;
+            breadcrumbLabels.faq = bc.faq;
             breadcrumbLabels.contact = bc.contact;
             breadcrumbLabels.philosophy = bc.philosophy;
+            if (breadcrumbText && lastSectionId) {
+                breadcrumbText.textContent = breadcrumbLabels[lastSectionId] || lastSectionId;
+            }
         }
 
         if (typeof morphTexts !== 'undefined') {
@@ -301,23 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        translateProjectDetails(lang);
         updateNowPlayingText(lang);
-    }
-
-    function translateProjectDetails(lang) {
-        const t = TRANSLATIONS[lang];
-        if (!t) return;
-
-        PROJECT_DETAILS.oneflow.tag = t['projects.oneflow.tag'];
-        PROJECT_DETAILS.oneflow.description = t['projects.oneflow.fullDesc'];
-        PROJECT_DETAILS.oneflow.title = t['projects.oneflow.title'];
-        PROJECT_DETAILS.oneflow.highlights = [t['projects.oneflow.h1'], t['projects.oneflow.h2'], t['projects.oneflow.h3']];
-
-        PROJECT_DETAILS.metanoia.tag = t['projects.metanoia.tag'];
-        PROJECT_DETAILS.metanoia.description = t['projects.metanoia.fullDesc'];
-        PROJECT_DETAILS.metanoia.title = t['projects.metanoia.title'];
-        PROJECT_DETAILS.metanoia.highlights = [t['projects.metanoia.h1'], t['projects.metanoia.h2'], t['projects.metanoia.h3']];
     }
 
     let currentNowPlayingLang = 'pt';
@@ -398,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navAnchors = document.querySelectorAll('.main-nav a');
     const sectionBreadcrumb = document.getElementById('sectionBreadcrumb');
     const breadcrumbText = document.getElementById('breadcrumbText');
-    let breadcrumbLabels = { home: 'Home', about: 'Sobre mim', work: 'Projetos', music: 'Música', contact: 'Contato', philosophy: 'Filosofia' };
+    let breadcrumbLabels = { home: 'Home', about: 'Sobre mim', music: 'Música', faq: 'Perguntas frequentes', contact: 'Contato', philosophy: 'Filosofia' };
     let lastSectionId = '';
 
     function updateSectionUI(id) {
@@ -443,119 +402,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
-
-    // 7. Projetos em grid + modal de detalhes
-    const PROJECT_DETAILS = {
-        oneflow: {
-            title: 'OneFlow',
-            tag: 'Projeto Web',
-            description: 'Plataforma web moderna com foco em experiência do usuário, performance e design limpo. Construída para demonstrar boas práticas de desenvolvimento frontend, da interface à otimização.',
-            stack: ['React', 'TypeScript', 'CSS3', 'Vercel'],
-            highlights: [
-                'Interface responsiva e acessível',
-                'Design limpo e moderno',
-                'Foco em performance de carregamento'
-            ],
-            live: 'https://oneflowweb.vercel.app'
-        },
-        metanoia: {
-            title: 'MetanoiaApp',
-            tag: 'Site Institucional',
-            description: 'Presença digital da juventude da Primeira Igreja Batista de Campo Mourão, PR. Pensada para conectar os jovens, divulgar encontros e fortalecer a comunidade.',
-            stack: ['HTML5', 'CSS3', 'JavaScript', 'Vercel'],
-            highlights: [
-                'Divulgação clara dos encontros',
-                'Visual acolhedor e jovem',
-                'Navegação simples e direta'
-            ],
-            live: 'https://metanoiaapp.vercel.app'
-        },
-        imper: {
-            title: 'Imper Uniformes',
-            tag: 'Site Institucional',
-            description: 'Site institucional para empresa de uniformes corporativos personalizados, com catálogo de produtos e informações para contato.',
-            stack: ['React', 'Tailwind CSS', 'Vercel'],
-            highlights: [
-                'Catálogo de produtos responsivo',
-                'Design profissional e moderno',
-                'Fácil acesso a informações de contato'
-            ],
-            live: 'https://www.imperuniformes.com.br'
-        }
-    };
-
-    const projectModal = document.getElementById('projectModal');
-
-    if (projectModal) {
-        const modalDialog = projectModal.querySelector('.modal-dialog');
-        const modalImage = document.getElementById('modalImage');
-        const modalTag = document.getElementById('modalTag');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDescription = document.getElementById('modalDescription');
-        const modalStack = document.getElementById('modalStack');
-        const modalHighlights = document.getElementById('modalHighlights');
-        const modalLive = document.getElementById('modalLive');
-        const modalCloseBtn = projectModal.querySelector('.modal-close');
-        let lastTrigger = null;
-
-        function openModal(key, trigger) {
-            const data = PROJECT_DETAILS[key];
-            if (!data) return;
-            lastTrigger = trigger || null;
-            const card = trigger && trigger.closest ? trigger.closest('.project-card') : null;
-            const cardImg = card ? card.querySelector('.project-preview img') : null;
-            if (cardImg) {
-                modalImage.src = cardImg.src;
-                modalImage.alt = cardImg.alt;
-            }
-            modalTag.textContent = data.tag;
-            modalTitle.textContent = data.title;
-            modalDescription.textContent = data.description;
-            modalStack.innerHTML = data.stack.map(t => '<span class="chip">' + t + '</span>').join('');
-            modalHighlights.innerHTML = data.highlights.map(h => '<li>' + h + '</li>').join('');
-            modalLive.href = data.live;
-            projectModal.classList.add('open');
-            projectModal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-            modalCloseBtn.focus();
-        }
-
-        function closeModal() {
-            projectModal.classList.remove('open');
-            projectModal.setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = '';
-            if (lastTrigger) lastTrigger.focus();
-        }
-
-        document.querySelectorAll('[data-project]').forEach(btn => {
-            btn.addEventListener('click', () => openModal(btn.dataset.project, btn));
-        });
-
-        projectModal.querySelectorAll('[data-close-modal]').forEach(el => {
-            el.addEventListener('click', closeModal);
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (!projectModal.classList.contains('open')) return;
-            if (e.key === 'Escape') {
-                closeModal();
-                return;
-            }
-            if (e.key === 'Tab') {
-                const focusables = modalDialog.querySelectorAll('a[href], button:not([disabled])');
-                if (!focusables.length) return;
-                const first = focusables[0];
-                const last = focusables[focusables.length - 1];
-                if (e.shiftKey && document.activeElement === first) {
-                    last.focus();
-                    e.preventDefault();
-                } else if (!e.shiftKey && document.activeElement === last) {
-                    first.focus();
-                    e.preventDefault();
-                }
-            }
-        });
-    }
 
     // 7.5 Música - now playing via Last.fm
     const nowPlayingCard = document.getElementById('nowPlaying');
@@ -675,106 +521,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateNowPlaying();
         setInterval(updateNowPlaying, 30000);
-    }
-
-    // 7.6 Projetos — carrossel
-    const carouselViewport = document.getElementById('carouselViewport');
-    const carouselTrack = document.getElementById('carouselTrack');
-    const carouselPrev = document.getElementById('carouselPrev');
-    const carouselNext = document.getElementById('carouselNext');
-    const carouselDots = document.getElementById('carouselDots');
-
-    if (carouselTrack && carouselViewport) {
-        const slides = Array.from(carouselTrack.children);
-        let currentIndex = 0;
-        let startX = 0;
-        let isDragging = false;
-        let didDrag = false;
-
-        function getStep() {
-            if (slides.length < 2) return carouselTrack.clientWidth || 1;
-            return slides[1].offsetLeft - slides[0].offsetLeft;
-        }
-
-        function render(smooth) {
-            carouselTrack.style.transition = smooth
-                ? 'transform 0.5s cubic-bezier(0.25, 0.8, 0.3, 1)'
-                : 'none';
-            carouselTrack.style.transform = 'translate3d(' + (-currentIndex * getStep()) + 'px, 0, 0)';
-            updateDots();
-        }
-
-        function goTo(index, smooth) {
-            currentIndex = Math.max(0, Math.min(slides.length - 1, index));
-            render(smooth === undefined ? true : smooth);
-        }
-
-        function buildDots() {
-            carouselDots.innerHTML = '';
-            slides.forEach((_, i) => {
-                const dot = document.createElement('button');
-                dot.type = 'button';
-                dot.className = 'carousel-dot' + (i === 0 ? ' is-active' : '');
-                dot.setAttribute('aria-label', 'Ir para o projeto ' + (i + 1));
-                dot.addEventListener('click', () => goTo(i));
-                carouselDots.appendChild(dot);
-            });
-        }
-
-        function updateDots() {
-            Array.from(carouselDots.children).forEach((dot, i) => {
-                dot.classList.toggle('is-active', i === currentIndex);
-            });
-        }
-
-        if (carouselPrev) carouselPrev.addEventListener('click', () => goTo(currentIndex - 1));
-        if (carouselNext) carouselNext.addEventListener('click', () => goTo(currentIndex + 1));
-
-        carouselTrack.addEventListener('pointerdown', e => {
-            isDragging = true;
-            didDrag = false;
-            startX = e.clientX;
-            carouselTrack.style.transition = 'none';
-        });
-
-        carouselTrack.addEventListener('pointermove', e => {
-            if (!isDragging) return;
-            const dx = e.clientX - startX;
-            if (Math.abs(dx) > 5) didDrag = true;
-            carouselTrack.style.transform = 'translate3d(' + (-currentIndex * getStep() + dx) + 'px, 0, 0)';
-        });
-
-        document.addEventListener('pointerup', e => {
-            if (!isDragging) return;
-            isDragging = false;
-            const dx = e.clientX - startX;
-            if (Math.abs(dx) > 50) {
-                goTo(currentIndex + (dx < 0 ? 1 : -1));
-            } else if (didDrag) {
-                render(true);
-            }
-        });
-
-        carouselTrack.addEventListener('pointercancel', () => {
-            isDragging = false;
-            render(true);
-        });
-
-        carouselTrack.addEventListener('click', e => {
-            if (didDrag) {
-                e.preventDefault();
-                e.stopPropagation();
-                didDrag = false;
-            }
-        });
-
-        function onResize() {
-            render(false);
-        }
-
-        buildDots();
-        render(false);
-        window.addEventListener('resize', onResize);
     }
 
     // 8. Hero V2 — morphing text (liquid-text effect)
@@ -1224,6 +970,119 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderCirc();
     }
+
+    // Native FAQ disclosures change the position of the contact section below.
+    const faqSection = document.getElementById('faq');
+    if (faqSection) {
+        faqSection.addEventListener('toggle', (event) => {
+            if (event.target.tagName !== 'DETAILS') return;
+            if (window.ScrollTrigger) ScrollTrigger.refresh(true);
+            updateProgress();
+        }, true);
+    }
+
+    // Philosophy — expand the image, then move verses with vertical page scroll.
+    const philoSection = document.getElementById('philosophy');
+    if (philoSection && window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        const philoTrack = philoSection.querySelector('.philosophy__track');
+        const philoStage = document.getElementById('philoStage');
+        const philoFrame = document.getElementById('philoFrame');
+        const philoMedia = philoSection.querySelector('.philosophy__media');
+        const philoScrim = document.getElementById('philoScrim');
+        const philoOverlay = document.getElementById('philoOverlay');
+        const philoVerses = document.getElementById('philoVerses');
+        const verses = Array.from(philoSection.querySelectorAll('.philosophy__verse'));
+        const philoMotion = gsap.matchMedia();
+
+        philoMotion.add('(prefers-reduced-motion: no-preference)', () => {
+            let sequenceContext = null;
+            let resizeTimer;
+            let active = true;
+
+            function updatePhilosophy() {
+                if (!active) return;
+                // Refresh an existing pin before measuring its resized viewport.
+                if (sequenceContext) ScrollTrigger.refresh();
+                philoSection.classList.add('philosophy--scroll');
+
+                // Keep the full passage readable if zoom or a small viewport makes it too tall.
+                if (philoOverlay.scrollHeight > philoStage.clientHeight + 1) {
+                    const wasPinned = Boolean(sequenceContext);
+                    if (sequenceContext) sequenceContext.revert();
+                    sequenceContext = null;
+                    philoSection.classList.remove('philosophy--scroll');
+                    if (wasPinned) ScrollTrigger.refresh();
+                    return;
+                }
+                if (sequenceContext) return;
+
+                // An explicit context also owns sequences created by delayed resize/font callbacks.
+                sequenceContext = gsap.context(() => {
+                    const sequence = gsap.timeline({
+                        defaults: { ease: 'none' },
+                        scrollTrigger: {
+                            id: 'philosophy-sequence',
+                            trigger: philoTrack,
+                            pin: philoStage,
+                            pinSpacing: true,
+                            start: 'top top',
+                            end: () => '+=' + Math.round(window.innerHeight * (2 + verses.length * 0.85)),
+                            scrub: 0.4,
+                            anticipatePin: 1,
+                            invalidateOnRefresh: true,
+                        },
+                    });
+
+                    // Phase 1: finish expanding the image before revealing the first verse.
+                    sequence
+                        .fromTo(philoFrame,
+                            { clipPath: 'inset(21% 29% round 24px)' },
+                            { clipPath: 'inset(0% 0% round 0px)', duration: 1.5 }, 0)
+                        .fromTo(philoMedia, { scale: 1.25 }, { scale: 1, duration: 1.5 }, 0)
+                        .fromTo(philoScrim, { opacity: 0 }, { opacity: 1, duration: 0.5 }, 1.5)
+                        .fromTo(philoOverlay, { autoAlpha: 0, y: 24 },
+                            { autoAlpha: 1, y: 0, duration: 0.5 }, 1.75)
+                        .set(philoVerses, { x: 0 }, 0)
+                        .addLabel('verse-1', 2.25)
+                        .to({}, { duration: 0.65 });
+
+                    // Phase 2: each transition and reading pause consumes vertical scroll distance.
+                    verses.slice(1).forEach((verse, index) => {
+                        sequence
+                            .to(philoVerses, {
+                                x: () => -(verse.offsetLeft - verses[0].offsetLeft),
+                                duration: 0.65,
+                            })
+                            .addLabel('verse-' + (index + 2))
+                            .to({}, { duration: 0.65 });
+                    });
+                }, philoSection);
+                ScrollTrigger.refresh();
+            }
+
+            function schedulePhilosophyUpdate() {
+                if (!active) return;
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(updatePhilosophy, 120);
+            }
+
+            updatePhilosophy();
+            window.addEventListener('resize', schedulePhilosophyUpdate);
+            window.addEventListener('load', schedulePhilosophyUpdate, { once: true });
+            if (document.fonts) document.fonts.ready.then(schedulePhilosophyUpdate);
+
+            return () => {
+                active = false;
+                clearTimeout(resizeTimer);
+                window.removeEventListener('resize', schedulePhilosophyUpdate);
+                window.removeEventListener('load', schedulePhilosophyUpdate);
+                if (sequenceContext) sequenceContext.revert();
+                philoSection.classList.remove('philosophy--scroll');
+            };
+        });
+    }
+    // End philosophy scroll sequence
 
     applyLang(getCurrentLang(), false);
 });
