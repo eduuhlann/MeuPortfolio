@@ -110,6 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         pt: {
             'nav.home': 'Home',
             'nav.about': 'Sobre',
+            'nav.projects': 'Projetos',
+            'nav.philosophy': 'Filosofia',
             'nav.music': 'Música',
             'nav.faq': 'FAQ',
             'nav.contact': 'Contato',
@@ -133,6 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'hero.ctaContact': 'Falar comigo',
             'hero.morphTexts': ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'],
             'section.about': 'Sobre Mim',
+            'section.projects': 'Projetos',
+            'projects.title': 'Projetos selecionados',
+            'projects.category': 'Projeto em destaque',
+            'projects.imper.description': 'Site institucional para apresentar uniformes corporativos personalizados e facilitar o contato com a empresa.',
+            'projects.visit': 'Visitar projeto',
+            'projects.visitAria': 'Visitar o site da Imper Uniformes (abre em uma nova aba)',
             'section.music': 'Música',
             'section.contact': 'Contato',
             'about.title': 'Desenvolvedor em formação pela UTFPR, apaixonado por tecnologia e design.',
@@ -167,11 +175,13 @@ document.addEventListener('DOMContentLoaded', () => {
             'philosophy.v8': 'Pois pela graça vocês são salvos, por meio da fé, e isto não vem de vocês, é dom de Deus;',
             'philosophy.v9': 'não por obras, para que ninguém se glorie.',
             'philosophy.v10': 'Porque fomos feitos por Deus, criados em Cristo Jesus, para boas obras, as quais Deus preparou previamente para que andássemos nelas.',
-            'breadcrumb': { home: 'Home', about: 'Sobre mim', music: 'Música', faq: 'Perguntas frequentes', contact: 'Contato', philosophy: 'Filosofia' }
+            'breadcrumb': { home: 'Home', about: 'Sobre mim', projects: 'Projetos', music: 'Música', faq: 'Perguntas frequentes', contact: 'Contato', philosophy: 'Filosofia' }
         },
         en: {
             'nav.home': 'Home',
             'nav.about': 'About',
+            'nav.projects': 'Projects',
+            'nav.philosophy': 'Philosophy',
             'nav.music': 'Music',
             'nav.faq': 'FAQ',
             'nav.contact': 'Contact',
@@ -195,6 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'hero.ctaContact': 'Get in touch',
             'hero.morphTexts': ['FRONTEND DEVELOPER', 'UI/UX DESIGNER', 'FREELANCER'],
             'section.about': 'About Me',
+            'section.projects': 'Projects',
+            'projects.title': 'Selected projects',
+            'projects.category': 'Featured project',
+            'projects.imper.description': 'Business website showcasing custom corporate uniforms and making it easy to contact the company.',
+            'projects.visit': 'Visit project',
+            'projects.visitAria': 'Visit the Imper Uniformes website (opens in a new tab)',
             'section.music': 'Music',
             'section.contact': 'Contact',
             'about.title': 'Computer Science student at UTFPR, passionate about technology and design.',
@@ -229,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'philosophy.v8': 'for by grace you have been saved through faith, and that not of yourselves; it is the gift of God,',
             'philosophy.v9': 'not of works, that no one would boast.',
             'philosophy.v10': 'For we are his workmanship, created in Christ Jesus for good works, which God prepared before that we would walk in them.',
-            'breadcrumb': { home: 'Home', about: 'About me', music: 'Music', faq: 'Frequently asked questions', contact: 'Contact', philosophy: 'Philosophy' }
+            'breadcrumb': { home: 'Home', about: 'About me', projects: 'Projects', music: 'Music', faq: 'Frequently asked questions', contact: 'Contact', philosophy: 'Philosophy' }
         }
     };
 
@@ -253,6 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function translatePage(lang) {
         const t = TRANSLATIONS[lang];
         if (!t) return;
+
+        const philosophy = document.getElementById('philosophy');
+        philosophy?.dispatchEvent(new Event('philosophy:before-translate'));
 
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
@@ -283,6 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (bc) {
             breadcrumbLabels.home = bc.home;
             breadcrumbLabels.about = bc.about;
+            breadcrumbLabels.projects = bc.projects;
             breadcrumbLabels.music = bc.music;
             breadcrumbLabels.faq = bc.faq;
             breadcrumbLabels.contact = bc.contact;
@@ -301,6 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         updateNowPlayingText(lang);
+        philosophy?.dispatchEvent(new Event('philosophy:translate'));
     }
 
     let currentNowPlayingLang = 'pt';
@@ -381,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navAnchors = document.querySelectorAll('.main-nav a');
     const sectionBreadcrumb = document.getElementById('sectionBreadcrumb');
     const breadcrumbText = document.getElementById('breadcrumbText');
-    let breadcrumbLabels = { home: 'Home', about: 'Sobre mim', music: 'Música', faq: 'Perguntas frequentes', contact: 'Contato', philosophy: 'Filosofia' };
+    let breadcrumbLabels = { home: 'Home', about: 'Sobre mim', projects: 'Projetos', music: 'Música', faq: 'Perguntas frequentes', contact: 'Contato', philosophy: 'Filosofia' };
     let lastSectionId = '';
 
     function updateSectionUI(id) {
@@ -1005,10 +1026,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }, true);
     }
 
-    // Philosophy — expand the image, then move verses with vertical page scroll.
+    // Philosophy — expand the image, then reveal each verse letter by letter while scrolling.
     const philoSection = document.getElementById('philosophy');
-    if (philoSection && window.gsap && window.ScrollTrigger) {
-        gsap.registerPlugin(ScrollTrigger);
+    if (philoSection && window.gsap && window.ScrollTrigger && window.SplitText) {
+        gsap.registerPlugin(ScrollTrigger, SplitText);
         const philoTrack = philoSection.querySelector('.philosophy__track');
         const philoStage = document.getElementById('philoStage');
         const philoFrame = document.getElementById('philoFrame');
@@ -1021,8 +1042,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         philoMotion.add('(prefers-reduced-motion: no-preference)', () => {
             let sequenceContext = null;
+            let sequence = null;
+            let textSplits = [];
+            let savedProgress = null;
             let resizeTimer;
             let active = true;
+
+            function resetPhilosophy() {
+                const trigger = sequence?.scrollTrigger;
+                savedProgress = trigger?.isActive ? trigger.progress : null;
+                if (sequenceContext) sequenceContext.revert();
+                sequenceContext = null;
+                sequence = null;
+                textSplits.forEach(split => split.revert());
+                textSplits = [];
+                philoSection.classList.remove('philosophy--scroll');
+            }
 
             function updatePhilosophy() {
                 if (!active) return;
@@ -1033,17 +1068,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Keep the full passage readable if zoom or a small viewport makes it too tall.
                 if (philoOverlay.scrollHeight > philoStage.clientHeight + 1) {
                     const wasPinned = Boolean(sequenceContext);
-                    if (sequenceContext) sequenceContext.revert();
-                    sequenceContext = null;
-                    philoSection.classList.remove('philosophy--scroll');
+                    resetPhilosophy();
                     if (wasPinned) ScrollTrigger.refresh();
                     return;
                 }
                 if (sequenceContext) return;
 
+                textSplits = verses.map(verse => new SplitText(verse.querySelector('.philosophy__quote p'), {
+                    type: 'words,chars',
+                    tag: 'span',
+                    wordsClass: 'philosophy__word',
+                    charsClass: 'philosophy__char',
+                    aria: 'auto',
+                }));
+                const characterCount = textSplits.reduce((total, split) => total + split.chars.length, 0);
+
                 // An explicit context also owns sequences created by delayed resize/font callbacks.
                 sequenceContext = gsap.context(() => {
-                    const sequence = gsap.timeline({
+                    sequence = gsap.timeline({
                         defaults: { ease: 'none' },
                         scrollTrigger: {
                             id: 'philosophy-sequence',
@@ -1051,7 +1093,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             pin: philoStage,
                             pinSpacing: true,
                             start: 'top top',
-                            end: () => '+=' + Math.round(window.innerHeight * (2 + verses.length * 0.85)),
+                            end: () => '+=' + Math.round(window.innerHeight * (2 + (verses.length - 1) * 0.35) + characterCount * 6),
                             scrub: 0.4,
                             anticipatePin: 1,
                             invalidateOnRefresh: true,
@@ -1067,22 +1109,36 @@ document.addEventListener('DOMContentLoaded', () => {
                         .fromTo(philoScrim, { opacity: 0 }, { opacity: 1, duration: 0.5 }, 1.5)
                         .fromTo(philoOverlay, { autoAlpha: 0, y: 24 },
                             { autoAlpha: 1, y: 0, duration: 0.5 }, 1.75)
-                        .set(philoVerses, { x: 0 }, 0)
-                        .addLabel('verse-1', 2.25)
-                        .to({}, { duration: 0.65 });
+                        .set(philoVerses, { x: 0 }, 0);
 
-                    // Phase 2: each transition and reading pause consumes vertical scroll distance.
-                    verses.slice(1).forEach((verse, index) => {
-                        sequence
-                            .to(philoVerses, {
+                    // Complete every letter before moving to the next verse. Scrubbing reverses both.
+                    verses.forEach((verse, index) => {
+                        if (index > 0) {
+                            sequence.to(philoVerses, {
                                 x: () => -(verse.offsetLeft - verses[0].offsetLeft),
                                 duration: 0.65,
+                            });
+                        }
+                        sequence
+                            .addLabel('verse-' + (index + 1))
+                            .fromTo(textSplits[index].chars, {
+                                opacity: 0.15,
+                                yPercent: 25,
+                            }, {
+                                opacity: 1,
+                                yPercent: 0,
+                                duration: 0.2,
+                                stagger: 0.025,
                             })
-                            .addLabel('verse-' + (index + 2))
-                            .to({}, { duration: 0.65 });
+                            .to({}, { duration: 0.35 });
                     });
                 }, philoSection);
                 ScrollTrigger.refresh();
+                if (savedProgress !== null) {
+                    const trigger = sequence.scrollTrigger;
+                    trigger.scroll(trigger.start + (trigger.end - trigger.start) * savedProgress);
+                    savedProgress = null;
+                }
             }
 
             function schedulePhilosophyUpdate() {
@@ -1094,6 +1150,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updatePhilosophy();
             window.addEventListener('resize', schedulePhilosophyUpdate);
             window.addEventListener('load', schedulePhilosophyUpdate, { once: true });
+            philoSection.addEventListener('philosophy:before-translate', resetPhilosophy);
+            philoSection.addEventListener('philosophy:translate', updatePhilosophy);
             if (document.fonts) document.fonts.ready.then(schedulePhilosophyUpdate);
 
             return () => {
@@ -1101,8 +1159,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearTimeout(resizeTimer);
                 window.removeEventListener('resize', schedulePhilosophyUpdate);
                 window.removeEventListener('load', schedulePhilosophyUpdate);
-                if (sequenceContext) sequenceContext.revert();
-                philoSection.classList.remove('philosophy--scroll');
+                philoSection.removeEventListener('philosophy:before-translate', resetPhilosophy);
+                philoSection.removeEventListener('philosophy:translate', updatePhilosophy);
+                resetPhilosophy();
             };
         });
     }

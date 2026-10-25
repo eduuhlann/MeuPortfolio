@@ -6,3 +6,4 @@ dist
 .env*
 docs/security-audit/
 *.bak
+artifacts/
