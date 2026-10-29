@@ -1658,11 +1658,15 @@ body > :where(:not(.page-grid)) {
 }
 
 .faq-section .section-heading {
+    display: grid;
+    justify-items: start;
     max-width: 900px;
     margin: 0 auto 2.5rem;
 }
 
 .faq-section .section-heading h2 {
+    min-width: 0;
+    max-width: 100%;
     font-size: clamp(1.75rem, 3.2vw, 2.5rem);
 }
 
