@@ -12,6 +12,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss(), apiMiddlewarePlugin()],
+    // A parallel preview can opt into its own optimizer cache.
+    cacheDir: process.env.PORTFOLIO_VITE_CACHE_DIR || 'node_modules/.vite',
     assetsInclude: ['**/*.glb'],
     resolve: {
       alias: {
@@ -19,6 +21,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     optimizeDeps: {
+      include: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'lenis'],
       exclude: ["@splinetool/runtime", "@splinetool/react-spline"],
     },
   }

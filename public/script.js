@@ -141,6 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.imper.description': 'Site institucional para apresentar uniformes corporativos personalizados e facilitar o contato com a empresa.',
             'projects.visit': 'Visitar projeto',
             'projects.visitAria': 'Visitar o site da Imper Uniformes (abre em uma nova aba)',
+            'kinetic.design': 'DESIGN COM INTENÇÃO',
+            'kinetic.code': 'CÓDIGO COM CUIDADO',
+            'kinetic.experience': 'EXPERIÊNCIA REAL',
+            'kinetic.idea': 'DA IDEIA À INTERFACE',
+            'kinetic.detail': 'DO DETALHE AO TODO',
+            'kinetic.people': 'FEITO PARA PESSOAS',
+            'kinetic.create': 'VAMOS CRIAR ALGO INESQUECÍVEL',
+            'kinetic.next': 'SUA IDEIA PODE SER A PRÓXIMA',
             'section.music': 'Música',
             'section.contact': 'Contato',
             'about.title': 'Desenvolvedor em formação pela UTFPR, apaixonado por tecnologia e design.',
@@ -211,6 +219,14 @@ document.addEventListener('DOMContentLoaded', () => {
             'projects.imper.description': 'Business website showcasing custom corporate uniforms and making it easy to contact the company.',
             'projects.visit': 'Visit project',
             'projects.visitAria': 'Visit the Imper Uniformes website (opens in a new tab)',
+            'kinetic.design': 'DESIGN WITH INTENTION',
+            'kinetic.code': 'CODE WITH CARE',
+            'kinetic.experience': 'REAL EXPERIENCE',
+            'kinetic.idea': 'FROM IDEA TO INTERFACE',
+            'kinetic.detail': 'FROM DETAIL TO WHOLE',
+            'kinetic.people': 'MADE FOR PEOPLE',
+            'kinetic.create': 'LET’S CREATE SOMETHING UNFORGETTABLE',
+            'kinetic.next': 'YOUR IDEA COULD BE NEXT',
             'section.music': 'Music',
             'section.contact': 'Contact',
             'about.title': 'Computer Science student at UTFPR, passionate about technology and design.',
@@ -307,6 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
             breadcrumbLabels.faq = bc.faq;
             breadcrumbLabels.contact = bc.contact;
             breadcrumbLabels.philosophy = bc.philosophy;
+            breadcrumbLabels.craft = lang === 'en' ? 'Design + code' : 'Design + código';
             if (breadcrumbText && lastSectionId) {
                 breadcrumbText.textContent = breadcrumbLabels[lastSectionId] || lastSectionId;
             }
@@ -406,6 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastSectionId = '';
 
     function updateSectionUI(id) {
+        sectionBreadcrumb?.classList.toggle('over-interactive-section', ['craft', 'projects'].includes(id));
         navAnchors.forEach(a => {
             a.classList.toggle('active', a.getAttribute('href') === '#' + id);
         });
@@ -659,7 +677,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: true });
 
         backToTop.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+            if (window.portfolioScroll) {
+                window.portfolioScroll.scrollTo(0);
+            } else {
+                window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+            }
         });
     }
 
@@ -967,6 +989,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hero && heroTitle && heroStage) {
                 const tl = gsap.timeline({
                     scrollTrigger: {
+                        id: 'hero-parallax',
                         trigger: hero,
                         start: 'top top',
                         end: 'bottom top',

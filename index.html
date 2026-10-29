@@ -21,8 +21,7 @@
             document.documentElement.classList.add('js');
             var stored = null;
             try { stored = localStorage.getItem('theme'); } catch (e) { }
-            var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-            var theme = stored ? stored : (prefersLight ? 'light' : 'dark');
+            var theme = stored || 'dark';
             document.documentElement.setAttribute('data-theme', theme);
             var meta = document.querySelector('meta[name="theme-color"]');
             if (meta) meta.setAttribute('content', theme === 'light' ? '#f7f7f8' : '#050505');
@@ -107,7 +106,7 @@
     </header>
 
     <main>
-        <!-- HERO SECTION -->
+        <!-- Home original -->
         <section id="home" class="hero-v2">
             <div class="hero-v2__title-wrap">
                 <h1 class="hero-v2__title" id="heroCyclingTitle" aria-label="DESENVOLVEDOR FRONTEND">
@@ -268,29 +267,70 @@
             </div>
         </section>
 
-        <!-- PROJETOS -->
-        <section id="projects" class="projects-section" aria-labelledby="projects-heading">
-            <div class="section-shell">
-                <div class="section-heading">
-                    <span class="tag" data-i18n="section.projects">Projetos</span>
-                    <h2 id="projects-heading" data-i18n="projects.title">Projetos selecionados</h2>
+        <!-- Faixa cinética -->
+        <div class="kinetic-marquee" aria-hidden="true">
+            <div class="kinetic-marquee__track">
+                <div class="kinetic-marquee__group">
+                    <span data-i18n="kinetic.design">DESIGN COM INTENÇÃO</span><i>✳</i>
+                    <span data-i18n="kinetic.code">CÓDIGO COM CUIDADO</span><i>✳</i>
+                    <span data-i18n="kinetic.experience">EXPERIÊNCIA REAL</span><i>✳</i>
+                    <span data-i18n="kinetic.design">DESIGN COM INTENÇÃO</span><i>✳</i>
+                    <span data-i18n="kinetic.code">CÓDIGO COM CUIDADO</span><i>✳</i>
+                    <span data-i18n="kinetic.experience">EXPERIÊNCIA REAL</span><i>✳</i>
                 </div>
-                <article class="project-card" aria-labelledby="imper-project-title">
-                    <div class="project-preview">
-                        <img src="/imper-project-preview-4k.jpg" width="3840" height="2105" alt="Página inicial da Imper Uniformes com uniformes corporativos personalizados" loading="lazy" decoding="async">
-                    </div>
-                    <div class="project-details">
-                        <span class="project-category" data-i18n="projects.category">Projeto em destaque</span>
-                        <h3 id="imper-project-title">Imper Uniformes</h3>
-                        <p data-i18n="projects.imper.description">Site institucional para apresentar uniformes corporativos personalizados e facilitar o contato com a empresa.</p>
-                        <a class="project-visit" href="https://www.imperuniformes.com.br" target="_blank" rel="noopener noreferrer" aria-label="Visitar o site da Imper Uniformes (abre em uma nova aba)" data-i18n-aria="projects.visitAria">
-                            <span data-i18n="projects.visit">Visitar projeto</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
-                        </a>
-                    </div>
-                </article>
+                <div class="kinetic-marquee__group">
+                    <span data-i18n="kinetic.design">DESIGN COM INTENÇÃO</span><i>✳</i>
+                    <span data-i18n="kinetic.code">CÓDIGO COM CUIDADO</span><i>✳</i>
+                    <span data-i18n="kinetic.experience">EXPERIÊNCIA REAL</span><i>✳</i>
+                    <span data-i18n="kinetic.design">DESIGN COM INTENÇÃO</span><i>✳</i>
+                    <span data-i18n="kinetic.code">CÓDIGO COM CUIDADO</span><i>✳</i>
+                    <span data-i18n="kinetic.experience">EXPERIÊNCIA REAL</span><i>✳</i>
+                </div>
+            </div>
+        </div>
+
+        <section id="craft" class="kinetic-section" aria-label="Design e código">
+            <div id="kineticExperience"><h2>Menos do mesmo. Mais intenção.</h2></div>
+        </section>
+
+        <!-- Selected work -->
+        <section id="projects" class="projects-section studio-projects" aria-labelledby="projects-heading">
+            <div id="projectExperience">
+                <div class="section-shell">
+                    <div class="section-heading"><span class="tag">Projetos</span><h2 id="projects-heading">Projetos que ganham vida.</h2></div>
+                    <article class="project-card" aria-labelledby="imper-fallback-title">
+                        <div class="project-preview"><img src="/imper-project-preview-4k.jpg" width="3840" height="2105" alt="Site da Imper Uniformes" loading="lazy" decoding="async"></div>
+                        <div class="project-details"><h3 id="imper-fallback-title">Imper Uniformes</h3><p>Site institucional para apresentar uniformes corporativos personalizados e facilitar o contato com a empresa.</p><a class="project-visit" href="https://www.imperuniformes.com.br" target="_blank" rel="noopener noreferrer">Explorar projeto ↗</a></div>
+                    </article>
+                    <article class="project-card" aria-labelledby="pib-fallback-title">
+                        <div class="project-preview"><img src="/pib-project-preview.jpg" width="1440" height="790" alt="Site da PIB Campo Mourão" loading="lazy" decoding="async"></div>
+                        <div class="project-details"><h3 id="pib-fallback-title">PIB Campo Mourão</h3><p>Site institucional da Primeira Igreja Batista de Campo Mourão, com apresentação da igreja e programação de cultos.</p><a class="project-visit" href="https://pib-site-ruddy.vercel.app/" target="_blank" rel="noopener noreferrer">Explorar projeto ↗</a></div>
+                    </article>
+                </div>
             </div>
         </section>
+
+        <!-- Faixa cinética -->
+        <div class="kinetic-marquee kinetic-marquee--outline kinetic-marquee--reverse" aria-hidden="true">
+            <div class="kinetic-marquee__track">
+                <div class="kinetic-marquee__group">
+                    <span data-i18n="kinetic.idea">DA IDEIA À INTERFACE</span><i>✳</i>
+                    <span data-i18n="kinetic.detail">DO DETALHE AO TODO</span><i>✳</i>
+                    <span data-i18n="kinetic.people">FEITO PARA PESSOAS</span><i>✳</i>
+                    <span data-i18n="kinetic.idea">DA IDEIA À INTERFACE</span><i>✳</i>
+                    <span data-i18n="kinetic.detail">DO DETALHE AO TODO</span><i>✳</i>
+                    <span data-i18n="kinetic.people">FEITO PARA PESSOAS</span><i>✳</i>
+                </div>
+                <div class="kinetic-marquee__group">
+                    <span data-i18n="kinetic.idea">DA IDEIA À INTERFACE</span><i>✳</i>
+                    <span data-i18n="kinetic.detail">DO DETALHE AO TODO</span><i>✳</i>
+                    <span data-i18n="kinetic.people">FEITO PARA PESSOAS</span><i>✳</i>
+                    <span data-i18n="kinetic.idea">DA IDEIA À INTERFACE</span><i>✳</i>
+                    <span data-i18n="kinetic.detail">DO DETALHE AO TODO</span><i>✳</i>
+                    <span data-i18n="kinetic.people">FEITO PARA PESSOAS</span><i>✳</i>
+                </div>
+            </div>
+        </div>
 
         <!-- FILOSOFIA (scroll expand) -->
         <section id="philosophy" class="philosophy" aria-label="Filosofia">
@@ -376,7 +416,7 @@
         <section id="music" class="section-shell">
             <div class="section-heading">
                 <span class="tag" data-i18n="section.music">Música</span>
-                <p data-i18n="music.subtitle">O que estou escutando enquanto codifico.</p>
+                <p data-i18n="music.subtitle" data-split="words" data-text-align="left" data-delay="35">O que estou escutando enquanto codifico.</p>
             </div>
 
             <div class="now-playing scroll-reveal scroll-reveal--up" id="nowPlaying" hidden>
@@ -408,7 +448,7 @@
         <section id="faq" class="faq-section section-shell" aria-labelledby="faqTitle">
             <div class="section-heading">
                 <span class="tag" data-i18n="section.faq">FAQ</span>
-                <h2 id="faqTitle" data-i18n="faq.title">Perguntas frequentes</h2>
+                <h2 id="faqTitle" data-i18n="faq.title" data-split="chars" data-text-align="left" data-delay="22">Perguntas frequentes</h2>
                 <p class="faq-intro" data-i18n="faq.intro">O que você precisa saber antes de começarmos um site juntos.</p>
             </div>
             <div class="faq-list">
@@ -475,6 +515,24 @@
                 </a>
             </div>
         </section>
+
+        <!-- Faixa cinética -->
+        <div class="kinetic-marquee kinetic-marquee--compact" aria-hidden="true">
+            <div class="kinetic-marquee__track">
+                <div class="kinetic-marquee__group">
+                    <span data-i18n="kinetic.create">VAMOS CRIAR ALGO INESQUECÍVEL</span><i>✳</i>
+                    <span data-i18n="kinetic.next">SUA IDEIA PODE SER A PRÓXIMA</span><i>✳</i>
+                    <span data-i18n="kinetic.create">VAMOS CRIAR ALGO INESQUECÍVEL</span><i>✳</i>
+                    <span data-i18n="kinetic.next">SUA IDEIA PODE SER A PRÓXIMA</span><i>✳</i>
+                </div>
+                <div class="kinetic-marquee__group">
+                    <span data-i18n="kinetic.create">VAMOS CRIAR ALGO INESQUECÍVEL</span><i>✳</i>
+                    <span data-i18n="kinetic.next">SUA IDEIA PODE SER A PRÓXIMA</span><i>✳</i>
+                    <span data-i18n="kinetic.create">VAMOS CRIAR ALGO INESQUECÍVEL</span><i>✳</i>
+                    <span data-i18n="kinetic.next">SUA IDEIA PODE SER A PRÓXIMA</span><i>✳</i>
+                </div>
+            </div>
+        </div>
 
         <!-- CONTATO SECTION -->
         <section id="contact" class="band section-shell contact-section">
@@ -545,6 +603,8 @@
         integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr"
         crossorigin="anonymous"></script>
     <script src="script.js"></script>
+    <script type="module" src="/src/experience.tsx"></script>
+    <script type="module" src="/src/page-scroll.js"></script>
     <script>
         (function () {
             var ldr = document.getElementById('pageLoader');
