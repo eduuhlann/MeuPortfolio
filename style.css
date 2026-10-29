@@ -991,6 +991,41 @@ body > :where(:not(.page-grid)) {
     margin-bottom: 1.5rem;
 }
 
+.about-cv {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--text-primary);
+    border-radius: 999px;
+    background: var(--text-primary);
+    color: var(--bg-base);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.about-cv i {
+    transition: transform 0.3s ease;
+}
+
+.about-cv:hover {
+    background: transparent;
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
+.about-cv:hover i {
+    transform: translateY(2px);
+}
+
+.about-cv:focus-visible {
+    outline: 2px solid var(--accent, #00a6fb);
+    outline-offset: 4px;
+}
+
 @media (max-width: 768px) {
     .about-grid {
         grid-template-columns: 1fr;
@@ -1865,7 +1900,7 @@ body > :where(:not(.page-grid)) {
     position: relative;
     overflow: hidden;
     width: 100%;
-    padding: 1.5rem 0;
+    padding: clamp(1.6rem, 3.4vw, 3.2rem) 0;
     border-top: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
     background: var(--bg-surface);
@@ -1888,18 +1923,20 @@ body > :where(:not(.page-grid)) {
 .marquee__item {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    margin-right: 3rem;
+    gap: clamp(0.8rem, 1.5vw, 1.6rem);
+    margin-right: clamp(2rem, 4vw, 4.5rem);
     font-family: var(--font-heading);
-    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-size: clamp(2.1rem, 5.4vw, 5.4rem);
     font-weight: 600;
+    line-height: .96;
     color: var(--text-secondary);
     white-space: nowrap;
     transition: color var(--transition-fast);
 }
 
 .marquee__item i {
-    font-size: 1.3em;
+    font-size: .9em;
+    line-height: 1;
     color: var(--text-secondary);
 }
 
@@ -1947,10 +1984,6 @@ body > :where(:not(.page-grid)) {
 
 .kinetic-marquee--compact .kinetic-marquee__track {
     animation-duration: 34s;
-}
-
-.kinetic-marquee:hover .kinetic-marquee__track {
-    animation-play-state: paused;
 }
 
 .kinetic-marquee__group {
