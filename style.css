@@ -2258,7 +2258,7 @@ html.intro-active body > :where(:not(.page-grid, .page-loader)) {
     translate: 0 12px;
     animation: loader-enter-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
     transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
-    margin-top: -18px;
+    margin-top: -26px;
 }
 
 .page-loader .loader-enter:hover {
