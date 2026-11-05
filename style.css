@@ -516,13 +516,14 @@ body > :where(:not(.page-grid)) {
 /* --- Stage (GIF + Tech Cards) --- */
 .hero-v2__stage {
     position: relative;
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 1100px;
+    justify-items: center;
+    width: min(1100px, 100%);
     min-height: 420px;
     margin: 0 auto;
+    gap: clamp(1rem, 2vw, 2.5rem);
     z-index: 5;
 }
 
@@ -561,22 +562,21 @@ body > :where(:not(.page-grid)) {
 
 /* --- Tech Cards (shared) --- */
 .hero-v2__tech {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
     z-index: 4;
+    width: min(100%, 260px);
 }
 
 .hero-v2__tech--left {
-    left: 2%;
+    justify-self: start;
     align-items: flex-start;
 }
 
 .hero-v2__tech--right {
-    right: 2%;
+    justify-self: end;
     align-items: flex-end;
 }
 
@@ -778,7 +778,7 @@ body > :where(:not(.page-grid)) {
     }
 
     .hero-v2__stage {
-        flex-direction: column;
+        grid-template-columns: 1fr;
         min-height: auto;
         gap: 1.5rem;
         padding: 1rem 0;
@@ -806,8 +806,7 @@ body > :where(:not(.page-grid)) {
 
     .hero-v2__tech--left,
     .hero-v2__tech--right {
-        left: auto;
-        right: auto;
+        justify-self: center;
         align-items: center;
     }
 
@@ -2190,7 +2189,7 @@ body > :where(:not(.page-grid)) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-base);
+    background: #000;
     transition: opacity 0.5s ease;
 }
 
@@ -2201,40 +2200,73 @@ body > :where(:not(.page-grid)) {
 
 .page-loader .loader-inner {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1.25rem;
-    min-width: 220px;
+    justify-content: center;
 }
 
-.page-loader .loader-brand {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+.page-loader .loader-logo {
+    --s: 0.34;
+    display: flex;
+    align-items: flex-end;
+    gap: calc(8px * var(--s));
+    height: calc(225px * var(--s));
 }
 
-.page-loader .loader-track {
-    width: 220px;
-    height: 4px;
-    border-radius: 999px;
-    background: var(--border-color);
-    overflow: hidden;
+.page-loader .loader-letter {
+    display: block;
+    width: calc(90px * var(--s));
+    height: calc(225px * var(--s));
+    background-image: url('/loader-logo.png');
+    background-repeat: no-repeat;
+    background-size: calc(1024px * var(--s)) calc(1024px * var(--s));
+    background-position: calc(var(--sx) * var(--s) * -1px) calc(-396px * var(--s));
+    opacity: 0;
+    transform: translateY(26px) scale(0.88);
+    filter: blur(6px);
+    animation: loader-letter-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(120ms + var(--i, 0) * 65ms);
+    will-change: transform, opacity, filter;
 }
 
-.page-loader .loader-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--accent-blue), var(--accent));
-    transition: width 0.12s ease;
+@media (min-width: 380px) {
+    .page-loader .loader-logo { --s: 0.4; }
 }
 
-.page-loader .loader-pct {
-    font-family: var(--font-heading);
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    font-variant-numeric: tabular-nums;
+@media (min-width: 600px) {
+    .page-loader .loader-logo { --s: 0.5; }
+}
+
+@media (min-width: 900px) {
+    .page-loader .loader-logo { --s: 0.6; }
+}
+
+@media (min-width: 1200px) {
+    .page-loader .loader-logo { --s: 0.68; }
+}
+
+@keyframes loader-letter-in {
+    0% {
+        opacity: 0;
+        transform: translateY(26px) scale(0.88);
+        filter: blur(6px);
+    }
+    55% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-loader .loader-letter {
+        animation: none;
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
 }
 
 .page-loader .loader {
@@ -2338,19 +2370,23 @@ body,
 
 .philosophy__track {
     position: relative;
-    height: auto;
+    height: 100%;
 }
 
 .philosophy__stage {
     position: relative;
     width: 100%;
-    height: auto;
-    min-height: 100svh;
+    height: clamp(32rem, 72svh, 52rem);
+    min-height: 32rem;
     overflow: hidden;
+    background: #07080a;
 }
 
 .philosophy__frame {
     position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     clip-path: none;
 }
 

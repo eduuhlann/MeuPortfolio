@@ -4,6 +4,7 @@
 .kinetic-statement__top > span:last-child { color: #4b4b54; }
 .kinetic-statement__heading { font: 600 clamp(2.5rem, 7.8vw, 8rem)/1.08 var(--font-heading); letter-spacing: -.05em; margin: 0; }
 .kinetic-statement__line { display: block; white-space: nowrap; will-change: transform; }
+.kinetic-statement__line .split-parent { overflow: visible !important; white-space: nowrap !important; }
 .kinetic-statement__line--first { color: #797981; transform: translateX(calc((.5 - var(--kinetic-progress)) * 100px)); }
 @supports (-webkit-text-stroke: 1px white) { .kinetic-statement__line--first { color: transparent; -webkit-text-stroke: 1px #77777f; } }
 .kinetic-statement__line--second { padding-left: 8%; transform: translateX(calc((var(--kinetic-progress) - .5) * 120px)); color: #ececef; }

@@ -65,12 +65,20 @@
 <body>
     <div class="page-loader" id="pageLoader" aria-hidden="true">
         <div class="loader-inner">
-            <span class="loader-brand">eduuhlann</span>
-            <div class="loader-track"><div class="loader-fill" id="loaderFill"></div></div>
-            <span class="loader-pct" id="loaderPct">0%</span>
+            <div class="loader-logo" role="img" aria-label="eduuhlann">
+                <span class="loader-letter" style="--i:0;--sx:75"></span>
+                <span class="loader-letter" style="--i:1;--sx:173"></span>
+                <span class="loader-letter" style="--i:2;--sx:271"></span>
+                <span class="loader-letter" style="--i:3;--sx:369"></span>
+                <span class="loader-letter" style="--i:4;--sx:467"></span>
+                <span class="loader-letter" style="--i:5;--sx:565"></span>
+                <span class="loader-letter" style="--i:6;--sx:663"></span>
+                <span class="loader-letter" style="--i:7;--sx:761"></span>
+                <span class="loader-letter" style="--i:8;--sx:859"></span>
+            </div>
         </div>
     </div>
-    <canvas class="page-grid" id="heroGrid"></canvas>
+    <div class="page-grid" id="heroFlux" aria-hidden="true"></div>
     <div class="scroll-progress" id="scrollProgress"></div>
     <canvas class="click-sparks" id="clickSparks" aria-hidden="true"></canvas>
     <header class="site-header">
@@ -345,67 +353,13 @@
                         <div class="philosophy__scrim" id="philoScrim"></div>
                         <div class="philosophy__overlay" id="philoOverlay">
                             <span class="philosophy__kicker" data-i18n="philosophy.kicker">A Filosofia</span>
-                            <h2 class="philosophy__reference" id="philoReference" data-i18n="philosophy.reference">Efésios 2:1–10</h2>
+                            <h2 class="philosophy__reference" id="philoReference" data-i18n="philosophy.reference">Romanos 12:2</h2>
                             <div class="philosophy__reader">
-                                <div class="philosophy__verses" id="philoVerses" role="region" aria-label="Versículos de Efésios 2:1–10 na NVI" data-i18n-aria="philosophy.reader">
-                                    <article class="philosophy__verse" data-verse="1" aria-labelledby="philoVerseLabel1">
-                                        <span class="philosophy__verse-number" id="philoVerseLabel1">01</span>
-                                        <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v1">Vocês estavam mortos nas suas transgressões e nos seus pecados,</p>
-                                        </blockquote>
-                                    </article>
+                                <div class="philosophy__verses" id="philoVerses" role="region" aria-label="Versículo de Romanos 12:2 na NVI" data-i18n-aria="philosophy.reader">
                                     <article class="philosophy__verse" data-verse="2" aria-labelledby="philoVerseLabel2">
                                         <span class="philosophy__verse-number" id="philoVerseLabel2">02</span>
                                         <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v2">nos quais costumavam viver, quando seguiam os padrões deste mundo e o príncipe do poder do ar, o espírito que agora atua nos filhos da desobediência.</p>
-                                        </blockquote>
-                                    </article>
-                                    <article class="philosophy__verse" data-verse="3" aria-labelledby="philoVerseLabel3">
-                                        <span class="philosophy__verse-number" id="philoVerseLabel3">03</span>
-                                        <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v3">Antes, todos também vivíamos como eles, satisfazendo os desejos da nossa natureza pecaminosa, realizando as vontades e os pensamentos dela. Como os outros, éramos por natureza merecedores da ira.</p>
-                                        </blockquote>
-                                    </article>
-                                    <article class="philosophy__verse" data-verse="4" aria-labelledby="philoVerseLabel4">
-                                        <span class="philosophy__verse-number" id="philoVerseLabel4">04</span>
-                                        <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v4">Todavia, Deus, por ser rico em misericórdia, por causa do grande amor com que nos amou,</p>
-                                        </blockquote>
-                                    </article>
-                                    <article class="philosophy__verse" data-verse="5" aria-labelledby="philoVerseLabel5">
-                                        <span class="philosophy__verse-number" id="philoVerseLabel5">05</span>
-                                        <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v5">deu-nos a vida com Cristo quando ainda estávamos mortos nas transgressões — pela graça vocês são salvos.</p>
-                                        </blockquote>
-                                    </article>
-                                    <article class="philosophy__verse" data-verse="6" aria-labelledby="philoVerseLabel6">
-                                        <span class="philosophy__verse-number" id="philoVerseLabel6">06</span>
-                                        <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v6">Deus nos ressuscitou com Cristo e com ele nos assentou nas regiões celestiais em Cristo Jesus,</p>
-                                        </blockquote>
-                                    </article>
-                                    <article class="philosophy__verse" data-verse="7" aria-labelledby="philoVerseLabel7">
-                                        <span class="philosophy__verse-number" id="philoVerseLabel7">07</span>
-                                        <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v7">para mostrar, nas eras por vir, a incomparável riqueza da sua graça, demonstrada na sua bondade para conosco em Cristo Jesus.</p>
-                                        </blockquote>
-                                    </article>
-                                    <article class="philosophy__verse" data-verse="8" aria-labelledby="philoVerseLabel8">
-                                        <span class="philosophy__verse-number" id="philoVerseLabel8">08</span>
-                                        <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v8">Pois pela graça vocês são salvos, por meio da fé, e isto não vem de vocês, é dom de Deus;</p>
-                                        </blockquote>
-                                    </article>
-                                    <article class="philosophy__verse" data-verse="9" aria-labelledby="philoVerseLabel9">
-                                        <span class="philosophy__verse-number" id="philoVerseLabel9">09</span>
-                                        <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v9">não por obras, para que ninguém se glorie.</p>
-                                        </blockquote>
-                                    </article>
-                                    <article class="philosophy__verse" data-verse="10" aria-labelledby="philoVerseLabel10">
-                                        <span class="philosophy__verse-number" id="philoVerseLabel10">10</span>
-                                        <blockquote class="philosophy__quote" lang="pt-BR">
-                                            <p data-i18n="philosophy.v10">Porque fomos feitos por Deus, criados em Cristo Jesus, para boas obras, as quais Deus preparou previamente para que andássemos nelas.</p>
+                                            <p data-i18n="philosophy.v2">Não se amoldem ao padrão deste mundo, mas transformem-se pela renovação da sua mente, para que experimentem e comprovem qual é a boa, agradável e perfeita vontade de Deus.</p>
                                         </blockquote>
                                     </article>
                                 </div>
@@ -613,45 +567,20 @@
         (function () {
             var ldr = document.getElementById('pageLoader');
             if (!ldr) return;
-            var fill = document.getElementById('loaderFill');
-            var pct = document.getElementById('loaderPct');
             var hidden = false;
-            var progress = 0;
-            var tick = null;
-
-            function render() {
-                if (fill) fill.style.width = progress + '%';
-                if (pct) pct.textContent = Math.round(progress) + '%';
-            }
-
-            function advance() {
-                if (hidden) return;
-                var next = progress + (Math.random() * 12 + 6);
-                if (next >= 96) {
-                    progress = 96;
-                    if (tick) clearInterval(tick);
-                    return;
-                }
-                progress = next;
-                render();
-            }
-
-            tick = setInterval(advance, 100);
-            render();
+            var startedAt = performance.now();
 
             function finish() {
                 if (hidden) return;
-                if (tick) clearInterval(tick);
                 hidden = true;
-                progress = 100;
-                render();
-                ldr.classList.add('pl--done');
-                setTimeout(function () { if (ldr.parentNode) ldr.parentNode.removeChild(ldr); }, 600);
+                var wait = Math.max(0, 1600 - (performance.now() - startedAt));
+                setTimeout(function () {
+                    ldr.classList.add('pl--done');
+                    setTimeout(function () { if (ldr.parentNode) ldr.parentNode.removeChild(ldr); }, 600);
+                }, wait);
             }
 
-            window.addEventListener('load', function () {
-                setTimeout(finish, 250);
-            });
+            window.addEventListener('load', finish);
             setTimeout(finish, 4000);
         })();
     </script>

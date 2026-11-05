@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1.5 Theme toggle (claro/escuro)
     const themeToggle = document.querySelector('.theme-toggle');
     const themeMeta = document.querySelector('meta[name="theme-color"]');
-    let gridRgb = '255, 255, 255';
     const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function getCurrentTheme() {
@@ -91,8 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
             icon.className = theme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
             themeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
         }
-        const gridValue = getComputedStyle(document.documentElement).getPropertyValue('--grid-dot').trim();
-        gridRgb = gridValue || '255, 255, 255';
     }
 
     function applyTheme(theme, persist) {
@@ -172,18 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'backToTop': 'Voltar ao topo',
             'footer.copyright': '© 2026 Eduardo Lannes Marinato. Desenvolvido com muito <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> e código.',
             'philosophy.kicker': 'A Filosofia',
-            'philosophy.reference': "Efésios 2:1–10",
-            'philosophy.reader': 'Versículos de Efésios 2:1–10 na NVI',
-            'philosophy.v1': 'Vocês estavam mortos nas suas transgressões e nos seus pecados,',
-            'philosophy.v2': 'nos quais costumavam viver, quando seguiam os padrões deste mundo e o príncipe do poder do ar, o espírito que agora atua nos filhos da desobediência.',
-            'philosophy.v3': 'Antes, todos também vivíamos como eles, satisfazendo os desejos da nossa natureza pecaminosa, realizando as vontades e os pensamentos dela. Como os outros, éramos por natureza merecedores da ira.',
-            'philosophy.v4': 'Todavia, Deus, por ser rico em misericórdia, por causa do grande amor com que nos amou,',
-            'philosophy.v5': 'deu-nos a vida com Cristo quando ainda estávamos mortos nas transgressões — pela graça vocês são salvos.',
-            'philosophy.v6': 'Deus nos ressuscitou com Cristo e com ele nos assentou nas regiões celestiais em Cristo Jesus,',
-            'philosophy.v7': 'para mostrar, nas eras por vir, a incomparável riqueza da sua graça, demonstrada na sua bondade para conosco em Cristo Jesus.',
-            'philosophy.v8': 'Pois pela graça vocês são salvos, por meio da fé, e isto não vem de vocês, é dom de Deus;',
-            'philosophy.v9': 'não por obras, para que ninguém se glorie.',
-            'philosophy.v10': 'Porque fomos feitos por Deus, criados em Cristo Jesus, para boas obras, as quais Deus preparou previamente para que andássemos nelas.',
+            'philosophy.reference': "Romanos 12:2",
+            'philosophy.reader': 'Versículo de Romanos 12:2 na NVI',
+            'philosophy.v2': 'Não se amoldem ao padrão deste mundo, mas transformem-se pela renovação da sua mente, para que experimentem e comprovem qual é a boa, agradável e perfeita vontade de Deus.',
             'breadcrumb': { home: 'Home', about: 'Sobre mim', projects: 'Projetos', music: 'Música', faq: 'Perguntas frequentes', contact: 'Contato', philosophy: 'Filosofia' }
         },
         en: {
@@ -251,18 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'backToTop': 'Back to top',
             'footer.copyright': '© 2026 Eduardo Lannes Marinato. Built with lots of <span class="footer-mug"><i class="fa-solid fa-mug-hot"></i><span class="steam"><span></span><span></span><span></span></span></span> and code.',
             'philosophy.kicker': 'The Philosophy',
-            'philosophy.reference': "Ephesians 2:1–10",
-            'philosophy.reader': 'Ephesians 2:1–10 verses in English (WEB)',
-            'philosophy.v1': 'You were made alive when you were dead in transgressions and sins,',
-            'philosophy.v2': 'in which you once walked according to the course of this world, according to the prince of the power of the air, the spirit who now works in the children of disobedience;',
-            'philosophy.v3': 'among whom we also all once lived in the lusts of our flesh, doing the desires of the flesh and of the mind, and were by nature children of wrath, even as the rest.',
-            'philosophy.v4': 'But God, being rich in mercy, for his great love with which he loved us,',
-            'philosophy.v5': 'even when we were dead through our trespasses, made us alive together with Christ—by grace you have been saved—',
-            'philosophy.v6': 'and raised us up with him, and made us to sit with him in the heavenly places in Christ Jesus,',
-            'philosophy.v7': 'that in the ages to come he might show the exceeding riches of his grace in kindness toward us in Christ Jesus;',
-            'philosophy.v8': 'for by grace you have been saved through faith, and that not of yourselves; it is the gift of God,',
-            'philosophy.v9': 'not of works, that no one would boast.',
-            'philosophy.v10': 'For we are his workmanship, created in Christ Jesus for good works, which God prepared before that we would walk in them.',
+            'philosophy.reference': "Romans 12:2",
+            'philosophy.reader': 'Romans 12:2 verse in English (WEB)',
+            'philosophy.v2': "Don't be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what is the good, well-pleasing, and perfect will of God.",
             'breadcrumb': { home: 'Home', about: 'About me', projects: 'Projects', music: 'Music', faq: 'Frequently asked questions', contact: 'Contact', philosophy: 'Philosophy' }
         }
     };
@@ -685,107 +664,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
             }
         });
-    }
-
-    // 10. Page grid animation
-    const heroCanvas = document.getElementById('heroGrid');
-    if (heroCanvas) {
-        const ctx = heroCanvas.getContext('2d');
-        let w, h, cols, rows, points;
-        const spacing = 50;
-        let mouse = { x: -1000, y: -1000 };
-
-        function resize() {
-            w = window.innerWidth;
-            h = window.innerHeight;
-            heroCanvas.width = w;
-            heroCanvas.height = h;
-            cols = Math.ceil(w / spacing) + 1;
-            rows = Math.ceil(h / spacing) + 1;
-            points = [];
-            for (let y = 0; y < rows; y++) {
-                for (let x = 0; x < cols; x++) {
-                    points.push({
-                        x: x * spacing,
-                        y: y * spacing,
-                        ox: x * spacing,
-                        oy: y * spacing
-                    });
-                }
-            }
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, w, h);
-
-            for (const p of points) {
-                const dx = mouse.x - p.x;
-                const dy = mouse.y - p.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const maxDist = 150;
-
-                if (dist < maxDist) {
-                    const force = (maxDist - dist) / maxDist;
-                    p.x = p.ox - dx * force * 0.3;
-                    p.y = p.oy - dy * force * 0.3;
-                } else {
-                    p.x += (p.ox - p.x) * 0.08;
-                    p.y += (p.oy - p.y) * 0.08;
-                }
-
-                const alpha = 0.25 + (dist < maxDist ? (maxDist - dist) / maxDist * 0.35 : 0);
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(${gridRgb},${alpha})`;
-                ctx.fill();
-            }
-
-            ctx.strokeStyle = `rgba(${gridRgb},0.1)`;
-            ctx.lineWidth = 0.5;
-            for (let y = 0; y < rows; y++) {
-                for (let x = 0; x < cols - 1; x++) {
-                    const a = points[y * cols + x];
-                    const b = points[y * cols + x + 1];
-                    ctx.beginPath();
-                    ctx.moveTo(a.x, a.y);
-                    ctx.lineTo(b.x, b.y);
-                    ctx.stroke();
-                }
-            }
-            for (let y = 0; y < rows - 1; y++) {
-                for (let x = 0; x < cols; x++) {
-                    const a = points[y * cols + x];
-                    const b = points[(y + 1) * cols + x];
-                    ctx.beginPath();
-                    ctx.moveTo(a.x, a.y);
-                    ctx.lineTo(b.x, b.y);
-                    ctx.stroke();
-                }
-            }
-        }
-
-        function loop() {
-            draw();
-            requestAnimationFrame(loop);
-        }
-
-        window.addEventListener('resize', resize);
-        resize();
-        if (reducedMotion) {
-            draw();
-        } else {
-            document.addEventListener('mousemove', (e) => {
-                mouse.x = e.clientX;
-                mouse.y = e.clientY;
-            });
-
-            document.addEventListener('mouseleave', () => {
-                mouse.x = -1000;
-                mouse.y = -1000;
-            });
-
-            loop();
-        }
     }
 
     // 10.1 Click sparks (React Bits — ClickSpark portado para JS puro)

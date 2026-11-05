@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { CSSProperties, PointerEvent } from "react";
+import SplitText from "../components/ui/SplitText";
 import "./projects.css";
 
 type Language = "pt" | "en";
@@ -14,9 +14,7 @@ const copy = {
     visit: "Explorar projeto",
     status: "ONLINE",
     featuresAria: "Características do projeto",
-    previous: "Projeto anterior",
-    next: "Próximo projeto",
-    goTo: "Ir para o projeto",
+    slidesAria: "Carrossel de projetos",
     slideOf: "de",
   },
   en: {
@@ -28,9 +26,7 @@ const copy = {
     visit: "Explore project",
     status: "LIVE",
     featuresAria: "Project features",
-    previous: "Previous project",
-    next: "Next project",
-    goTo: "Go to project",
+    slidesAria: "Project carousel",
     slideOf: "of",
   },
 };
@@ -105,14 +101,14 @@ export default function ProjectShowcase() {
     document.documentElement.dataset.lang === "en" ? "en" : "pt",
   );
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
   const root = useRef<HTMLDivElement>(null);
-  const swipeStart = useRef<number | null>(null);
   const text = copy[language];
-  const total = projects.length;
+  const secondaryProject = projects[0];
+  const secondaryText = secondaryProject.copy[language];
 
-  const goTo = (index: number) => setActive((index + total) % total);
-  const goBy = (delta: number) => setActive((current) => (current + delta + total) % total);
+  const goToSlide = (index: number) => {
+    setActive((index + projects.length) % projects.length);
+  };
 
   useEffect(() => {
     document.dispatchEvent(new Event('portfolio:layout-change'));
@@ -144,138 +140,136 @@ export default function ProjectShowcase() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (paused) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setInterval(() => goBy(1), 7000);
-    return () => window.clearInterval(timer);
-  }, [paused]);
-
-  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== "touch") return;
-    swipeStart.current = event.clientX;
-  };
-
-  const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
-    if (swipeStart.current === null) return;
-    const distance = event.clientX - swipeStart.current;
-    swipeStart.current = null;
-    if (Math.abs(distance) < 42) return;
-    goBy(distance < 0 ? 1 : -1);
-  };
-
   return (
-    <div
-      ref={root}
-      className="ps-showcase"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
-      onKeyDown={(event) => {
-        if (event.key === "ArrowLeft") {
-          event.preventDefault();
-          goBy(-1);
-        }
-        if (event.key === "ArrowRight") {
-          event.preventDefault();
-          goBy(1);
-        }
-      }}
-    >
+    <div ref={root} className="ps-showcase">
       <header className="ps-heading ps-reveal">
         <div className="ps-section-index"><span className="ps-index-mark" aria-hidden="true" />{text.label}</div>
         <div className="ps-heading-row">
           <h2 id="projects-heading" aria-live="polite">
-            <span className="ps-heading-word">{text.title}</span><br />
-            <span className="ps-heading-word ps-heading-word--muted">{text.titleEnd}</span>
+            <SplitText
+              tag="span"
+              className="ps-heading-word ps-heading-word--light"
+              text={text.title}
+              splitType="chars"
+              effect="rise"
+              trigger="view"
+              delay={26}
+              duration={1}
+              staggerFrom="start"
+              threshold={0.15}
+              rootMargin="-70px"
+              textAlign="left"
+            />
+            <br />
+            <SplitText
+              tag="span"
+              className="ps-heading-word ps-heading-word--muted"
+              text={text.titleEnd}
+              splitType="chars"
+              effect="rise"
+              trigger="view"
+              delay={26}
+              duration={1}
+              staggerFrom="start"
+              threshold={0.15}
+              rootMargin="-70px"
+              textAlign="left"
+            />
           </h2>
-          <p>{text.intro}</p>
+          <a
+            className="ps-heading-link"
+            href={secondaryProject.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={secondaryText.visitAria}
+          >
+            <Arrow diagonal />
+          </a>
         </div>
       </header>
 
-      <div className="ps-carousel ps-reveal" aria-roledescription="carrossel" aria-label={language === "en" ? "Project carousel" : "Carrossel de projetos"}>
-        <div
-          className="ps-carousel__stage"
-          onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={() => { swipeStart.current = null; }}
-        >
-          {projects.map((project, index) => {
-            const projectText = project.copy[language];
-            const isActive = index === active;
-            const offset = index - active;
-            return (
-              <article
-                key={project.id}
-                className={isActive ? "ps-slide is-active" : "ps-slide"}
-                style={{ "--ps-offset": offset } as CSSProperties}
-                aria-hidden={!isActive}
-                aria-roledescription="slide"
-                aria-label={`${index + 1} ${text.slideOf} ${total}: ${project.name}`}
-              >
-                <div className="ps-slide__preview">
-                  <span className="ps-preview-grid" aria-hidden="true" />
-                  <div className="ps-browser">
-                    <div className="ps-browser-bar" aria-hidden="true">
-                      <span className="ps-browser-dots"><i /><i /><i /></span>
-                      <span className="ps-browser-url"><svg viewBox="0 0 12 12" fill="none"><path d="M3.5 5V3.5a2.5 2.5 0 0 1 5 0V5m-6 0h7v6h-7z" /></svg>{project.domain}</span>
-                      <span className="ps-browser-menu">···</span>
+      <div className="ps-carousel ps-reveal" aria-roledescription="carrossel" aria-label={text.slidesAria}>
+        <div className="ps-carousel__viewport">
+          <div className="ps-carousel__track" style={{ transform: `translateX(-${active * 100}%)` }}>
+            {projects.map((project, index) => {
+              const projectText = project.copy[language];
+              return (
+                <article key={project.id} className="ps-carousel__slide" aria-hidden={index !== active}>
+                  <div className="ps-featured-card">
+                    <div className="ps-featured-card__media">
+                      <div className="ps-browser">
+                        <div className="ps-browser-bar">
+                          <div className="ps-browser-dots" aria-hidden="true">
+                            <i />
+                            <i />
+                            <i />
+                          </div>
+                          <div className="ps-browser-url">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                              <path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                            </svg>
+                            <span>{project.domain}</span>
+                          </div>
+                          <div className="ps-browser-menu">⋮</div>
+                        </div>
+                        <img src={project.preview} alt={projectText.previewAlt} draggable={false} />
+                      </div>
                     </div>
-                    <img src={project.preview} width={project.width} height={project.height} alt={projectText.previewAlt} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
-                  </div>
-                  <span className="ps-preview-coordinate" aria-hidden="true">DESIGN / DEVELOP / DELIVER</span>
-                  <span className="ps-preview-number" aria-hidden="true">0{index + 1}</span>
-                </div>
 
-                <div className="ps-slide__content">
-                  <div className="ps-slide__topline">
-                    <span>{text.featured}</span>
-                    <span className="ps-status"><i aria-hidden="true" />{text.status}</span>
+                    <div className="ps-featured-card__content">
+                      <div className="ps-slide__topline">
+                        <span>{text.featured}</span>
+                        <span className="ps-status"><i aria-hidden="true" />{text.status}</span>
+                      </div>
+                      <span className="ps-eyebrow">{projectText.projectType}</span>
+                      <h3>{project.name}</h3>
+                      <p className="ps-project-description">{projectText.projectDescription}</p>
+                      <ul className="ps-tags" aria-label={text.featuresAria}>
+                        {projectText.tags.map((tag) => <li key={tag}>{tag}</li>)}
+                      </ul>
+                      <a
+                        className="ps-button ps-button-primary"
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={projectText.visitAria}
+                      >
+                        {text.visit}<Arrow diagonal />
+                      </a>
+                    </div>
                   </div>
-                  <span className="ps-eyebrow">{projectText.projectType}</span>
-                  <h3>{project.name}</h3>
-                  <p className="ps-project-description">{projectText.projectDescription}</p>
-                  <ul className="ps-tags" aria-label={text.featuresAria}>
-                    {projectText.tags.map((tag) => <li key={tag}>{tag}</li>)}
-                  </ul>
-                  <a
-                    className="ps-button ps-button-primary"
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={projectText.visitAria}
-                    tabIndex={isActive ? 0 : -1}
-                  >
-                    {text.visit}<Arrow diagonal />
-                  </a>
-                </div>
-              </article>
-            );
-          })}
+                </article>
+              );
+            })}
+          </div>
         </div>
 
         <div className="ps-carousel__controls">
-          <p className="ps-carousel__count" aria-live="polite">
-            <strong>0{active + 1}</strong><span>/ 0{total}</span>
-          </p>
+          <div className="ps-carousel__count" aria-live="polite">
+            <strong>{String(active + 1).padStart(2, "0")}</strong>
+            <span>/ {String(projects.length).padStart(2, "0")}</span>
+          </div>
 
           <div className="ps-carousel__dots" role="group" aria-label={language === "en" ? "Choose project" : "Escolher projeto"}>
             {projects.map((project, index) => (
               <button
                 key={project.id}
                 type="button"
-                className={index === active ? "is-active" : undefined}
+                className={index === active ? "is-active" : ""}
                 aria-current={index === active ? "true" : undefined}
-                aria-label={`${text.goTo} ${index + 1}: ${project.name}`}
-                onClick={() => goTo(index)}
+                aria-label={language === "en" ? `Open project ${project.name}` : `Abrir projeto ${project.name}`}
+                onClick={() => goToSlide(index)}
               />
             ))}
           </div>
 
           <div className="ps-carousel__arrows">
-            <button type="button" onClick={() => goBy(-1)} aria-label={text.previous}><Arrow /></button>
-            <button type="button" onClick={() => goBy(1)} aria-label={text.next}><Arrow /></button>
+            <button type="button" aria-label={language === "en" ? "Previous project" : "Projeto anterior"} onClick={() => goToSlide(active - 1)}>
+              <Arrow />
+            </button>
+            <button type="button" aria-label={language === "en" ? "Next project" : "Próximo projeto"} onClick={() => goToSlide(active + 1)}>
+              <Arrow diagonal />
+            </button>
           </div>
         </div>
       </div>

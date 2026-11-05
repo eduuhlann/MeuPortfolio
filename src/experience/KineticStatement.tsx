@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import SplitText from '../components/ui/SplitText';
 import { usePortfolioLanguage } from './usePortfolioLanguage';
 import './kinetic.css';
 
@@ -37,7 +38,39 @@ export default function KineticStatement() {
   return (
     <div className="kinetic-statement" ref={root}>
       <div className="kinetic-statement__top"><span>01 / {english ? 'THE CREATIVE PROCESS' : 'O PROCESSO CRIATIVO'}</span><span aria-hidden="true">[ DESIGN × CODE ]</span></div>
-      <h2 className="kinetic-statement__heading"><span className="kinetic-statement__line kinetic-statement__line--first">{english ? 'LESS ORDINARY.' : 'MENOS DO MESMO.'}</span><span className="kinetic-statement__line kinetic-statement__line--second">{english ? 'MORE INTENTION.' : 'MAIS INTENÇÃO.'}<span className="kinetic-statement__asterisk" aria-hidden="true">✳</span></span></h2>
+      <h2 className="kinetic-statement__heading">
+        <span className="kinetic-statement__line kinetic-statement__line--first">
+          <SplitText
+            tag="span"
+            text={english ? 'LESS ORDINARY.' : 'MENOS DO MESMO.'}
+            splitType="chars"
+            effect="rise"
+            trigger="view"
+            delay={32}
+            duration={1.05}
+            staggerFrom="start"
+            threshold={0.15}
+            rootMargin="-60px"
+            textAlign="left"
+          />
+        </span>
+        <span className="kinetic-statement__line kinetic-statement__line--second">
+          <SplitText
+            tag="span"
+            text={english ? 'MORE INTENTION.' : 'MAIS INTENÇÃO.'}
+            splitType="chars"
+            effect="rise"
+            trigger="view"
+            delay={32}
+            duration={1.05}
+            staggerFrom="start"
+            threshold={0.15}
+            rootMargin="-60px"
+            textAlign="left"
+          />
+          <span className="kinetic-statement__asterisk" aria-hidden="true">✳</span>
+        </span>
+      </h2>
       <div className="kinetic-statement__bottom"><span aria-hidden="true">↳</span><p>{english ? 'A good interface doesn’t just look good. It feels right, responds naturally, and makes every detail count.' : 'Uma boa interface vai além do visual. Ela faz sentido, responde com naturalidade e transforma cada detalhe em experiência.'}</p><a href="#projects">{english ? 'See it in practice' : 'Veja na prática'}<span aria-hidden="true">↗</span></a></div>
     </div>
   );
