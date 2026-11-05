@@ -73,6 +73,9 @@ function initPageScroll() {
     });
     window.portfolioScroll = lenis;
 
+    if (document.documentElement.classList.contains('intro-active')) lenis.stop();
+    document.addEventListener('portfolio:intro-done', () => lenis.start(), { once: true });
+
     const gsap = window.gsap;
     const scrollTrigger = window.ScrollTrigger;
     let previousScroll = window.scrollY;

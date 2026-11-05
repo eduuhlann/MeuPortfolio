@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-lang="pt">
+<html lang="pt-BR" data-lang="pt" class="intro-active">
 
 <head>
     <!-- Google tag (gtag.js) -->
@@ -63,19 +63,13 @@
 </head>
 
 <body>
-    <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="page-loader" id="pageLoader" role="dialog" aria-modal="true" aria-label="eduuhlann">
         <div class="loader-inner">
-            <div class="loader-logo" role="img" aria-label="eduuhlann">
-                <span class="loader-letter" style="--i:0;--sx:75"></span>
-                <span class="loader-letter" style="--i:1;--sx:173"></span>
-                <span class="loader-letter" style="--i:2;--sx:271"></span>
-                <span class="loader-letter" style="--i:3;--sx:369"></span>
-                <span class="loader-letter" style="--i:4;--sx:467"></span>
-                <span class="loader-letter" style="--i:5;--sx:565"></span>
-                <span class="loader-letter" style="--i:6;--sx:663"></span>
-                <span class="loader-letter" style="--i:7;--sx:761"></span>
-                <span class="loader-letter" style="--i:8;--sx:859"></span>
-            </div>
+            <img class="loader-logo" src="/IntroTransparente.png" alt="eduuhlann" />
+            <button type="button" class="loader-enter" id="loaderEnter" autofocus>
+                <span data-i18n="intro.enter">Acessar</span>
+                <span aria-hidden="true">↗</span>
+            </button>
         </div>
     </div>
     <div class="page-grid" id="heroFlux" aria-hidden="true"></div>
@@ -156,7 +150,7 @@
                 <!-- Center GIF -->
                 <div class="hero-v2__center">
                     <div class="hero-v2__gif-wrap">
-                        <img src="dekudark.png" alt="Ilustração" class="hero-v2__gif" id="heroGif">
+                        <img src="/IntroTransparente.png" alt="Ilustração" class="hero-v2__gif" id="heroGif">
                     </div>
                 </div>
 
@@ -566,22 +560,28 @@
     <script>
         (function () {
             var ldr = document.getElementById('pageLoader');
+            var enter = document.getElementById('loaderEnter');
             if (!ldr) return;
-            var hidden = false;
-            var startedAt = performance.now();
+            var entered = false;
 
-            function finish() {
-                if (hidden) return;
-                hidden = true;
-                var wait = Math.max(0, 1600 - (performance.now() - startedAt));
-                setTimeout(function () {
-                    ldr.classList.add('pl--done');
-                    setTimeout(function () { if (ldr.parentNode) ldr.parentNode.removeChild(ldr); }, 600);
-                }, wait);
+            function enterSite() {
+                if (entered) return;
+                entered = true;
+                document.documentElement.classList.remove('intro-active');
+                if (window.portfolioScroll && window.portfolioScroll.start) window.portfolioScroll.start();
+                document.dispatchEvent(new Event('portfolio:intro-done'));
+                ldr.classList.add('pl--done');
+                setTimeout(function () { if (ldr.parentNode) ldr.parentNode.removeChild(ldr); }, 600);
             }
 
-            window.addEventListener('load', finish);
-            setTimeout(finish, 4000);
+            if (enter) enter.addEventListener('click', enterSite);
+            document.addEventListener('keydown', function (event) {
+                if (entered) return;
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    enterSite();
+                }
+            });
         })();
     </script>
 

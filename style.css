@@ -2189,8 +2189,26 @@ body > :where(:not(.page-grid)) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #000;
+    background: transparent;
     transition: opacity 0.5s ease;
+    isolation: isolate;
+}
+
+.page-loader::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 42%, rgba(5, 5, 5, 0.12) 0%, rgba(5, 5, 5, 0.58) 58%, rgba(5, 5, 5, 0.9) 100%);
+    pointer-events: none;
+}
+
+html.intro-active,
+html.intro-active body {
+    overflow: hidden;
+}
+
+html.intro-active body > :where(:not(.page-grid, .page-loader)) {
+    visibility: hidden;
 }
 
 .page-loader.pl--done {
@@ -2199,73 +2217,95 @@ body > :where(:not(.page-grid)) {
 }
 
 .page-loader .loader-inner {
+    position: relative;
+    z-index: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: clamp(16px, 2.5vh, 24px);
+    transform: translateY(-18px);
 }
 
 .page-loader .loader-logo {
-    --s: 0.34;
-    display: flex;
-    align-items: flex-end;
-    gap: calc(8px * var(--s));
-    height: calc(225px * var(--s));
-}
-
-.page-loader .loader-letter {
+    width: min(82vw, 620px);
+    max-width: 100%;
+    height: auto;
     display: block;
-    width: calc(90px * var(--s));
-    height: calc(225px * var(--s));
-    background-image: url('/loader-logo.png');
-    background-repeat: no-repeat;
-    background-size: calc(1024px * var(--s)) calc(1024px * var(--s));
-    background-position: calc(var(--sx) * var(--s) * -1px) calc(-396px * var(--s));
+    object-fit: contain;
     opacity: 0;
-    transform: translateY(26px) scale(0.88);
-    filter: blur(6px);
-    animation: loader-letter-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: calc(120ms + var(--i, 0) * 65ms);
-    will-change: transform, opacity, filter;
+    transform: translate3d(0, 20px, 0) scale(0.97);
+    animation: loader-letter-in 1.05s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    filter: drop-shadow(0 12px 24px rgba(255, 255, 255, 0.08));
+    will-change: transform, opacity;
+    backface-visibility: hidden;
 }
 
-@media (min-width: 380px) {
-    .page-loader .loader-logo { --s: 0.4; }
+.page-loader .loader-enter {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 30px;
+    border: 1px solid #f1f1f3;
+    border-radius: 999px;
+    background: #f1f1f3;
+    color: #050505;
+    font: 600 12px/1 var(--font-heading);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0;
+    translate: 0 12px;
+    animation: loader-enter-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+    margin-top: -18px;
 }
 
-@media (min-width: 600px) {
-    .page-loader .loader-logo { --s: 0.5; }
+.page-loader .loader-enter:hover {
+    background: #050505;
+    color: #f1f1f3;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.16);
 }
 
-@media (min-width: 900px) {
-    .page-loader .loader-logo { --s: 0.6; }
+.page-loader .loader-enter:focus-visible {
+    outline: 2px solid #f1f1f3;
+    outline-offset: 5px;
 }
 
-@media (min-width: 1200px) {
-    .page-loader .loader-logo { --s: 0.68; }
+@keyframes loader-enter-in {
+    from {
+        opacity: 0;
+        translate: 0 12px;
+    }
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
 }
 
 @keyframes loader-letter-in {
     0% {
         opacity: 0;
-        transform: translateY(26px) scale(0.88);
-        filter: blur(6px);
-    }
-    55% {
-        opacity: 1;
+        transform: translate3d(0, 20px, 0) scale(0.97);
     }
     100% {
         opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
+        transform: translate3d(0, 0, 0) scale(1);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .page-loader .loader-letter {
+    .page-loader .loader-logo {
         animation: none;
         opacity: 1;
         transform: none;
-        filter: none;
+    }
+
+    .page-loader .loader-enter {
+        animation: none;
+        opacity: 1;
+        translate: none;
     }
 }
 
