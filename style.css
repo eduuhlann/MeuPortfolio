@@ -2228,13 +2228,13 @@ html.intro-active body > :where(:not(.page-grid, .page-loader)) {
 }
 
 .page-loader .loader-logo {
-    width: min(82vw, 620px);
+    width: min(90vw, 760px);
     max-width: 100%;
     height: auto;
     display: block;
     object-fit: contain;
     opacity: 0;
-    transform: translate3d(0, 20px, 0) scale(0.97);
+    transform: translate3d(0, 20px, 0) scale(1.05);
     animation: loader-letter-in 1.05s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     filter: drop-shadow(0 12px 24px rgba(255, 255, 255, 0.08));
     will-change: transform, opacity;
@@ -2245,12 +2245,12 @@ html.intro-active body > :where(:not(.page-grid, .page-loader)) {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    padding: 14px 30px;
+    padding: 18px 36px;
     border: 1px solid #f1f1f3;
     border-radius: 999px;
     background: #f1f1f3;
     color: #050505;
-    font: 600 12px/1 var(--font-heading);
+    font: 600 14px/1 var(--font-heading);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     cursor: pointer;
@@ -2258,7 +2258,7 @@ html.intro-active body > :where(:not(.page-grid, .page-loader)) {
     translate: 0 12px;
     animation: loader-enter-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
     transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
-    margin-top: -26px;
+    margin-top: -12px;
 }
 
 .page-loader .loader-enter:hover {
