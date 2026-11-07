@@ -19,12 +19,12 @@ const BrandWordmark = ({
         <WarpText
           text={text}
           color="#f5f5f5"
-          warpStrength={0.09}
-          warpScale={1.8}
-          speed={0.6}
-          pointerInfluence={0.46}
-          pointerStrength={0.42}
-          refraction={0.02}
+          warpStrength={0.16}
+          warpScale={2.2}
+          speed={0.9}
+          pointerInfluence={0.7}
+          pointerStrength={0.6}
+          refraction={0.03}
           ripple
           fontSize="clamp(2.3rem, 8vw, 6.5rem)"
           fontWeight={800}

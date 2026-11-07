@@ -486,27 +486,57 @@ document.addEventListener('DOMContentLoaded', () => {
             setPlayIcon();
         }
 
+        const FALLBACK_NOW_PLAYING = {
+            track: 'Funtime',
+            artists: ['Mystery'],
+            album: 'Funtime',
+            cover: '',
+            url: '#',
+            preview: '',
+            playing: false
+        };
+
         function renderNowPlaying(item) {
-            if (!item || !item.track) {
+            const fallbackItem = item || FALLBACK_NOW_PLAYING;
+            if (!fallbackItem.track) {
                 nowPlayingCard.hidden = true;
                 stopAudio();
                 return;
             }
             nowPlayingCard.hidden = false;
-            const playing = npIndex === 0 ? !!item.playing : false;
+            const playing = npIndex === 0 ? !!fallbackItem.playing : false;
             nowPlayingCard.classList.toggle('paused', !playing);
-            if (npAudio.dataset.track !== (item.track || '')) stopAudio();
-            npCover.src = item.cover || '';
-            npCover.alt = item.album ? 'Capa do álbum ' + item.album : 'Capa do álbum';
+            if (npAudio.dataset.track !== (fallbackItem.track || '')) stopAudio();
+            const coverSrc = fallbackItem.cover || `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'>
+                    <defs>
+                        <linearGradient id='bg' x1='0%' x2='100%' y1='0%' y2='100%'>
+                            <stop offset='0%' stop-color='#ff4ba9'/>
+                            <stop offset='28%' stop-color='#af3fff'/>
+                            <stop offset='60%' stop-color='#2ad2ff'/>
+                            <stop offset='100%' stop-color='#ffd75a'/>
+                        </linearGradient>
+                    </defs>
+                    <rect width='600' height='600' rx='48' fill='url(#bg)'/>
+                    <circle cx='320' cy='220' r='120' fill='rgba(255,255,255,0.18)'/>
+                    <circle cx='250' cy='360' r='82' fill='rgba(255,255,255,0.2)'/>
+                    <path d='M110 110 C170 80, 220 150, 260 215 C200 250, 160 340, 105 420 C70 360, 70 150, 110 110Z' fill='rgba(255,255,255,0.25)'/>
+                    <path d='M450 90 C510 130, 540 210, 520 290 C470 260, 415 240, 360 220 C380 150, 410 110, 450 90Z' fill='rgba(0,0,0,0.15)'/>
+                    <circle cx='240' cy='255' r='54' fill='rgba(0,0,0,0.22)'/>
+                    <path d='M160 330 C220 300, 310 300, 370 332 C350 390, 295 425, 220 430 C180 395, 170 357, 160 330Z' fill='rgba(11,11,13,0.24)'/>
+                </svg>
+            `)}`;
+            npCover.src = coverSrc;
+            npCover.alt = fallbackItem.album ? 'Capa do álbum ' + fallbackItem.album : 'Capa do álbum';
             npStatus.textContent = playing ? TRANSLATIONS[currentNowPlayingLang]['music.listening'] : TRANSLATIONS[currentNowPlayingLang]['music.paused'];
-            npTrack.textContent = item.track;
-            npTrack.href = item.url || '#';
-            npArtist.textContent = Array.isArray(item.artists) ? item.artists.join(', ') : '';
-            if (npProgress) npProgress.hidden = !item.duration;
-            npBar.style.width = item.duration ? Math.min(100, (item.progress / item.duration) * 100) + '%' : '0%';
+            npTrack.textContent = fallbackItem.track;
+            npTrack.href = fallbackItem.url || '#';
+            npArtist.textContent = Array.isArray(fallbackItem.artists) ? fallbackItem.artists.join(', ') : '';
+            if (npProgress) npProgress.hidden = !fallbackItem.duration;
+            npBar.style.width = fallbackItem.duration ? Math.min(100, (fallbackItem.progress / fallbackItem.duration) * 100) + '%' : '0%';
             if (npPrev) npPrev.disabled = npIndex <= 0;
             if (npNext) npNext.disabled = npIndex >= npHistory.length - 1;
-            if (npPlay) npPlay.disabled = !item.preview;
+            if (npPlay) npPlay.disabled = !fallbackItem.preview;
         }
 
         function togglePlay() {
@@ -534,7 +564,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!res.ok) throw new Error('api indisponivel');
                 const data = await res.json();
                 if (!data || !data.track) {
-                    nowPlayingCard.hidden = true;
+                    npHistory = [FALLBACK_NOW_PLAYING];
+                    npIndex = 0;
+                    renderNowPlaying(npHistory[0]);
                     return;
                 }
                 npHistory = Array.isArray(data.history) && data.history.length
@@ -543,7 +575,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 npIndex = 0;
                 renderNowPlaying(npHistory[0]);
             } catch (e) {
-                nowPlayingCard.hidden = true;
+                npHistory = [FALLBACK_NOW_PLAYING];
+                npIndex = 0;
+                renderNowPlaying(npHistory[0]);
             }
         }
 

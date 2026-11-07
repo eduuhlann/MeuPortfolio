@@ -1410,26 +1410,93 @@ body > :where(:not(.page-grid)) {
 }
 
 /* ================== MÚSICA / SPOTIFY ================== */
-.now-playing {
+#music {
+    position: relative;
+    overflow: hidden;
+}
+
+#music::before,
+#music::after {
+    content: "";
+    position: absolute;
+    inset: auto auto 10% 52%;
+    width: 42rem;
+    height: 42rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    pointer-events: none;
+    filter: none;
+    opacity: 0.38;
+    transform: rotate(-18deg);
+    background: transparent;
+    box-shadow: none;
+}
+
+#music::before {
+    right: -18rem;
+    left: auto;
+    top: 1rem;
+    width: 35rem;
+    height: 35rem;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+#music::after {
+    left: -10rem;
+    bottom: 2rem;
+    width: 28rem;
+    height: 28rem;
+    border-color: rgba(255, 255, 255, 0.04);
+    opacity: 0.3;
+}
+
+#music .section-heading {
     display: flex;
     align-items: center;
-    gap: 1.75rem;
-    background: var(--skill-card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 1rem;
-    padding: 2rem;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+#music .tag {
+    margin-bottom: 0;
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+#music .section-heading p {
+    margin: 0;
+    font-size: clamp(1.1rem, 2vw, 1.65rem);
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+.now-playing {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.8rem;
+    background: rgba(21, 21, 21, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 1.7rem;
+    padding: 1.75rem 1.5rem 1.75rem 1.4rem;
     margin-bottom: 2rem;
-    max-width: 680px;
+    max-width: 760px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 30px 80px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .np-cover {
     position: relative;
-    width: 150px;
-    height: 150px;
-    border-radius: 0.75rem;
+    width: 180px;
+    height: 180px;
+    border-radius: 1.2rem;
     overflow: hidden;
     flex-shrink: 0;
-    background: var(--bg-surface-hover);
+    background:
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.85), transparent 16%),
+        linear-gradient(135deg, #a91dd4 0%, #ff4a9d 28%, #f8c31d 58%, #5ac8ff 100%);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
 .np-cover img {
@@ -1439,16 +1506,66 @@ body > :where(:not(.page-grid)) {
     display: block;
 }
 
+.np-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.np-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-heading);
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+}
+
+.np-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35);
+}
+
+.now-playing:not(.paused) .np-dot {
+    background: #f5f5f5;
+    animation: np-pulse 1.8s ease-in-out infinite;
+}
+
+.now-playing.paused .np-dot {
+    background: rgba(255, 255, 255, 0.72);
+    animation: none;
+}
+
+@keyframes np-pulse {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        opacity: 0.7;
+        box-shadow: 0 0 0 6px rgba(255, 255, 255, 0);
+    }
+}
+
 .np-eq {
     position: absolute;
-    left: 0.5rem;
-    bottom: 0.5rem;
+    left: 0.8rem;
+    bottom: 0.8rem;
     display: flex;
     gap: 3px;
     align-items: stretch;
-    height: 14px;
-    padding: 4px 6px;
-    border-radius: 6px;
+    height: 16px;
+    padding: 5px 7px;
+    border-radius: 999px;
     background: rgba(0, 0, 0, 0.55);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
@@ -1463,9 +1580,10 @@ body > :where(:not(.page-grid)) {
 .np-eq span {
     width: 3px;
     height: 100%;
-    background: #1db954;
+    background: rgba(255, 255, 255, 0.95);
     transform-origin: bottom;
     animation: eq-bounce 1s ease-in-out infinite;
+    border-radius: 999px;
 }
 
 .np-eq span:nth-child(2) { animation-delay: 0.2s; }
@@ -1473,53 +1591,15 @@ body > :where(:not(.page-grid)) {
 .np-eq span:nth-child(4) { animation-delay: 0.1s; }
 
 @keyframes eq-bounce {
-    0%, 100% { transform: scaleY(0.3); }
-    50% { transform: scaleY(1); }
-}
-
-.np-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    min-width: 0;
-    flex: 1;
-}
-
-.np-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-family: var(--font-heading);
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-secondary);
-    margin-bottom: 0.25rem;
-}
-
-.np-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #1db954;
-    animation: np-pulse 1.8s ease-in-out infinite;
-}
-
-.now-playing.paused .np-dot {
-    background: var(--text-secondary);
-    animation: none;
-}
-
-@keyframes np-pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.5); }
-    50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(29, 185, 84, 0); }
+    0%, 100% { transform: scaleY(0.3); opacity: 0.7; }
+    50% { transform: scaleY(1); opacity: 1; }
 }
 
 .np-track {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1.6rem;
+    font-size: clamp(2.1rem, 3vw, 3.15rem);
+    line-height: 0.96;
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
@@ -1531,7 +1611,7 @@ body > :where(:not(.page-grid)) {
 }
 
 .np-artist {
-    font-size: 1.15rem;
+    font-size: clamp(1.1rem, 1.5vw, 1.6rem);
     color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
@@ -1541,28 +1621,118 @@ body > :where(:not(.page-grid)) {
 .np-progress {
     height: 4px;
     border-radius: 999px;
-    background: var(--border-color);
-    margin-top: 0.65rem;
+    background: rgba(255, 255, 255, 0.08);
+    margin-top: 0.9rem;
     overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.np-progress:not([hidden]) {
+    opacity: 1;
 }
 
 .np-bar {
     height: 100%;
     width: 0%;
-    background: #1db954;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: inherit;
     transition: width 0.5s linear;
+}
+
+.np-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-width: 170px;
+    margin-left: auto;
+}
+
+.np-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 50%;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.9);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    font-size: 1.1rem;
+}
+
+.np-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.np-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.np-btn.np-play {
+    width: 92px;
+    height: 92px;
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(255, 255, 255, 0.96);
+    color: #0d0d0f;
+    box-shadow: 0 20px 28px rgba(0, 0, 0, 0.25);
+}
+
+.np-btn.np-play:hover:not(:disabled) {
+    background: #ffffff;
+    transform: translateY(-2px) scale(1.02);
+}
+
+.np-btn .fa-play,
+.np-btn .fa-pause {
+    font-size: 1.6rem;
+}
+
+@media (max-width: 700px) {
+    #music .section-heading {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.85rem;
+    }
+
+    .now-playing {
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        padding: 1.35rem 1.1rem;
+    }
+
+    .np-cover {
+        width: 138px;
+        height: 138px;
+    }
+
+    .np-controls {
+        width: 100%;
+        justify-content: flex-end;
+        min-width: 0;
+        margin-left: 0;
+    }
 }
 
 @media (max-width: 480px) {
     .now-playing {
         max-width: 100%;
-        padding: 1.25rem;
+        padding: 1.25rem 1rem;
     }
 
     .np-cover {
-        width: 108px;
-        height: 108px;
+        width: 110px;
+        height: 110px;
+    }
+
+    .np-btn.np-play {
+        width: 76px;
+        height: 76px;
     }
 }
 
