@@ -2242,6 +2242,17 @@ html.intro-active body > :where(:not(.page-grid, .page-loader)) {
     backface-visibility: hidden;
 }
 
+.page-loader .loader-logo.warp-loader {
+    width: min(90vw, 820px);
+    height: clamp(120px, 26vh, 260px);
+    overflow: visible;
+}
+
+.page-loader .loader-logo.warp-loader .warp-text {
+    min-height: 0;
+    height: 100%;
+}
+
 .page-loader .loader-enter {
     display: inline-flex;
     align-items: center;

@@ -9,6 +9,7 @@ interface NavItem {
 interface PillNavProps {
   logo?: string;
   logoAlt?: string;
+  brandText?: string;
   items: NavItem[];
   activeHref?: string;
   className?: string;
@@ -23,6 +24,7 @@ interface PillNavProps {
 const PillNav = ({
   logo,
   logoAlt = 'Logo',
+  brandText,
   items,
   activeHref = '',
   className = '',
@@ -104,12 +106,21 @@ const PillNav = ({
       style={{ backgroundColor: baseColor }}
       aria-label="Navegação principal"
     >
-      {logo && (
-        <img
-          src={logo}
-          alt={logoAlt}
-          className="mr-2 h-8 w-8 rounded-full object-contain"
-        />
+      {(logo || brandText) && (
+        <div className="mr-2 flex items-center gap-2">
+          {logo && (
+            <img
+              src={logo}
+              alt={logoAlt}
+              className="h-8 w-8 rounded-full object-contain"
+            />
+          )}
+          {brandText && (
+            <span className="text-sm font-semibold tracking-[0.12em] text-white uppercase">
+              {brandText}
+            </span>
+          )}
+        </div>
       )}
       <div
         data-pillnav-background

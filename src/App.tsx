@@ -1,98 +1,25 @@
-import CyclingWarpText from "@/components/ui/CyclingWarpText";
-import AnimatedCard from "@/components/ui/AnimatedCard";
-import ClickSpark from "@/components/ui/ClickSpark";
-import PillNav from "@/components/ui/PillNav";
-import { TextAnimate } from "@/components/ui/text-animate";
-import ParallaxDemo from "@/demos/default";
-import { SplineSceneBasic } from "@/demos/spline-demo";
-import favicon from "/favicon.ico";
+import BrandWordmark from "@/components/ui/BrandWordmark";
 
 function App() {
   return (
-    <main className="w-full scroll-smooth bg-background">
-      <PillNav
-        logo={favicon}
-        logoAlt="Logo"
-        items={[
-          { label: "Início", href: "#inicio" },
-          { label: "Serviços", href: "#servicos" },
-          { label: "Sobre", href: "#sobre" },
-          { label: "Contato", href: "#contato" },
-        ]}
-        activeHref="#inicio"
-        className="fixed left-1/2 top-6 z-50 -translate-x-1/2"
-        ease="power2.out"
-        baseColor="#000000"
-        pillColor="#ffffff"
-        hoveredPillTextColor="#000000"
-        pillTextColor="#ffffff"
-        theme="dark"
-      />
-      <ClickSpark
-        sparkColor="#fff"
-        sparkSize={10}
-        sparkRadius={15}
-        sparkCount={8}
-        duration={400}
-      >
-        <section id="inicio" className="scroll-mt-24">
-          <ParallaxDemo />
-        </section>
-        <AnimatedCard direction="up" delay={0}>
-          <section id="servicos" className="flex scroll-mt-24 justify-center p-6 md:p-10">
-            <div className="w-full max-w-5xl">
-              <SplineSceneBasic />
-            </div>
-          </section>
-        </AnimatedCard>
-        <AnimatedCard direction="up" delay={0.15}>
-          <section id="sobre" className="flex scroll-mt-24 flex-col items-center justify-center gap-6 p-6 md:p-10" aria-label="Sobre mim">
-            <TextAnimate
-              as="h2"
-              animation="blurInUp"
-              by="character"
-              once
-              className="text-4xl font-bold text-white md:text-5xl"
-            >
-              SOBRE MIM
-            </TextAnimate>
-            <p className="max-w-lg text-center text-neutral-300">
-              Desenvolvedor apaixonado por criar interfaces modernas, limpas e
-              focadas na experiência do usuário.
-            </p>
-            <CyclingWarpText
-              texts={['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER']}
-              interval={2500}
-              color="#f5f5f5"
-              fontSize="clamp(2rem, 7vw, 6.5rem)"
-              fontWeight={800}
-              warpStrength={0.08}
-              warpScale={1.7}
-              speed={0.55}
-              pointerInfluence={0.42}
-              pointerStrength={0.38}
-              refraction={0.018}
-              ripple
-            />
-          </section>
-        </AnimatedCard>
-        <AnimatedCard direction="up" delay={0.15}>
-          <section id="contato" className="flex scroll-mt-24 flex-col items-center justify-center gap-6 p-6 md:p-10" aria-label="Contato">
-            <TextAnimate
-              as="h2"
-              animation="blurInUp"
-              by="character"
-              once
-              className="text-4xl font-bold text-white md:text-5xl"
-            >
-              CONTATO
-            </TextAnimate>
-            <p className="text-center text-lg text-muted-foreground">
-              Entre em contato para projetos freelancer.
-            </p>
-          </section>
-        </AnimatedCard>
-      </ClickSpark>
+    <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-black text-white">
+      <div className="pointer-events-none absolute inset-0 opacity-80">
+        <div className="absolute left-[-12%] bottom-[8%] h-[28vw] w-[28vw] rounded-full border border-white/20" />
+        <div className="absolute right-[-10%] top-[18%] h-[30vw] w-[30vw] rounded-full border border-white/20" />
+        <div className="absolute left-[12%] top-[52%] h-[18vw] w-[18vw] rounded-full border border-white/20" />
+        <div className="absolute right-[18%] bottom-[10%] h-[20vw] w-[20vw] rounded-full border border-white/20" />
+      </div>
+
+      <div className="relative z-10 flex items-center justify-center gap-10 px-6">
+        <BrandWordmark text="eduuhlann" className="max-w-[280px] md:max-w-[520px]" />
+        <button
+          type="button"
+          className="inline-flex items-center justify-center gap-3 rounded-full border-2 border-white bg-white px-8 py-4 text-sm font-bold uppercase tracking-[0.08em] text-black shadow-[0_0_30px_rgba(255,255,255,0.18)] transition-transform duration-200 hover:scale-[1.02]"
+        >
+          <span>ACESSAR</span>
+          <span aria-hidden="true" className="text-xl leading-none">↗</span>
+        </button>
+      </div>
     </main>
   );
 }

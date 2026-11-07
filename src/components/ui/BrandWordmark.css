@@ -1,0 +1,63 @@
+.brand-wordmark {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: min(100%, 800px);
+  min-height: 170px;
+  margin: 0 auto;
+  filter: drop-shadow(0 0 18px rgba(180, 200, 255, 0.18));
+}
+
+.brand-wordmark__warp,
+.brand-wordmark__pressure {
+  position: relative;
+  width: 100%;
+  min-height: 170px;
+}
+
+.brand-wordmark__warp {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.95;
+  filter: saturate(1.1) contrast(1.08);
+}
+
+.brand-wordmark__pressure {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  mix-blend-mode: screen;
+  background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0));
+  border-radius: 18px;
+  padding: 0.25rem 0.5rem;
+}
+
+.text-pressure {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  line-height: 0.85;
+  user-select: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.text-pressure__char {
+  display: inline-block;
+  will-change: transform, opacity, color, text-shadow;
+}
+
+@media (max-width: 640px) {
+  .brand-wordmark,
+  .brand-wordmark__warp,
+  .brand-wordmark__pressure {
+    min-height: 120px;
+  }
+}

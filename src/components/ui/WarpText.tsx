@@ -1,6 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Renderer, Program, Mesh, Triangle, Texture } from 'ogl';
 import './WarpText.css';
+
+const LENS_MODES = { bulge: 0, pinch: 1, swirl: 2 } as const;
+const INTRO_MS = 1600;
+const RIPPLE_LIFE = 1.6;
+const MAX_CLICKS = 4;
 
 const vertex = `#version 300 es
 in vec2 position;
@@ -26,8 +31,14 @@ uniform float uSpeed;
 uniform float uPointerInfluence;
 uniform float uPointerStrength;
 uniform float uRefraction;
+uniform float uChromatic;
 uniform float uRipple;
 uniform float uMotion;
+uniform float uLens;
+uniform float uIntro;
+uniform float uReveal;
+uniform float uBackdrop;
+uniform vec4 uClicks[4];
 
 in vec2 vUv;
 out vec4 fragColor;
@@ -78,7 +89,7 @@ void main() {
   vec2 drift = vec2(time * 0.055, -time * 0.045);
   float n1 = fbm(uv * scale * 3.1 + drift);
   float n2 = fbm((uv + 19.17) * scale * 3.4 - drift.yx);
-  vec2 ambient = (vec2(n1, n2) - 0.5) * uWarpStrength * 0.045 * uMotion;
+  vec2 ambient = (vec2(n1, n2) - 0.5) * (uWarpStrength * 0.045 * uMotion + uIntro * 0.18);
 
   vec2 pointerDelta = uv - uPointer;
   vec2 aspectDelta = vec2(pointerDelta.x * aspect, pointerDelta.y);
@@ -91,28 +102,80 @@ void main() {
 
   float rippleWave = sin(dist * 28.0 - time * 4.2) * 0.5 + 0.5;
   float rippleRing = (rippleWave - 0.5) * uRipple;
-  vec2 pointerWarp = -dir * bulge * uPointerStrength * 0.045;
-  pointerWarp += dir * rippleRing * bulge * uPointerStrength * 0.016;
+  vec2 pointerWarp = dir * rippleRing * bulge * uPointerStrength * 0.016;
 
-  vec2 displaced = uv + ambient + pointerWarp;
-  vec2 splitDir = ambient + pointerWarp;
+  if (uLens > 1.5) {
+    float twist = (1.0 - t) * (1.0 - t) * uPointerActive * uPointerStrength * 2.4;
+    float s = sin(twist);
+    float c = cos(twist);
+    vec2 turned = vec2(aspectDelta.x * c - aspectDelta.y * s, aspectDelta.x * s + aspectDelta.y * c);
+    pointerWarp += vec2(turned.x / aspect, turned.y) - pointerDelta;
+  } else {
+    float side = uLens > 0.5 ? -1.0 : 1.0;
+    pointerWarp -= dir * side * bulge * uPointerStrength * 0.045;
+  }
+
+  vec2 shock = vec2(0.0);
+  float shockLight = 0.0;
+  for (int i = 0; i < 4; i++) {
+    vec4 click = uClicks[i];
+    if (click.w <= 0.0) continue;
+    vec2 clickDelta = uv - click.xy;
+    vec2 clickAspect = vec2(clickDelta.x * aspect, clickDelta.y);
+    float clickDist = length(clickAspect);
+    float age = click.z;
+    float offset = (clickDist - age * 0.9) / (0.06 + age * 0.06);
+    float fade = 1.0 - smoothstep(0.0, 1.6, age);
+    float energy = exp(-offset * offset) * fade * smoothstep(0.0, 0.08, age) * click.w;
+    vec2 clickDir = clickDist > 0.0001 ? vec2(clickAspect.x / aspect, clickAspect.y) / clickDist : vec2(0.0);
+    shock -= clickDir * offset * energy * 0.09;
+    shockLight += energy;
+  }
+
+  vec2 bend = pointerWarp + shock;
+  vec2 rest = uv + ambient;
+  vec2 splitDir = ambient + bend;
   float splitLen = length(splitDir);
   splitDir = splitLen > 0.00001 ? splitDir / splitLen : vec2(0.7071, 0.7071);
-  vec2 split = splitDir * uRefraction * 0.16 * (0.35 + lens * 1.65);
+  vec2 split = splitDir * uRefraction * 0.16 * (0.35 + lens * 1.65 + uIntro * 3.0);
+  float dispersion = uChromatic * 0.5;
 
-  vec4 base = sampleText(displaced);
-  float r = sampleText(displaced + split).r;
-  float g = base.g;
-  float b = sampleText(displaced - split).b;
-  float a = max(max(sampleText(displaced + split).a, base.a), sampleText(displaced - split).a);
-
-  vec3 color = vec3(r, g, b) + lens * base.a * 0.055;
-  fragColor = vec4(color, a);
+  vec3 ink = vec3(0.0);
+  vec3 cover = vec3(0.0);
+  vec3 weight = vec3(0.0);
+  for (int i = 0; i < 7; i++) {
+    float k = 1.0 - float(i) / 3.0;
+    vec4 tap = sampleText(rest + bend * (1.0 + dispersion * k) + split * k);
+    vec3 band = vec3(max(k, 0.0), 1.0 - abs(k), max(-k, 0.0));
+    ink += tap.rgb * band;
+    cover += tap.a * band;
+    weight += band;
+  }
+  ink /= weight;
+  cover /= weight;
+  float a = max(max(cover.r, cover.g), cover.b);
+  vec3 color = ink + (a - cover) * uBackdrop;
+  color = min(color + (lens + shockLight * 0.5) * cover.g * 0.055, vec3(a));
+  fragColor = vec4(color, a) * uReveal;
 }
 `;
 
 const getFontValue = (value: string | number) =>
   typeof value === 'number' ? `${value}px` : value;
+
+const smooth = (value: number) => value * value * (3 - 2 * value);
+
+const getLuminance = (color: string) => {
+  const probe = document.createElement('canvas');
+  probe.width = 1;
+  probe.height = 1;
+  const ctx = probe.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return 1;
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, 1, 1);
+  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+};
 
 const measureLine = (ctx: CanvasRenderingContext2D, line: string, letterSpacing: number) => {
   const chars = Array.from(line);
@@ -120,7 +183,13 @@ const measureLine = (ctx: CanvasRenderingContext2D, line: string, letterSpacing:
   return textWidth + Math.max(0, chars.length - 1) * letterSpacing;
 };
 
-const drawLine = (ctx: CanvasRenderingContext2D, line: string, x: number, y: number, letterSpacing: number) => {
+const drawLine = (
+  ctx: CanvasRenderingContext2D,
+  line: string,
+  x: number,
+  y: number,
+  letterSpacing: number,
+) => {
   const chars = Array.from(line);
   let cursor = x - measureLine(ctx, line, letterSpacing) / 2;
 
@@ -130,45 +199,77 @@ const drawLine = (ctx: CanvasRenderingContext2D, line: string, x: number, y: num
   });
 };
 
-const buildTextCanvas = ({ container, width, height, dpr, props }: {
+type WarpTextConfig = {
+  text: string;
+  color: string | null;
+  fontSize: string | number;
+  fontWeight: string | number;
+  fontFamily: string;
+  letterSpacing: string | number;
+  lineHeight: string | number;
+  warpStrength: number;
+  warpScale: number;
+  speed: number;
+  pointerInfluence: number;
+  pointerStrength: number;
+  refraction: number;
+  chromatic: number;
+  ripple: boolean;
+  clickRipple: boolean;
+  idleDrift: number;
+  lens: 'bulge' | 'pinch' | 'swirl';
+  intro: boolean;
+};
+
+const buildTextCanvas = ({
+  container,
+  width,
+  height,
+  dpr,
+  props,
+}: {
   container: HTMLElement;
   width: number;
   height: number;
   dpr: number;
-  props: Record<string, unknown>;
+  props: WarpTextConfig;
 }) => {
   const canvas = document.createElement('canvas');
   canvas.width = Math.max(1, Math.floor(width * dpr));
   canvas.height = Math.max(1, Math.floor(height * dpr));
 
   const ctx = canvas.getContext('2d');
-  if (!ctx) return canvas;
+  if (!ctx) return { canvas, ink: props.color ?? 'currentColor' };
+
+  const color = props.color ?? 'currentColor';
 
   const probe = document.createElement('span');
-  probe.textContent = props.text as string;
+  probe.textContent = props.text;
   Object.assign(probe.style, {
     position: 'absolute',
     visibility: 'hidden',
     pointerEvents: 'none',
     whiteSpace: 'pre',
     inset: '0 auto auto 0',
-    fontFamily: props.fontFamily as string,
-    fontSize: getFontValue(props.fontSize as string | number),
+    color,
+    fontFamily: props.fontFamily,
+    fontSize: getFontValue(props.fontSize),
     fontWeight: String(props.fontWeight),
-    letterSpacing: getFontValue(props.letterSpacing as string | number),
-    lineHeight: typeof props.lineHeight === 'number' ? String(props.lineHeight) : props.lineHeight as string,
+    letterSpacing: getFontValue(props.letterSpacing),
+    lineHeight:
+      typeof props.lineHeight === 'number' ? String(props.lineHeight) : props.lineHeight,
   });
   container.appendChild(probe);
   const computed = window.getComputedStyle(probe);
   let fontSizePx = parseFloat(computed.fontSize) || 96;
+  const ink = computed.color || color;
   const fontFamily = computed.fontFamily || 'sans-serif';
   const fontWeight = computed.fontWeight || String(props.fontWeight);
   let letterSpacing =
     computed.letterSpacing === 'normal' ? 0 : parseFloat(computed.letterSpacing) || 0;
   let lineHeight = parseFloat(computed.lineHeight);
   if (!Number.isFinite(lineHeight)) {
-    lineHeight =
-      fontSizePx * (typeof props.lineHeight === 'number' ? (props.lineHeight as number) : 0.92);
+    lineHeight = fontSizePx * (typeof props.lineHeight === 'number' ? props.lineHeight : 0.92);
   }
   probe.remove();
 
@@ -176,7 +277,7 @@ const buildTextCanvas = ({ container, width, height, dpr, props }: {
   ctx.clearRect(0, 0, width, height);
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = props.color as string;
+  ctx.fillStyle = ink;
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
 
@@ -204,30 +305,37 @@ const buildTextCanvas = ({ container, width, height, dpr, props }: {
     drawLine(ctx, line, width / 2, startY + index * lineHeight, letterSpacing),
   );
 
-  return canvas;
+  return { canvas, ink };
 };
 
-const syncUniforms = (program: Program, props: Record<string, unknown>) => {
+const syncUniforms = (program: Program, props: WarpTextConfig) => {
   const uniforms = program.uniforms;
-  uniforms.uWarpStrength.value = props.warpStrength as number;
-  uniforms.uWarpScale.value = props.warpScale as number;
-  uniforms.uSpeed.value = props.speed as number;
-  uniforms.uPointerInfluence.value = props.pointerInfluence as number;
-  uniforms.uPointerStrength.value = props.pointerStrength as number;
-  uniforms.uRefraction.value = props.refraction as number;
-  uniforms.uRipple.value = (props.ripple as boolean) ? 1 : 0;
+  uniforms.uWarpStrength.value = props.warpStrength;
+  uniforms.uWarpScale.value = props.warpScale;
+  uniforms.uSpeed.value = props.speed;
+  uniforms.uPointerInfluence.value = props.pointerInfluence;
+  uniforms.uPointerStrength.value = props.pointerStrength;
+  uniforms.uRefraction.value = props.refraction;
+  uniforms.uChromatic.value = props.chromatic;
+  uniforms.uRipple.value = props.ripple ? 1 : 0;
+  uniforms.uLens.value = LENS_MODES[props.lens] ?? 0;
 };
 
 interface WarpTextProps {
   text?: string;
-  color?: string;
+  color?: string | null;
   warpStrength?: number;
   warpScale?: number;
   speed?: number;
   pointerInfluence?: number;
   pointerStrength?: number;
   refraction?: number;
+  chromatic?: number;
   ripple?: boolean;
+  clickRipple?: boolean;
+  idleDrift?: number;
+  lens?: 'bulge' | 'pinch' | 'swirl';
+  intro?: boolean;
   fontSize?: string | number;
   fontWeight?: string | number;
   fontFamily?: string;
@@ -239,14 +347,19 @@ interface WarpTextProps {
 
 const WarpText: React.FC<WarpTextProps> = ({
   text = 'Bend the moment',
-  color = '#f8f5ff',
+  color = 'currentColor',
   warpStrength = 0.08,
   warpScale = 1.7,
   speed = 0.55,
   pointerInfluence = 0.42,
   pointerStrength = 0.38,
   refraction = 0.018,
+  chromatic = 0,
   ripple = true,
+  clickRipple = true,
+  idleDrift = 0.2,
+  lens = 'bulge',
+  intro = true,
   fontSize = 'clamp(3rem, 10vw, 9rem)',
   fontWeight = 800,
   fontFamily = 'inherit',
@@ -256,7 +369,7 @@ const WarpText: React.FC<WarpTextProps> = ({
   style,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const propsRef = useRef({
+  const propsRef = useRef<WarpTextConfig>({
     text,
     color,
     fontSize,
@@ -270,12 +383,18 @@ const WarpText: React.FC<WarpTextProps> = ({
     pointerInfluence,
     pointerStrength,
     refraction,
+    chromatic,
     ripple,
+    clickRipple,
+    idleDrift,
+    lens,
+    intro,
   });
   const contextRef = useRef<{
     program: Program;
     rasterize: () => Promise<void>;
   } | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     propsRef.current = {
@@ -292,13 +411,15 @@ const WarpText: React.FC<WarpTextProps> = ({
       pointerInfluence,
       pointerStrength,
       refraction,
+      chromatic,
       ripple,
+      clickRipple,
+      idleDrift,
+      lens,
+      intro,
     };
 
-    if (contextRef.current) {
-      syncUniforms(contextRef.current.program, propsRef.current);
-      contextRef.current.rasterize();
-    }
+    if (contextRef.current) syncUniforms(contextRef.current.program, propsRef.current);
   }, [
     text,
     color,
@@ -313,8 +434,17 @@ const WarpText: React.FC<WarpTextProps> = ({
     pointerInfluence,
     pointerStrength,
     refraction,
+    chromatic,
     ripple,
+    clickRipple,
+    idleDrift,
+    lens,
+    intro,
   ]);
+
+  useEffect(() => {
+    contextRef.current?.rasterize();
+  }, [text, color, fontSize, fontWeight, fontFamily, letterSpacing, lineHeight]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -337,21 +467,29 @@ const WarpText: React.FC<WarpTextProps> = ({
     let reduceMotion =
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     let rasterVersion = 0;
+    let textReady = false;
+    let introProgress = propsRef.current.intro && !reduceMotion ? 0 : 1;
+    let lastFrame = 0;
+    let frame = 0;
+    let lastInk = '';
 
     const pointer = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, active: 0, activeTarget: 0 };
+    const clicks: number[][] = Array.from({ length: MAX_CLICKS }, () => [0.5, 0.5, 0, 0]);
+    let clickSlot = 0;
     const startTime = performance.now();
 
     try {
       renderer = new Renderer({
         webgl: 2,
         alpha: true,
-        premultipliedAlpha: false,
+        premultipliedAlpha: true,
         antialias: true,
         dpr: Math.min(window.devicePixelRatio || 1, 2),
       });
       gl = renderer.gl;
     } catch (error) {
       console.warn('WarpText: WebGL could not be initialized.', error);
+      setFailed(true);
       return undefined;
     }
 
@@ -367,6 +505,7 @@ const WarpText: React.FC<WarpTextProps> = ({
 
     texture = new Texture(gl, {
       generateMipmaps: false,
+      premultiplyAlpha: true,
       minFilter: gl.LINEAR,
       magFilter: gl.LINEAR,
       wrapS: gl.CLAMP_TO_EDGE,
@@ -392,8 +531,14 @@ const WarpText: React.FC<WarpTextProps> = ({
         uPointerInfluence: { value: propsRef.current.pointerInfluence },
         uPointerStrength: { value: propsRef.current.pointerStrength },
         uRefraction: { value: propsRef.current.refraction },
+        uChromatic: { value: propsRef.current.chromatic },
         uRipple: { value: propsRef.current.ripple ? 1 : 0 },
         uMotion: { value: reduceMotion ? 0 : 1 },
+        uLens: { value: LENS_MODES[propsRef.current.lens] ?? 0 },
+        uIntro: { value: 0 },
+        uReveal: { value: 0 },
+        uBackdrop: { value: 0 },
+        uClicks: { value: clicks },
       },
     });
     mesh = new Mesh(gl, { geometry, program });
@@ -408,7 +553,9 @@ const WarpText: React.FC<WarpTextProps> = ({
       if (document.fonts?.ready) {
         try {
           await document.fonts.ready;
-        } catch {}
+        } catch (error) {
+          void error;
+        }
       }
       if (disposed || contextLost || version !== rasterVersion) return;
 
@@ -416,15 +563,18 @@ const WarpText: React.FC<WarpTextProps> = ({
       if (rect.width <= 0 || rect.height <= 0) return;
 
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const textCanvas = buildTextCanvas({
+      lastInk = window.getComputedStyle(container).color;
+      const raster = buildTextCanvas({
         container,
         width: rect.width,
         height: rect.height,
         dpr,
         props: propsRef.current,
       });
-      texture.image = textCanvas;
+      texture.image = raster.canvas;
       texture.needsUpdate = true;
+      program.uniforms.uBackdrop.value = getLuminance(raster.ink) < 0.5 ? 1 : 0;
+      textReady = true;
       renderOnce();
     };
 
@@ -453,11 +603,24 @@ const WarpText: React.FC<WarpTextProps> = ({
       pointer.activeTarget = 0;
     };
 
+    const onPointerDown = (event: PointerEvent) => {
+      if (!propsRef.current.clickRipple) return;
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      const click = clicks[clickSlot];
+      clickSlot = (clickSlot + 1) % clicks.length;
+      click[0] = (event.clientX - rect.left) / rect.width;
+      click[1] = 1 - (event.clientY - rect.top) / rect.height;
+      click[2] = 0;
+      click[3] = reduceMotion ? 0.35 : 1;
+    };
+
     const onContextLost = (event: Event) => {
       event.preventDefault();
       contextLost = true;
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
+      setFailed(true);
     };
 
     const onVisibility = () => {
@@ -472,6 +635,7 @@ const WarpText: React.FC<WarpTextProps> = ({
     const mediaQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     const onReducedMotion = (event: MediaQueryListEvent) => {
       reduceMotion = event.matches;
+      if (reduceMotion) introProgress = 1;
       program.uniforms.uMotion.value = reduceMotion ? 0 : 1;
       renderOnce();
     };
@@ -480,23 +644,41 @@ const WarpText: React.FC<WarpTextProps> = ({
       if (disposed || contextLost) return;
 
       const elapsed = (now - startTime) * 0.001;
-      const idleX = 0.5 + Math.sin(elapsed * 0.33) * 0.12;
-      const idleY = 0.5 + Math.cos(elapsed * 0.27) * 0.1;
-      const targetX = pointer.activeTarget > 0 ? pointer.tx : idleX;
-      const targetY = pointer.activeTarget > 0 ? pointer.ty : idleY;
-      const damping = pointer.activeTarget > 0 ? 0.12 : 0.035;
+      const delta = lastFrame ? Math.min(now - lastFrame, 50) : 16;
+      lastFrame = now;
+      frame += 1;
 
-      pointer.x += (targetX - pointer.x) * damping;
-      pointer.y += (targetY - pointer.y) * damping;
-      pointer.active +=
-        ((pointer.activeTarget > 0 ? 1 : 0.18) - pointer.active) * 0.06;
+      if (textReady && introProgress < 1) {
+        introProgress = Math.min(1, introProgress + delta / INTRO_MS);
+      }
+      const settle = 1 - introProgress;
+
+      if (textReady && frame % 15 === 0 && window.getComputedStyle(container).color !== lastInk) {
+        rasterize();
+      }
+
+      const drift = Math.min(Math.max(propsRef.current.idleDrift, 0), 1);
+      const engaged = pointer.activeTarget > 0;
+      const idleX = 0.5 + Math.sin(elapsed * 0.33) * (0.08 + drift * 0.2);
+      const idleY = 0.5 + Math.cos(elapsed * 0.27) * (0.06 + drift * 0.2);
+      const follow = 1 - Math.exp(-delta / (engaged ? 130 : 470));
+
+      pointer.x += ((engaged ? pointer.tx : idleX) - pointer.x) * follow;
+      pointer.y += ((engaged ? pointer.ty : idleY) - pointer.y) * follow;
+      pointer.active += ((engaged ? 1 : drift) - pointer.active) * (1 - Math.exp(-delta / 270));
+
+      clicks.forEach((click) => {
+        if (click[3] <= 0) return;
+        click[2] += delta / 1000;
+        if (click[2] > RIPPLE_LIFE) click[3] = 0;
+      });
 
       program.uniforms.uPointer.value[0] = pointer.x;
       program.uniforms.uPointer.value[1] = pointer.y;
-      program.uniforms.uPointerActive.value = reduceMotion
-        ? pointer.active * 0.35
-        : pointer.active;
+      program.uniforms.uPointerActive.value = reduceMotion ? pointer.active * 0.35 : pointer.active;
       program.uniforms.uTime.value = reduceMotion ? 0 : elapsed;
+      program.uniforms.uIntro.value = settle * settle * settle;
+      program.uniforms.uReveal.value = textReady ? smooth(Math.min(1, introProgress / 0.45)) : 0;
 
       renderOnce();
       raf = requestAnimationFrame(loop);
@@ -520,6 +702,7 @@ const WarpText: React.FC<WarpTextProps> = ({
 
     canvas.addEventListener('pointermove', onPointerMove);
     canvas.addEventListener('pointerleave', onPointerLeave);
+    canvas.addEventListener('pointerdown', onPointerDown);
     canvas.addEventListener('webglcontextlost', onContextLost, false);
     document.addEventListener('visibilitychange', onVisibility);
     mediaQuery?.addEventListener('change', onReducedMotion);
@@ -537,6 +720,7 @@ const WarpText: React.FC<WarpTextProps> = ({
       intersectionObserver?.disconnect();
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerleave', onPointerLeave);
+      canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('webglcontextlost', onContextLost);
       document.removeEventListener('visibilitychange', onVisibility);
       mediaQuery?.removeEventListener('change', onReducedMotion);
@@ -547,7 +731,9 @@ const WarpText: React.FC<WarpTextProps> = ({
           geometry?.remove?.();
           program?.remove?.();
           gl.getExtension('WEBGL_lose_context')?.loseContext();
-        } catch {}
+        } catch (error) {
+          void error;
+        }
       }
 
       if (canvas.parentNode === container) container.removeChild(canvas);
@@ -561,7 +747,24 @@ const WarpText: React.FC<WarpTextProps> = ({
       style={style}
       role="img"
       aria-label={text}
-    />
+    >
+      {failed && (
+        <span
+          className="warp-text__fallback"
+          aria-hidden="true"
+          style={{
+            color: color ?? undefined,
+            fontFamily,
+            fontWeight,
+            fontSize: getFontValue(fontSize),
+            letterSpacing: getFontValue(letterSpacing),
+            lineHeight,
+          }}
+        >
+          {text}
+        </span>
+      )}
+    </div>
   );
 };
 
