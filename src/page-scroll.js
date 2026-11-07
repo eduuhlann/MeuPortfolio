@@ -59,7 +59,17 @@ function initPageScroll() {
         const animatedNodes = '.morphing-text__span, .hero-v2__gif-wrap, .marquee__track, .computer-float, .studio-scroll-cue > span';
         const liveNodes = main.querySelectorAll(animatedNodes);
         const copies = tail.querySelectorAll(animatedNodes);
-        mirrors = Array.from(copies, (copy, index) => [liveNodes[index], copy]);
+        mirrors = Array.from(copies, (copy, index) => {
+            const source = liveNodes[index];
+            if (!source.classList.contains('morphing-text__span')) {
+                const sourceAnimation = source.getAnimations()[0];
+                const copyAnimation = copy.getAnimations()[0];
+                if (sourceAnimation && copyAnimation) {
+                    copyAnimation.currentTime = sourceAnimation.currentTime;
+                }
+            }
+            return [source, copy];
+        });
         lenis.resize();
     }
 
@@ -68,10 +78,41 @@ function initPageScroll() {
         smoothWheel: true,
         lerp: 0.085,
         syncTouch: true,
-        anchors: true,
+        anchors: false,
         allowNestedScroll: true,
     });
     window.portfolioScroll = lenis;
+
+    function scrollToHash(hash) {
+        if (!hash || hash === '#') return;
+        const id = decodeURIComponent(hash.slice(1));
+        const target = document.getElementById(id);
+        if (target) {
+            const header = document.querySelector('.site-header');
+            lenis.scrollTo(target, {
+                offset: -(header?.getBoundingClientRect().height ?? 0),
+            });
+        }
+    }
+
+    document.addEventListener('click', event => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+        if (!link || (link.target && link.target !== '_self') || link.hasAttribute('download')) return;
+
+        const url = new URL(link.href, window.location.href);
+        if (url.origin !== window.location.origin || url.pathname !== window.location.pathname || !url.hash) return;
+        const id = decodeURIComponent(url.hash.slice(1));
+        if (!document.getElementById(id)) return;
+
+        event.preventDefault();
+        if (window.location.hash !== url.hash) {
+            window.history.pushState(null, '', url.hash);
+        }
+        scrollToHash(url.hash);
+    });
+
+    window.addEventListener('popstate', () => scrollToHash(window.location.hash));
 
     if (document.documentElement.classList.contains('intro-active')) lenis.stop();
     document.addEventListener('portfolio:intro-done', () => lenis.start(), { once: true });
@@ -99,13 +140,6 @@ function initPageScroll() {
                 if (copy.textContent !== source.textContent) copy.textContent = source.textContent;
                 copy.style.filter = source.style.filter;
                 copy.style.opacity = source.style.opacity;
-            } else {
-                // Floating artwork and the marquee share their original clocks.
-                const originalAnimation = source.getAnimations()[0];
-                const copyAnimation = copy.getAnimations()[0];
-                if (originalAnimation && copyAnimation) {
-                    copyAnimation.currentTime = originalAnimation.currentTime;
-                }
             }
         });
     }
