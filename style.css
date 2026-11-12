@@ -77,14 +77,6 @@ html.lenis {
     overscroll-behavior-y: none;
 }
 
-/* A viewport of the opening content joins the footer to the next cycle. */
-.page-loop-tail {
-    overflow: hidden;
-    overflow: clip;
-    pointer-events: none;
-    overflow-anchor: none;
-}
-
 body {
     background-color: var(--bg-base);
     color: var(--text-primary);
@@ -2114,12 +2106,24 @@ body > :where(:not(.page-grid)) {
     color: var(--text-secondary);
 }
 
+.marquee__icon {
+    width: .9em;
+    height: .9em;
+    object-fit: contain;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
 .marquee__item:hover {
     color: var(--text-primary);
 }
 
 .marquee__item:hover i {
     color: var(--text-primary);
+}
+
+.marquee__item:hover .marquee__icon {
+    opacity: 1;
 }
 
 @keyframes marquee-scroll {

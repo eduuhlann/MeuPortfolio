@@ -398,37 +398,55 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
 
     // 3.5 Scrollspy - destaca a seção ativa no menu + breadcrumb flutuante
-    const sections = document.querySelectorAll('section[id]');
+    const sections = Array.from(document.querySelectorAll('section[id]'));
     const navAnchors = document.querySelectorAll('.main-nav a');
+    const navTargets = new Set(Array.from(navAnchors, a => a.getAttribute('href')));
     const sectionBreadcrumb = document.getElementById('sectionBreadcrumb');
     const breadcrumbText = document.getElementById('breadcrumbText');
     let breadcrumbLabels = { home: 'Home', about: 'Sobre mim', projects: 'Projetos', music: 'Música', faq: 'Perguntas frequentes', contact: 'Contato', philosophy: 'Filosofia' };
     let lastSectionId = '';
 
     function updateSectionUI(id) {
-        sectionBreadcrumb?.classList.toggle('over-interactive-section', ['craft', 'projects'].includes(id));
-        navAnchors.forEach(a => {
-            a.classList.toggle('active', a.getAttribute('href') === '#' + id);
-        });
-        if (pillBg && pillNav && !pillHovered) {
-            const active = pillNav.querySelector('a.active') || pillNav.querySelector('a');
-            movePill(active);
-        }
-        if (!sectionBreadcrumb || !breadcrumbText || id === lastSectionId) return;
+        if (id === lastSectionId) return;
         lastSectionId = id;
+        sectionBreadcrumb?.classList.toggle('over-interactive-section', ['craft', 'projects'].includes(id));
+        // Sections without a menu entry (e.g. the kinetic band) must not clear the nav state.
+        if (navTargets.has('#' + id)) {
+            navAnchors.forEach(a => {
+                a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+            });
+            if (pillBg && pillNav && !pillHovered) {
+                const active = pillNav.querySelector('a.active') || pillNav.querySelector('a');
+                movePill(active);
+            }
+        }
+        if (!sectionBreadcrumb || !breadcrumbText) return;
         breadcrumbText.textContent = breadcrumbLabels[id] || id;
         sectionBreadcrumb.classList.remove('flash');
         void sectionBreadcrumb.offsetWidth;
         sectionBreadcrumb.classList.add('flash');
     }
 
-    const spyObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) updateSectionUI(entry.target.id);
-        });
-    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    let sectionSpyFrame = 0;
 
-    sections.forEach(section => spyObserver.observe(section));
+    function updateCurrentSection() {
+        sectionSpyFrame = 0;
+        const line = window.scrollY + window.innerHeight * 0.45;
+        let current = sections[0];
+        sections.forEach(section => {
+            if (section.getBoundingClientRect().top + window.scrollY <= line) current = section;
+        });
+        if (current) updateSectionUI(current.id);
+    }
+
+    function scheduleSectionSpy() {
+        if (!sectionSpyFrame) sectionSpyFrame = requestAnimationFrame(updateCurrentSection);
+    }
+
+    window.addEventListener('scroll', scheduleSectionSpy, { passive: true });
+    window.addEventListener('resize', scheduleSectionSpy);
+    document.addEventListener('portfolio:layout-change', scheduleSectionSpy);
+    updateCurrentSection();
 
     // Breadcrumb aparece depois que o usuário sai do topo
     function updateBreadcrumbVisibility() {
