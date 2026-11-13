@@ -21,13 +21,14 @@
             document.documentElement.classList.add('js');
             var stored = null;
             try { stored = localStorage.getItem('theme'); } catch (e) { }
-            var themes = ['dark', 'light'];
-            var theme = themes.indexOf(stored) >= 0 ? stored : 'dark';
+            var theme = 'dark';
+            if (stored === 'dark' || stored === 'light') {
+                theme = 'dark';
+            }
             document.documentElement.setAttribute('data-theme', theme);
             var meta = document.querySelector('meta[name="theme-color"]');
             if (meta) {
-                var themeColor = theme === 'light' ? '#f7f7f8' : '#050505';
-                meta.setAttribute('content', themeColor);
+                meta.setAttribute('content', '#050505');
             }
             var lang = null;
             try { lang = localStorage.getItem('lang'); } catch (e) { }
@@ -101,17 +102,6 @@
             <button class="icon-button lang-toggle" type="button" aria-label="Alternar idioma" aria-pressed="false">
                 <span class="lang-toggle__label" id="langLabel">EN</span>
             </button>
-            <div class="theme-switcher" id="themeSwitcher" role="radiogroup" aria-label="Tema" data-i18n-aria="theme.group">
-                <span class="theme-switcher__thumb" aria-hidden="true"></span>
-                <button class="theme-switcher__option" type="button" role="radio" data-theme-value="dark"
-                    aria-checked="true" aria-label="Tema escuro" title="Dark" data-i18n-aria="theme.dark">
-                    <i class="fa-solid fa-moon" aria-hidden="true"></i>
-                </button>
-                <button class="theme-switcher__option" type="button" role="radio" data-theme-value="light"
-                    aria-checked="false" aria-label="Tema claro" title="Light" data-i18n-aria="theme.light">
-                    <i class="fa-solid fa-sun" aria-hidden="true"></i>
-                </button>
-            </div>
             <button class="icon-button menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
                 <i class="fa-solid fa-bars"></i>
             </button>

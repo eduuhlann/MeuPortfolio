@@ -71,20 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', positionInitialPill);
     }
 
-    // 1.5 Theme switcher (Dark / Light)
-    const THEMES = ['dark', 'light'];
-    const themeSwitcher = document.getElementById('themeSwitcher');
-    const themeOptions = themeSwitcher ? Array.from(themeSwitcher.querySelectorAll('[data-theme-value]')) : [];
     const themeMeta = document.querySelector('meta[name="theme-color"]');
     const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function getCurrentTheme() {
-        const theme = document.documentElement.getAttribute('data-theme');
-        return THEMES.includes(theme) ? theme : 'dark';
+        return 'dark';
     }
 
-    function getThemeColor(theme) {
-        if (theme === 'light') return '#f7f7f8';
+    function getThemeColor() {
         return '#050505';
     }
 
@@ -93,53 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (themeMeta) {
             themeMeta.setAttribute('content', getThemeColor(theme));
         }
-        if (!themeSwitcher) return;
-        themeSwitcher.setAttribute('data-active', theme);
-        themeSwitcher.style.setProperty('--theme-index', Math.max(0, THEMES.indexOf(theme)));
-        themeOptions.forEach(option => {
-            const active = option.getAttribute('data-theme-value') === theme;
-            option.classList.toggle('active', active);
-            option.setAttribute('aria-checked', active ? 'true' : 'false');
-            option.tabIndex = active ? 0 : -1;
-        });
     }
 
-    function applyTheme(theme, persist) {
-        if (!THEMES.includes(theme)) theme = 'dark';
+    function applyTheme() {
         const html = document.documentElement;
-        html.setAttribute('data-theme', theme);
-        if (persist) {
-            try { localStorage.setItem('theme', theme); } catch (e) { }
-        }
+        html.setAttribute('data-theme', 'dark');
+        try { localStorage.setItem('theme', 'dark'); } catch (e) { }
         syncThemeUI();
-        document.dispatchEvent(new CustomEvent('portfolio:theme-change', { detail: { theme } }));
+        document.dispatchEvent(new CustomEvent('portfolio:theme-change', { detail: { theme: 'dark' } }));
     }
 
-    function selectTheme(theme) {
-        if (theme === getCurrentTheme()) return;
-        const apply = () => applyTheme(theme, true);
-        if (document.startViewTransition && !reducedMotion) {
-            document.startViewTransition(apply);
-        } else {
-            apply();
-        }
-    }
-
-    themeOptions.forEach((option, index) => {
-        option.addEventListener('click', () => selectTheme(option.getAttribute('data-theme-value')));
-        option.addEventListener('keydown', event => {
-            let nextIndex = null;
-            if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIndex = (index + 1) % themeOptions.length;
-            if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextIndex = (index - 1 + themeOptions.length) % themeOptions.length;
-            if (event.key === 'Home') nextIndex = 0;
-            if (event.key === 'End') nextIndex = themeOptions.length - 1;
-            if (nextIndex === null) return;
-            event.preventDefault();
-            const next = themeOptions[nextIndex];
-            next.focus();
-            selectTheme(next.getAttribute('data-theme-value'));
-        });
-    });
+    applyTheme();
 
     let morphTexts = ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'];
 
@@ -155,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav.contact': 'Contato',
             'theme.group': 'Tema',
             'theme.dark': 'Tema escuro',
-            'theme.light': 'Tema claro',
             'section.faq': "FAQ",
             'faq.title': "Perguntas frequentes",
             'faq.intro': "O que você precisa saber antes de começarmos um site juntos.",
@@ -229,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav.contact': 'Contact',
             'theme.group': 'Theme',
             'theme.dark': 'Dark theme',
-            'theme.light': 'Light theme',
             'section.faq': "FAQ",
             'faq.title': "Frequently asked questions",
             'faq.intro': "What you need to know before we start building your website.",
