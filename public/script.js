@@ -71,40 +71,27 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', positionInitialPill);
     }
 
-    // 1.5 Theme switcher (Dark / Light / Glass)
-    const THEMES = ['dark', 'light', 'glass'];
+    // 1.5 Theme switcher (Dark / Light)
+    const THEMES = ['dark', 'light'];
     const themeSwitcher = document.getElementById('themeSwitcher');
     const themeOptions = themeSwitcher ? Array.from(themeSwitcher.querySelectorAll('[data-theme-value]')) : [];
     const themeMeta = document.querySelector('meta[name="theme-color"]');
     const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const glassSchemeMedia = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
 
     function getCurrentTheme() {
         const theme = document.documentElement.getAttribute('data-theme');
         return THEMES.includes(theme) ? theme : 'dark';
     }
 
-    function getGlassScheme() {
-        return glassSchemeMedia && glassSchemeMedia.matches ? 'light' : 'dark';
-    }
-
-    function getThemeColor(theme, scheme) {
+    function getThemeColor(theme) {
         if (theme === 'light') return '#f7f7f8';
-        if (theme === 'glass') return scheme === 'light' ? '#e9ecf1' : '#08090c';
         return '#050505';
-    }
-
-    function syncGlassScheme() {
-        const scheme = getGlassScheme();
-        document.documentElement.setAttribute('data-glass-scheme', scheme);
-        return scheme;
     }
 
     function syncThemeUI() {
         const theme = getCurrentTheme();
-        const scheme = document.documentElement.getAttribute('data-glass-scheme') || syncGlassScheme();
         if (themeMeta) {
-            themeMeta.setAttribute('content', getThemeColor(theme, scheme));
+            themeMeta.setAttribute('content', getThemeColor(theme));
         }
         if (!themeSwitcher) return;
         themeSwitcher.setAttribute('data-active', theme);
@@ -120,13 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyTheme(theme, persist) {
         if (!THEMES.includes(theme)) theme = 'dark';
         const html = document.documentElement;
-        const scheme = syncGlassScheme();
         html.setAttribute('data-theme', theme);
         if (persist) {
             try { localStorage.setItem('theme', theme); } catch (e) { }
         }
         syncThemeUI();
-        document.dispatchEvent(new CustomEvent('portfolio:theme-change', { detail: { theme, scheme } }));
+        document.dispatchEvent(new CustomEvent('portfolio:theme-change', { detail: { theme } }));
     }
 
     function selectTheme(theme) {
@@ -170,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
             'theme.group': 'Tema',
             'theme.dark': 'Tema escuro',
             'theme.light': 'Tema claro',
-            'theme.glass': 'Glass Mode',
             'section.faq': "FAQ",
             'faq.title': "Perguntas frequentes",
             'faq.intro': "O que você precisa saber antes de começarmos um site juntos.",
@@ -245,7 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
             'theme.group': 'Theme',
             'theme.dark': 'Dark theme',
             'theme.light': 'Light theme',
-            'theme.glass': 'Glass Mode',
             'section.faq': "FAQ",
             'faq.title': "Frequently asked questions",
             'faq.intro': "What you need to know before we start building your website.",
@@ -410,26 +394,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (glassSchemeMedia) {
-        const handleSchemeChange = event => {
-            const scheme = event.matches ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-glass-scheme', scheme);
-            if (getCurrentTheme() === 'glass') {
-                if (themeMeta) themeMeta.setAttribute('content', getThemeColor('glass', scheme));
-                document.dispatchEvent(new CustomEvent('portfolio:theme-change', { detail: { theme: 'glass', scheme } }));
-            }
-            let stored = null;
-            try { stored = localStorage.getItem('theme'); } catch (err) { }
-            if (!stored) applyTheme(scheme === 'light' ? 'light' : 'dark', false);
-        };
-        if (glassSchemeMedia.addEventListener) {
-            glassSchemeMedia.addEventListener('change', handleSchemeChange);
-        } else if (glassSchemeMedia.addListener) {
-            glassSchemeMedia.addListener(handleSchemeChange);
-        }
-    }
-
-    syncGlassScheme();
     syncThemeUI();
 
     // 2. Scroll Reveal Animation using Intersection Observer

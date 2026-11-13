@@ -21,14 +21,12 @@
             document.documentElement.classList.add('js');
             var stored = null;
             try { stored = localStorage.getItem('theme'); } catch (e) { }
-            var themes = ['dark', 'light', 'glass'];
+            var themes = ['dark', 'light'];
             var theme = themes.indexOf(stored) >= 0 ? stored : 'dark';
-            var glassScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-glass-scheme', glassScheme);
             document.documentElement.setAttribute('data-theme', theme);
             var meta = document.querySelector('meta[name="theme-color"]');
             if (meta) {
-                var themeColor = theme === 'light' ? '#f7f7f8' : theme === 'glass' ? (glassScheme === 'light' ? '#e9ecf1' : '#08090c') : '#050505';
+                var themeColor = theme === 'light' ? '#f7f7f8' : '#050505';
                 meta.setAttribute('content', themeColor);
             }
             var lang = null;
@@ -66,8 +64,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <!-- Estilo Principal -->
     <link rel="stylesheet" href="style.css">
-    <!-- Glass Mode (terceiro tema) -->
-    <link rel="stylesheet" href="glass.css">
 </head>
 
 <body>
@@ -114,15 +110,6 @@
                 <button class="theme-switcher__option" type="button" role="radio" data-theme-value="light"
                     aria-checked="false" aria-label="Tema claro" title="Light" data-i18n-aria="theme.light">
                     <i class="fa-solid fa-sun" aria-hidden="true"></i>
-                </button>
-                <button class="theme-switcher__option" type="button" role="radio" data-theme-value="glass"
-                    aria-checked="false" aria-label="Glass Mode" title="Glass" data-i18n-aria="theme.glass">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                        stroke-linejoin="round" aria-hidden="true">
-                        <rect x="8.5" y="3.5" width="12" height="12" rx="3.2" opacity=".42" />
-                        <rect x="5.5" y="6.5" width="12" height="12" rx="3.2" opacity=".68" />
-                        <rect x="2.5" y="9.5" width="12" height="12" rx="3.2" />
-                    </svg>
                 </button>
             </div>
             <button class="icon-button menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
@@ -579,7 +566,6 @@
         integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr"
         crossorigin="anonymous"></script>
     <script src="script.js"></script>
-    <script src="glass.js"></script>
     <script type="module" src="/src/experience.tsx"></script>
     <script type="module" src="/src/page-scroll.js"></script>
     <script>
