@@ -71,34 +71,89 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', positionInitialPill);
     }
 
-    // 1.5 Theme toggle (claro/escuro)
-    const themeToggle = document.querySelector('.theme-toggle');
+    // 1.5 Theme switcher (Dark / Light / Glass)
+    const THEMES = ['dark', 'light', 'glass'];
+    const themeSwitcher = document.getElementById('themeSwitcher');
+    const themeOptions = themeSwitcher ? Array.from(themeSwitcher.querySelectorAll('[data-theme-value]')) : [];
     const themeMeta = document.querySelector('meta[name="theme-color"]');
     const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const glassSchemeMedia = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
 
     function getCurrentTheme() {
-        return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        const theme = document.documentElement.getAttribute('data-theme');
+        return THEMES.includes(theme) ? theme : 'dark';
+    }
+
+    function getGlassScheme() {
+        return glassSchemeMedia && glassSchemeMedia.matches ? 'light' : 'dark';
+    }
+
+    function getThemeColor(theme, scheme) {
+        if (theme === 'light') return '#f7f7f8';
+        if (theme === 'glass') return scheme === 'light' ? '#e9ecf1' : '#08090c';
+        return '#050505';
+    }
+
+    function syncGlassScheme() {
+        const scheme = getGlassScheme();
+        document.documentElement.setAttribute('data-glass-scheme', scheme);
+        return scheme;
     }
 
     function syncThemeUI() {
         const theme = getCurrentTheme();
+        const scheme = document.documentElement.getAttribute('data-glass-scheme') || syncGlassScheme();
         if (themeMeta) {
-            themeMeta.setAttribute('content', theme === 'light' ? '#f7f7f8' : '#050505');
+            themeMeta.setAttribute('content', getThemeColor(theme, scheme));
         }
-        if (themeToggle) {
-            const icon = themeToggle.querySelector('i');
-            icon.className = theme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-            themeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-        }
+        if (!themeSwitcher) return;
+        themeSwitcher.setAttribute('data-active', theme);
+        themeSwitcher.style.setProperty('--theme-index', Math.max(0, THEMES.indexOf(theme)));
+        themeOptions.forEach(option => {
+            const active = option.getAttribute('data-theme-value') === theme;
+            option.classList.toggle('active', active);
+            option.setAttribute('aria-checked', active ? 'true' : 'false');
+            option.tabIndex = active ? 0 : -1;
+        });
     }
 
     function applyTheme(theme, persist) {
-        document.documentElement.setAttribute('data-theme', theme);
+        if (!THEMES.includes(theme)) theme = 'dark';
+        const html = document.documentElement;
+        const scheme = syncGlassScheme();
+        html.setAttribute('data-theme', theme);
         if (persist) {
             try { localStorage.setItem('theme', theme); } catch (e) { }
         }
         syncThemeUI();
+        document.dispatchEvent(new CustomEvent('portfolio:theme-change', { detail: { theme, scheme } }));
     }
+
+    function selectTheme(theme) {
+        if (theme === getCurrentTheme()) return;
+        const apply = () => applyTheme(theme, true);
+        if (document.startViewTransition && !reducedMotion) {
+            document.startViewTransition(apply);
+        } else {
+            apply();
+        }
+    }
+
+    themeOptions.forEach((option, index) => {
+        option.addEventListener('click', () => selectTheme(option.getAttribute('data-theme-value')));
+        option.addEventListener('keydown', event => {
+            let nextIndex = null;
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIndex = (index + 1) % themeOptions.length;
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextIndex = (index - 1 + themeOptions.length) % themeOptions.length;
+            if (event.key === 'Home') nextIndex = 0;
+            if (event.key === 'End') nextIndex = themeOptions.length - 1;
+            if (nextIndex === null) return;
+            event.preventDefault();
+            const next = themeOptions[nextIndex];
+            next.focus();
+            selectTheme(next.getAttribute('data-theme-value'));
+        });
+    });
 
     let morphTexts = ['DESENVOLVEDOR FRONTEND', 'UI/UX DESIGNER', 'FREELANCER'];
 
@@ -112,6 +167,10 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav.music': 'Música',
             'nav.faq': 'FAQ',
             'nav.contact': 'Contato',
+            'theme.group': 'Tema',
+            'theme.dark': 'Tema escuro',
+            'theme.light': 'Tema claro',
+            'theme.glass': 'Glass Mode',
             'section.faq': "FAQ",
             'faq.title': "Perguntas frequentes",
             'faq.intro': "O que você precisa saber antes de começarmos um site juntos.",
@@ -183,6 +242,10 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav.music': 'Music',
             'nav.faq': 'FAQ',
             'nav.contact': 'Contact',
+            'theme.group': 'Theme',
+            'theme.dark': 'Dark theme',
+            'theme.light': 'Light theme',
+            'theme.glass': 'Glass Mode',
             'section.faq': "FAQ",
             'faq.title': "Frequently asked questions",
             'faq.intro': "What you need to know before we start building your website.",
@@ -347,27 +410,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const next = getCurrentTheme() === 'light' ? 'dark' : 'light';
-            const apply = () => applyTheme(next, true);
-            if (document.startViewTransition && !reducedMotion) {
-                document.startViewTransition(apply);
-            } else {
-                apply();
+    if (glassSchemeMedia) {
+        const handleSchemeChange = event => {
+            const scheme = event.matches ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-glass-scheme', scheme);
+            if (getCurrentTheme() === 'glass') {
+                if (themeMeta) themeMeta.setAttribute('content', getThemeColor('glass', scheme));
+                document.dispatchEvent(new CustomEvent('portfolio:theme-change', { detail: { theme: 'glass', scheme } }));
             }
-        });
-    }
-
-    if (window.matchMedia) {
-        const systemTheme = window.matchMedia('(prefers-color-scheme: light)');
-        systemTheme.addEventListener('change', (e) => {
             let stored = null;
             try { stored = localStorage.getItem('theme'); } catch (err) { }
-            if (!stored) applyTheme(e.matches ? 'light' : 'dark', false);
-        });
+            if (!stored) applyTheme(scheme === 'light' ? 'light' : 'dark', false);
+        };
+        if (glassSchemeMedia.addEventListener) {
+            glassSchemeMedia.addEventListener('change', handleSchemeChange);
+        } else if (glassSchemeMedia.addListener) {
+            glassSchemeMedia.addListener(handleSchemeChange);
+        }
     }
 
+    syncGlassScheme();
     syncThemeUI();
 
     // 2. Scroll Reveal Animation using Intersection Observer
@@ -712,7 +774,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: true });
 
         backToTop.addEventListener('click', () => {
-            if (window.portfolioScroll) {
+            if (window.portfolioScrollToTop) {
+                window.portfolioScrollToTop();
+            } else if (window.portfolioScroll) {
                 window.portfolioScroll.scrollTo(0);
             } else {
                 window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });

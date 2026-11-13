@@ -29,11 +29,35 @@ function initPageScroll() {
         return match.start;
     }
 
+    const easeInOutCubic = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+    function scrollToTop() {
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+            lenis.scrollTo(0, { immediate: true });
+            return;
+        }
+        const distance = Math.abs(lenis.animatedScroll ?? window.scrollY);
+        // Longer trips get more time, with a smooth acceleration/deceleration
+        // instead of the abrupt default exponential ease.
+        lenis.scrollTo(0, {
+            duration: Math.min(2.4, Math.max(1.1, distance / 4000)),
+            easing: easeInOutCubic,
+            force: true,
+        });
+    }
+
+    window.portfolioScrollToTop = scrollToTop;
+
     function scrollToHash(hash) {
         if (!hash || hash === '#') return;
         const id = decodeURIComponent(hash.slice(1));
         const target = document.getElementById(id);
         if (!target) return;
+
+        if (id === 'home') {
+            scrollToTop();
+            return;
+        }
 
         const pinnedTarget = getPinnedTarget(target);
         if (pinnedTarget !== null) {
@@ -104,7 +128,11 @@ function initPageScroll() {
             lenis.scrollTo(lenis.targetScroll + deltas[event.key], { programmatic: false });
         } else if (event.key === 'Home' || event.key === 'End') {
             event.preventDefault();
-            lenis.scrollTo(event.key === 'Home' ? 0 : lenis.limit);
+            if (event.key === 'Home') {
+                scrollToTop();
+            } else {
+                lenis.scrollTo(lenis.limit);
+            }
         }
     });
 
